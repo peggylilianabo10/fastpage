@@ -580,11 +580,11 @@
     /* Chat Bubble */
     .chat-bubble {
       position: fixed;
-      bottom: 90px;
+      bottom: 20px;
       right: 20px;
-      z-index: 10000;
-      width: 60px;
-      height: 60px;
+      z-index: 99999;
+      width: 64px;
+      height: 64px;
       border-radius: 50%;
       background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
       color: white;
@@ -1033,10 +1033,16 @@
 
       /* Chat Widget Mobile Styles */
       .chat-bubble {
-        bottom: 90px;
+        bottom: 20px;
         right: 20px;
-        width: 56px;
-        height: 56px;
+        width: 64px;
+        height: 64px;
+        z-index: 99999;
+      }
+
+      .chat-bubble svg {
+        width: 28px;
+        height: 28px;
       }
 
       .chat-window {
