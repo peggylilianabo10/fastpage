@@ -996,30 +996,41 @@
 
     /* ===== RESPONSIVE ===== */
     @media (max-width: 768px) {
+
+      /* Language selector - Bottom left corner */
+      .lang-selector {
+        bottom: 20px;
+        left: 20px;
+        z-index: 9998;
+      }
+
+      #lang-toggle {
+        padding: 10px 12px;
+        font-size: 12px;
+      }
+
+      /* Theme toggle - Above language selector on the left */
       #theme-toggle {
         bottom: 80px;
-        padding: 10px 14px;
-        font-size: 13px;
+        left: 20px;
+        right: auto;
+        padding: 10px 12px;
+        font-size: 12px;
+        z-index: 9997;
       }
 
       #theme-toggle span {
         display: none;
       }
 
+      /* Back to top - Above theme toggle */
       #back-to-top {
-        bottom: 80px;
-        left: auto;
-        right: 90px;
-      }
-
-      .lang-selector {
-        bottom: 80px;
-        left: 10px;
-      }
-
-      #back-to-top {
-        bottom: 80px;
-        left: 70px;
+        bottom: 140px;
+        left: 20px;
+        right: auto;
+        width: 44px;
+        height: 44px;
+        z-index: 9996;
       }
 
       .modal-content {
@@ -1028,21 +1039,21 @@
 
       .floating-action {
         bottom: 90px;
-        right: 10px;
+        right: 20px;
       }
 
-      /* Chat Widget Mobile Styles */
+      /* Chat Widget Mobile Styles - Bottom right corner */
       .chat-bubble {
         bottom: 20px;
         right: 20px;
-        width: 64px;
-        height: 64px;
+        width: 60px;
+        height: 60px;
         z-index: 99999;
       }
 
       .chat-bubble svg {
-        width: 28px;
-        height: 28px;
+        width: 26px;
+        height: 26px;
       }
 
       .chat-window {
