@@ -1806,6 +1806,45 @@
             });
           }
 
+          // Visual feedback - Add user message
+          const chatMessages = document.querySelector('.chat-messages');
+          if (chatMessages) {
+            const messageEl = document.createElement('div');
+            messageEl.className = 'message';
+            messageEl.style.justifyContent = 'flex-end';
+            messageEl.innerHTML = `
+              <div class="message-content">
+                <div class="message-bubble" style="background: var(--primary); color: white;">
+                  <p>${message}</p>
+                  <span class="message-time" style="color: rgba(255,255,255,0.7); text-align: right;">Now</span>
+                </div>
+              </div>
+            `;
+            chatMessages.appendChild(messageEl);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Simulate bot reply
+            setTimeout(() => {
+              const replyEl = document.createElement('div');
+              replyEl.className = 'message';
+              const replyText = currentLang === 'en'
+                ? 'Thanks for reaching out! A team member will be with you shortly.'
+                : '¡Gracias por contactarnos! Un miembro del equipo te atenderá pronto.';
+
+              replyEl.innerHTML = `
+                <div class="message-avatar">💬</div>
+                <div class="message-content">
+                  <div class="message-bubble">
+                    <p>${replyText}</p>
+                    <span class="message-time">Now</span>
+                  </div>
+                </div>
+              `;
+              chatMessages.appendChild(replyEl);
+              chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 1000);
+          }
+
           chatInput.value = '';
         }
       }
@@ -1860,13 +1899,9 @@
 
       // Update chat translations when language changes
       if (langToggle) {
-        const originalLangToggleClick = langToggle.onclick;
-        langToggle.onclick = function () {
-          if (originalLangToggleClick) {
-            originalLangToggleClick.call(this);
-          }
+        langToggle.addEventListener('click', () => {
           setTimeout(updateChatTranslations, 100);
-        };
+        });
       }
     })();
   </script>
