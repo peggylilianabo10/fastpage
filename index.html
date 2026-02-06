@@ -1948,26 +1948,10 @@
 
     })();
   </script>
-  <!-- === SUCCESS STORIES INJECTOR V4 (LANDING ONLY & REAL CAROUSEL) === -->
+  <!-- === SUCCESS STORIES INJECTOR V5 (MOBILE FIRST & CONTEXT AWARE) === -->
   <script>
     (function () {
       'use strict';
-
-      // 1. LANDING PAGE GUARD
-      // Evitar ejecución en Dashboard/Admin
-      const path = window.location.pathname;
-      const isLanding = path === '/' || path === '/index.html' || path.endsWith('/FastPage/') || path.endsWith('/FastPage');
-
-      // Si detectamos indicios de dashboard en el DOM, también paramos
-      const checkForDashboard = () => {
-        if (document.querySelector('aside') || document.querySelector('.dashboard') || document.body.classList.contains('admin-panel')) return true;
-        return false;
-      };
-
-      if (!isLanding && checkForDashboard()) {
-        console.log('FastPage: Dashboard detected, skipping testimonials.');
-        return;
-      }
 
       const successStories = [
         { name: "Carlos Mendoza", role: "Agencia de Marketing", img: "men/32.jpg", profit: "+$15k/mes", text: "FastPage cambió mi agencia. Creamos landings para clientes en minutos y nuestros márgenes subieron un 200%.", stars: 5 },
@@ -1997,12 +1981,11 @@
       function injectTestimonialSection() {
         if (document.getElementById('success-stories-section')) return;
 
-        // Create HTML
+        // 1. Create HTML Structure
         const section = document.createElement('section');
         section.id = 'success-stories-section';
         section.className = 'success-section';
 
-        // Correct Text: más de 1,000 creadores
         let html = `
           <div class="success-header">
             <h2 class="section-title">Emprendedores ganando con FastPage 🚀</h2>
@@ -2046,9 +2029,9 @@
         `;
         section.innerHTML = html;
 
-        // Styles Corrected for Landing Only
+        // 2. Mobile First CSS
         const style = document.createElement('style');
-        style.id = 'success-v4-css';
+        style.id = 'success-v5-css';
         style.textContent = `
           .success-section {
             padding: 4rem 1.5rem;
@@ -2057,45 +2040,57 @@
             position: relative; z-index: 10; opacity: 0; animation: fadeInSuccess 0.8s ease forwards;
           }
           @keyframes fadeInSuccess { to { opacity: 1; } }
+          
           .success-header { text-align: center; margin-bottom: 3rem; }
-          .section-title { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #7c3aed 0%, #db2777 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem; }
-          .section-subtitle { color: #6b7280; font-size: 1.1rem; }
+          .section-title { 
+             font-size: 1.8rem; /* Mobile friendly size */
+             font-weight: 800; 
+             background: linear-gradient(135deg, #7c3aed 0%, #db2777 100%); 
+             -webkit-background-clip: text; 
+             -webkit-text-fill-color: transparent; 
+             margin-bottom: 0.5rem;
+             line-height: 1.2;
+          }
+          .section-subtitle { color: #6b7280; font-size: 1rem; padding: 0 1rem; }
 
           .carousel-wrapper { position: relative; display: flex; align-items: center; justify-content: center; }
           
+          /* Navigation Buttons - Visible on Mobile too per request */
           .nav-btn {
-            background: white; border: 1px solid #FCD34D; width: 48px; height: 48px; border-radius: 50%;
+            background: white; border: 1px solid #FCD34D; width: 40px; height: 40px; border-radius: 50%;
             cursor: pointer; display: flex; align-items: center; justify-content: center;
             box-shadow: 0 4px 6px -1px rgba(255, 215, 0, 0.3); z-index: 20; transition: transform 0.2s;
             position: absolute; top: 50%; transform: translateY(-50%);
           }
           .nav-btn:hover { transform: translateY(-50%) scale(1.1); background: #FFFBEB; }
-          .prev-btn { left: -10px; }
-          .next-btn { right: -10px; }
-          .nav-btn svg { width: 24px; height: 24px; }
+          .prev-btn { left: -5px; }
+          .next-btn { right: -5px; }
+          .nav-btn svg { width: 20px; height: 20px; }
           
           :root.dark .nav-btn { background: #1f2937; border-color: #B45309; }
 
-          /* CAROUSEL BASE STYLE (MOBILE & DESKTOP) */
+          /* CAROUSEL BASE STYLE (MOBILE) */
           .success-grid {
-            display: flex; /* Flexbox ALWAYS */
-            gap: 1.5rem; 
+            display: flex;
+            gap: 1rem; 
             overflow-x: auto; 
             scroll-behavior: smooth;
             padding: 1rem 0.5rem; 
             scrollbar-width: none;
             width: 100%; 
             scroll-snap-type: x mandatory;
-            flex-wrap: nowrap !important; /* Forces Carousel */
+            flex-wrap: nowrap !important;
           }
           .success-grid::-webkit-scrollbar { display: none; }
 
           .success-card {
             background: white; border: 1px solid #e5e7eb; border-radius: 16px; padding: 1.5rem;
-            min-width: 280px; max-width: 280px; scroll-snap-align: center; flex-shrink: 0;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); transition: transform 0.3s;
+            /* Mobile: 85% width to see previous/next hints */
+            min-width: 85vw; max-width: 85vw; 
+            scroll-snap-align: center; flex-shrink: 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); 
+            display: flex; flex-direction: column; justify-content: space-between;
           }
-          .success-card:hover { transform: translateY(-5px); border-color: #FCD34D; }
           :root.dark .success-card { background: #1f2937; border-color: #374151; }
           
           .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 1rem; }
@@ -2109,15 +2104,23 @@
           .card-text { font-size: 0.9rem; line-height: 1.5; color: #374151; font-style: italic; }
           :root.dark .card-text { color: #d1d5db; }
 
+          /* DESKTOP ENHANCEMENTS */
+          @media (min-width: 768px) {
+             .success-card {
+                min-width: 280px; max-width: 280px; 
+             }
+             .prev-btn { left: -20px; }
+             .next-btn { right: -20px; }
+          }
+
           @media (min-width: 1024px) {
+             .section-title { font-size: 2.5rem; }
              .success-grid {
-               display: flex !important;
-               flex-wrap: nowrap !important;
                justify-content: flex-start;
-               overflow-x: hidden; /* Hide scrollbar completely to force arrows */
+               overflow-x: hidden; 
+               gap: 1.5rem;
              }
              .success-card {
-                /* Exact math for 4 cards */
                 flex: 0 0 calc((100% - 4.5rem) / 4);
                 min-width: calc((100% - 4.5rem) / 4);
                 max-width: calc((100% - 4.5rem) / 4);
@@ -2137,7 +2140,7 @@
 
           if (btnPrev && btnNext && track) {
             btnPrev.addEventListener('click', () => {
-              const w = track.clientWidth; // Scroll full width view
+              const w = track.clientWidth;
               track.scrollBy({ left: -w, behavior: 'smooth' });
             });
             btnNext.addEventListener('click', () => {
@@ -2148,18 +2151,16 @@
         }
 
         const findTarget = () => {
-          // More specific target finding to avoid dashboard body
-          // Only look if we found a section that looks like "Features" or "Pricing" which are on landing
-          // And ensure it's not a sidebar item
+          // Context Aware: Find "Features" section
           const walkers = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
           let node;
           while (node = walkers.nextNode()) {
             const t = node.nodeValue || '';
             if (t.includes('Diseño Premium') || t.includes('Todo lo que necesitas')) {
               let p = node.parentElement;
-              // Safety check: Don't select if inside a sidebar or navbar
               if (p.closest('aside') || p.closest('nav') || p.closest('.sidebar')) continue;
 
+              // Climb up
               for (let i = 0; i < 6; i++) {
                 if (!p) break;
                 if (p.tagName === 'SECTION' || (p.parentElement && p.parentElement.id === 'root')) return p;
@@ -2172,34 +2173,34 @@
         };
 
         const tryInsert = () => {
-          // Guard again just in case
-          if (checkForDashboard()) return false;
-
           const target = findTarget();
           if (target && target.parentNode) {
             target.parentNode.insertBefore(section, target.nextSibling);
             setTimeout(initCarousel, 100);
             return true;
           }
-          const root = document.getElementById('root');
-          if (root && root.children.length > 0) {
-            root.appendChild(section);
-            setTimeout(initCarousel, 100);
-            return true;
-          }
+          // NOTE: Removed fallback to root.appendChild.
+          // If we don't find the features section, we are likely not on the landing page (Dashboard).
+          // Or the landing page hasn't loaded. 
+          // We rely on MutationObserver to wait for it.
           return false;
         };
 
-        if (isLanding && !checkForDashboard()) {
-          tryInsert();
-          // Retry logic
-          let attempts = 0;
-          const interval = setInterval(() => {
-            if (tryInsert()) clearInterval(interval);
-            attempts++;
-            if (attempts > 10) clearInterval(interval);
-          }, 800);
-        }
+        // Observer Strategy: Check for target availability extensively
+        const observer = new MutationObserver((mutations) => {
+          if (tryInsert()) {
+            observer.disconnect();
+            console.log('FastPage V5: Injected into Landing Page');
+          }
+        });
+
+        observer.observe(document.body, { childList: true, subtree: true });
+
+        // Initial try
+        tryInsert();
+
+        // Failsafe timeout to stop observing after 15 seconds (save performance)
+        setTimeout(() => { observer.disconnect(); }, 15000);
       }
 
       if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', injectTestimonialSection);
@@ -2209,4 +2210,3 @@
 </body>
 
 </html>
-<!-- === SUCCESS STORIES INJECTOR V3 (GOLDEN CAROUSEL) === -->
