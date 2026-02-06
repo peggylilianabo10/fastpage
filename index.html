@@ -2211,6 +2211,55 @@
       else injectTestimonialSection();
     })();
   </script>
+  <!-- === AUTH REDIRECTOR === -->
+  <script>
+    (function () {
+      // Función para navegar a auth.html
+      const goToAuth = (mode, e) => {
+        if (e) { e.preventDefault(); e.stopPropagation(); }
+        window.location.href = 'auth.html' + (mode === 'register' ? '#register' : '#login');
+      };
+
+      const updateAuthLinks = () => {
+        // Selectores amplios para capturar botones generados por React
+        // Buscamos por texto porque las clases son dinámicas/ofuscadas
+        const targets = document.querySelectorAll('a, button, div[role="button"]');
+
+        targets.forEach(el => {
+          // Evitar procesar si ya tiene el evento o es parte del chat widget
+          if (el.dataset.authProcessed || el.closest('#new-chat-widget')) return;
+
+          const text = el.innerText ? el.innerText.toLowerCase().trim() : '';
+
+          if (['login', 'iniciar sesión', 'entrar', 'acceder'].includes(text)) {
+            el.dataset.authProcessed = 'true';
+            el.style.cursor = 'pointer';
+            el.addEventListener('click', (e) => goToAuth('login', e));
+            if (el.tagName === 'A') el.setAttribute('href', 'auth.html#login');
+          }
+
+          if (['registrarse', 'crear cuenta', 'sign up', 'empieza gratis', 'comenzar ahora', 'crear mi web'].includes(text)) {
+            el.dataset.authProcessed = 'true';
+            el.style.cursor = 'pointer';
+            el.addEventListener('click', (e) => goToAuth('register', e));
+            if (el.tagName === 'A') el.setAttribute('href', 'auth.html#register');
+          }
+        });
+      };
+
+      // Observar cambios en el DOM (React render)
+      const observer = new MutationObserver((mutations) => {
+        updateAuthLinks();
+      });
+
+      observer.observe(document.body, { childList: true, subtree: true });
+
+      // Ejecución inicial y periódica por si acaso
+      document.addEventListener('DOMContentLoaded', updateAuthLinks);
+      setTimeout(updateAuthLinks, 500);
+      setTimeout(updateAuthLinks, 2000);
+    })();
+  </script>
 </body>
 
 </html>
