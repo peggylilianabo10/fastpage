@@ -1268,16 +1268,28 @@
       const langText = document.getElementById('lang-text');
 
       function updateLanguage() {
-        langText.textContent = currentLang.toUpperCase();
+        // Update lang text in button
+        if (langText) langText.textContent = currentLang.toUpperCase();
         document.documentElement.lang = currentLang;
 
-        // Update all translatable elements
-        themeText.textContent = isDark ? t('themeLight') : t('themeDark');
-        document.getElementById('contact-title').textContent = t('contactTitle');
-        document.querySelector('label[for="contact-name"]').textContent = t('contactName');
-        document.querySelector('label[for="contact-email"]').textContent = t('contactEmail');
-        document.querySelector('label[for="contact-message"]').textContent = t('contactMessage');
-        document.querySelector('.btn-primary').textContent = t('contactSubmit');
+        // Update theme text
+        if (themeText) themeText.textContent = isDark ? t('themeLight') : t('themeDark');
+
+        // Update contact form elements (if they exist)
+        const contactTitle = document.getElementById('contact-title');
+        const labelName = document.querySelector('label[for="contact-name"]');
+        const labelEmail = document.querySelector('label[for="contact-email"]');
+        const labelMsg = document.querySelector('label[for="contact-message"]');
+        const btnPrimary = document.querySelector('.btn-primary');
+
+        if (contactTitle) contactTitle.textContent = t('contactTitle');
+        if (labelName) labelName.textContent = t('contactName');
+        if (labelEmail) labelEmail.textContent = t('contactEmail');
+        if (labelMsg) labelMsg.textContent = t('contactMessage');
+        if (btnPrimary) btnPrimary.textContent = t('contactSubmit');
+
+        // Update chat widget translations
+        updateChatTranslations();
 
         // Track language change
         if (typeof gtag !== 'undefined') {
@@ -1285,16 +1297,89 @@
             'language': currentLang
           });
         }
+
+        console.log('Language changed to:', currentLang);
       }
 
+      // Define chat translation function early
+      function updateChatTranslations() {
+        const chatTranslations = {
+          es: {
+            chatTitle: 'Soporte FastPage 💬',
+            chatStatus: 'En línea • Responde en ~1 min',
+            chatWelcome: '👋 ¡Hola! Soy el equipo de FastPage.',
+            chatQuestion: '¿En qué podemos ayudarte hoy?',
+            chatPlaceholder: 'Escribe tu mensaje... 💬',
+            chatFooter: '🔒 Soporte 24/7 • Respuesta garantizada',
+            chatTime: 'Ahora',
+            quickDemo: '💡 Ver Demo',
+            quickPricing: '💰 Precios',
+            quickStart: '🚀 Empezar',
+            quickTalk: '💬 Hablar con alguien'
+          },
+          en: {
+            chatTitle: 'FastPage Support 💬',
+            chatStatus: 'Online • Responds in ~1 min',
+            chatWelcome: '👋 Hi! I\'m the FastPage team.',
+            chatQuestion: 'How can we help you today?',
+            chatPlaceholder: 'Type your message... 💬',
+            chatFooter: '🔒 24/7 Support • Guaranteed response',
+            chatTime: 'Now',
+            quickDemo: '💡 View Demo',
+            quickPricing: '💰 Pricing',
+            quickStart: '🚀 Get Started',
+            quickTalk: '💬 Talk to someone'
+          }
+        };
+
+        const tc = chatTranslations[currentLang];
+
+        const chatTitle = document.getElementById('chat-title');
+        const chatStatusText = document.getElementById('chat-status-text');
+        const chatWelcome = document.getElementById('chat-welcome');
+        const chatQuestion = document.getElementById('chat-question');
+        const chatInputEl = document.getElementById('chat-input');
+        const chatFooterText = document.getElementById('chat-footer-text');
+        const chatTime = document.getElementById('chat-time');
+        const quickDemo = document.getElementById('quick-demo');
+        const quickPricing = document.getElementById('quick-pricing');
+        const quickStart = document.getElementById('quick-start');
+        const quickTalk = document.getElementById('quick-talk');
+
+        if (chatTitle) chatTitle.textContent = tc.chatTitle;
+        if (chatStatusText) chatStatusText.textContent = tc.chatStatus;
+        if (chatWelcome) chatWelcome.textContent = tc.chatWelcome;
+        if (chatQuestion) chatQuestion.textContent = tc.chatQuestion;
+        if (chatInputEl) chatInputEl.placeholder = tc.chatPlaceholder;
+        if (chatFooterText) chatFooterText.textContent = tc.chatFooter;
+        if (chatTime) chatTime.textContent = tc.chatTime;
+        if (quickDemo) quickDemo.textContent = tc.quickDemo;
+        if (quickPricing) quickPricing.textContent = tc.quickPricing;
+        if (quickStart) quickStart.textContent = tc.quickStart;
+        if (quickTalk) quickTalk.textContent = tc.quickTalk;
+
+        // Update testimonials
+        const testimonials = document.querySelectorAll('.testimonial');
+        testimonials.forEach(testimonial => {
+          const text = testimonial.querySelector('.testimonial-text');
+          const author = testimonial.querySelector('.testimonial-author');
+          if (text && text.dataset[currentLang]) text.textContent = text.dataset[currentLang];
+          if (author && author.dataset[currentLang]) author.textContent = author.dataset[currentLang];
+        });
+      }
+
+      // Initial update
       updateLanguage();
 
-      langToggle.addEventListener('click', () => {
-        currentLang = currentLang === 'es' ? 'en' : 'es';
-        localStorage.setItem('lang', currentLang);
-        updateLanguage();
-        translatePlatformContent();
-      });
+      // Language toggle click handler
+      if (langToggle) {
+        langToggle.addEventListener('click', () => {
+          currentLang = currentLang === 'es' ? 'en' : 'es';
+          localStorage.setItem('lang', currentLang);
+          updateLanguage();
+          translatePlatformContent();
+        });
+      }
 
       // ===== PLATFORM CONTENT TRANSLATION =====
       // HOW TO ADD NEW TRANSLATIONS FOR FUTURE CONTENT:
