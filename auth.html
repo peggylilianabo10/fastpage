@@ -283,9 +283,15 @@
             transform: translateY(0);
         }
 
+        .btn-submit:disabled,
         .btn-submit.loading {
+            background: #a78bfa;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-submit.loading .btn-text {
             color: transparent;
-            pointer-events: none;
         }
 
         .spinner {
@@ -396,6 +402,36 @@
             color: var(--primary);
             text-decoration: none;
         }
+
+        /* Toast Error */
+        .error-toast {
+            background: #fee2e2;
+            color: #b91c1c;
+            border: 1px solid #fca5a5;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            display: none;
+            text-align: center;
+            animation: shake 0.4s ease-in-out;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            75% {
+                transform: translateX(5px);
+            }
+        }
     </style>
 </head>
 
@@ -412,21 +448,26 @@
         </div>
 
         <div class="auth-body">
+            <div id="error-message" class="error-toast"></div>
+
             <div class="tabs">
                 <div class="tab active" onclick="switchTab('login')" id="tab-login">Iniciar Sesión</div>
                 <div class="tab" onclick="switchTab('register')" id="tab-register">Crear Cuenta</div>
             </div>
 
             <!-- Login Form -->
-            <form id="form-login" onsubmit="handleLogin(event)">
+            <form id="form-login">
                 <div class="form-group">
                     <label>Correo Electrónico</label>
-                    <input type="email" placeholder="nombre@ejemplo.com" required oninput="validateEmail(this)">
+                    <input type="email" id="login-email" placeholder="nombre@ejemplo.com" required
+                        oninput="validateEmail(this)">
                 </div>
                 <div class="form-group">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
                         <label style="margin:0">Contraseña</label>
-                        <a href="#" class="link">¿Olvidaste tu contraseña?</a>
+                        <a href="#" class="link"
+                            onclick="alert('Funcionalidad de recuperar contraseña pendiente de configuración en Firebase.')">¿Olvidaste
+                            tu contraseña?</a>
                     </div>
                     <div class="password-wrapper">
                         <input type="password" id="login-password" placeholder="••••••••" required>
@@ -447,14 +488,15 @@
             </form>
 
             <!-- Register Form -->
-            <form id="form-register" class="hidden" onsubmit="handleRegister(event)">
+            <form id="form-register" class="hidden">
                 <div class="form-group">
                     <label>Nombre Completo</label>
-                    <input type="text" placeholder="Ej. Juan Pérez" required>
+                    <input type="text" id="register-name" placeholder="Ej. Juan Pérez" required>
                 </div>
                 <div class="form-group">
                     <label>Correo Electrónico</label>
-                    <input type="email" placeholder="nombre@ejemplo.com" required oninput="validateEmail(this)">
+                    <input type="email" id="register-email" placeholder="nombre@ejemplo.com" required
+                        oninput="validateEmail(this)">
                 </div>
                 <div class="form-group">
                     <label>Contraseña</label>
@@ -484,7 +526,7 @@
             <div class="divider"><span>O continúa con</span></div>
 
             <div class="social-btns">
-                <button type="button" class="social-btn">
+                <button type="button" class="social-btn" id="btn-google">
                     <svg width="20" height="20" viewBox="0 0 24 24">
                         <path
                             d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -501,7 +543,7 @@
                     </svg>
                     Google
                 </button>
-                <button type="button" class="social-btn"
+                <button type="button" class="social-btn" id="btn-facebook"
                     style="color: #1877F2; background: #fff; border-color: #dbeafe;">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="#1877F2">
                         <path
@@ -518,12 +560,115 @@
         </div>
     </div>
 
-    <script>
-        function switchTab(tab) {
-            const loginForm = document.getElementById('form-login');
-            const registerForm = document.getElementById('form-register');
-            const loginTab = document.getElementById('tab-login');
-            const registerTab = document.getElementById('tab-register');
+    <script type="module">
+        // --- FIREBASE CONFIGURATION & LOGIC ---
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-analytics.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBwG1SGZvp97zau4AGOIQxnIlNt9ig8dbs",
+            authDomain: "fast-page-726db.firebaseapp.com",
+            projectId: "fast-page-726db",
+            storageBucket: "fast-page-726db.firebasestorage.app",
+            messagingSenderId: "850638079580",
+            appId: "1:850638079580:web:0a70125759adced1d30899",
+            measurementId: "G-F22PMSZ703"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const auth = getAuth(app);
+
+        // --- UI HELPERS ---
+        const getEl = (id) => document.getElementById(id);
+        const showError = (msg) => {
+            const el = getEl('error-message');
+            el.textContent = "⚠️ " + msg;
+            el.style.display = 'block';
+            setTimeout(() => el.style.display = 'none', 5000);
+        };
+
+        const toggleLoading = (btnId, isLoading) => {
+            const btn = getEl(btnId);
+            if (isLoading) btn.classList.add('loading');
+            else btn.classList.remove('loading');
+        };
+
+        // --- AUTH ACTIONS ---
+
+        // Login
+        getEl('form-login').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = getEl('login-email').value;
+            const password = getEl('login-password').value;
+
+            toggleLoading('btn-login', true);
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                window.location.href = '/'; // Redirigir al dashboard
+            } catch (error) {
+                console.error(error);
+                let msg = "Error al iniciar sesión.";
+                if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password') msg = "Correo o contraseña incorrectos.";
+                if (error.code === 'auth/user-not-found') msg = "No existe cuenta con este correo.";
+                if (error.code === 'auth/too-many-requests') msg = "Muchos intentos fallidos. Intenta más tarde.";
+                showError(msg);
+            } finally {
+                toggleLoading('btn-login', false);
+            }
+        });
+
+        // Register
+        getEl('form-register').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = getEl('register-name').value;
+            const email = getEl('register-email').value;
+            const password = getEl('register-password').value;
+
+            toggleLoading('btn-register', true);
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                // Actualizar nombre
+                await updateProfile(userCredential.user, { displayName: name });
+                window.location.href = '/'; // Redirigir al dashboard
+            } catch (error) {
+                console.error(error);
+                let msg = "Error al crear cuenta.";
+                if (error.code === 'auth/email-already-in-use') msg = "Este correo ya está registrado.";
+                if (error.code === 'auth/weak-password') msg = "La contraseña es muy débil (mínimo 6 caracteres).";
+                showError(msg);
+            } finally {
+                toggleLoading('btn-register', false);
+            }
+        });
+
+        // Social Login Helpers
+        const handleSocialLogin = async (provider) => {
+            try {
+                await signInWithPopup(auth, provider);
+                window.location.href = '/';
+            } catch (error) {
+                console.error(error);
+                let msg = "Error con inicio de sesión social.";
+                if (error.code === 'auth/account-exists-with-different-credential') msg = "Ya existe una cuenta con este email usando otro método.";
+                if (error.code === 'auth/popup-closed-by-user') return; // Ignorar
+                showError(msg);
+            }
+        };
+
+        getEl('btn-google').addEventListener('click', () => handleSocialLogin(new GoogleAuthProvider()));
+        getEl('btn-facebook').addEventListener('click', () => handleSocialLogin(new FacebookAuthProvider()));
+
+        // --- GLOBAL FUNCTIONS FOR UI (Tabs, etc) ---
+        // Como estamos en type="module", debemos exponer estas al window
+        window.switchTab = function (tab) {
+            const loginForm = getEl('form-login');
+            const registerForm = getEl('form-register');
+            const loginTab = getEl('tab-login');
+            const registerTab = getEl('tab-register');
+            getEl('error-message').style.display = 'none'; // Limpiar errores
 
             if (tab === 'login') {
                 loginForm.classList.remove('hidden');
@@ -540,8 +685,8 @@
             }
         }
 
-        function togglePassword(inputId, btn) {
-            const input = document.getElementById(inputId);
+        window.togglePassword = function (inputId, btn) {
+            const input = getEl(inputId);
             if (input.type === "password") {
                 input.type = "text";
                 btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>';
@@ -551,8 +696,7 @@
             }
         }
 
-        // Real-time Email Validation
-        function validateEmail(input) {
+        window.validateEmail = function (input) {
             const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (input.value.length === 0) {
                 input.classList.remove('valid', 'invalid');
@@ -567,10 +711,9 @@
             }
         }
 
-        // Checking Password Strength
-        function checkStrength(input) {
-            const meter = document.getElementById('strength-meter');
-            const bar = document.getElementById('strength-bar');
+        window.checkStrength = function (input) {
+            const meter = getEl('strength-meter');
+            const bar = getEl('strength-bar');
             const val = input.value;
 
             if (val.length > 0) meter.classList.add('visible');
@@ -588,31 +731,6 @@
             else if (strength <= 50) bar.style.backgroundColor = '#f59e0b'; // Orange
             else if (strength <= 75) bar.style.backgroundColor = '#3b82f6'; // Blue
             else bar.style.backgroundColor = '#10b981'; // Green
-        }
-
-        // Simulate Loading Process
-        function simulateLoading(btnId, callback) {
-            const btn = document.getElementById(btnId);
-            btn.classList.add('loading');
-
-            setTimeout(() => {
-                btn.classList.remove('loading');
-                callback();
-            }, 1500); // 1.5s delay simulation
-        }
-
-        function handleLogin(e) {
-            e.preventDefault();
-            simulateLoading('btn-login', () => {
-                window.location.href = '/';
-            });
-        }
-
-        function handleRegister(e) {
-            e.preventDefault();
-            simulateLoading('btn-register', () => {
-                window.location.href = '/';
-            });
         }
 
         // Check hash on load
