@@ -1948,7 +1948,239 @@
 
     })();
   </script>
-  <!-- === SUCCESS STORIES INJECTOR V2 (ROBUST) === -->
+  <!-- === SUCCESS STORIES INJECTOR V3 (GOLDEN CAROUSEL) === -->
+  <script>
+    (function () {
+      'use strict';
+
+      const successStories = [
+        { name: "Carlos Mendoza", role: "Agencia de Marketing", img: "men/32.jpg", profit: "+$15k/mes", text: "FastPage cambió mi agencia. Creamos landings para clientes en minutos y nuestros márgenes subieron un 200%.", stars: 5 },
+        { name: "Ana Paula Silva", role: "E-commerce Joyería", img: "women/44.jpg", profit: "+250% Ventas", text: "El diseño es precioso y carga volando. Mis ventas de joyería se triplicaron el primer mes.", stars: 5 },
+        { name: "David López", role: "Consultor Legal", img: "men/45.jpg", profit: "Agenda Llena", text: "Mis clientes aman la facilidad para reservar citas. Mi práctica legal nunca ha estado tan ocupada.", stars: 5 },
+        { name: "Elena Rojas", role: "Coach de Vida", img: "women/68.jpg", profit: "$8k Lanzamiento", text: "Lancé mi curso en 2 días. La plantilla de webinar convirtió al 15% de tráfico frío. ¡Increíble!", stars: 5 },
+        { name: "Javier Torres", role: "SaaS Founder", img: "men/22.jpg", profit: "Seed Round", text: "Usamos FastPage para nuestro MVP. Los inversores quedaron impresionados con la calidad profesional.", stars: 4 },
+        { name: "Carmen Soto", role: "Bienes Raíces", img: "women/12.jpg", profit: "2 Ventas/mes", text: "Cada propiedad tiene su landing. He vendido 2 casas extra al mes gracias a la presentación visual.", stars: 5 },
+        { name: "Roberto Fernández", role: "Restaurante Gourmet", img: "men/54.jpg", profit: "Reservas Top", text: "El sistema de reservas integrado funciona perfecto. No más mesas vacías los martes.", stars: 5 },
+        { name: "Isabel Díaz", role: "Clínica Dental", img: "women/33.jpg", profit: "+40 Pacientes", text: "Captamos 40 pacientes nuevos en la primera campaña. El formulario de contacto es muy efectivo.", stars: 5 },
+        { name: "Miguel Ángel", role: "Entrenador Personal", img: "men/76.jpg", profit: "$5k Recurrente", text: "Vendo mis planes de suscripción fácilmente. La integración de pagos fue súper sencilla.", stars: 5 },
+        { name: "Patricia Núñez", role: "Travel Blogger", img: "women/29.jpg", profit: "10k Visitas", text: "El SEO automático es real. Mi blog empezó a rankear en Google en semanas, no meses.", stars: 4 },
+        { name: "Fernando Gómez", role: "Consultor Financiero", img: "men/11.jpg", profit: "Alto Ticket", text: "Transmite la confianza que necesito para cerrar clientes de alto perfil. Diseño sobrio y elegante.", stars: 5 },
+        { name: "Lucía Herrera", role: "Fotógrafa", img: "women/91.jpg", profit: "Portafolio Viral", text: "La galería de fotos se ve espectacular en móviles. Mis clientes me contratan desde Instagram directo.", stars: 5 },
+        { name: "Pablo Jiménez", role: "Músico Independiente", img: "men/85.jpg", profit: "Sold Out", text: "Vendí todas las entradas de mi gira usando una landing de FastPage. ¡A mis fans les encantó!", stars: 5 },
+        { name: "Sara Klein", role: "Traductora", img: "women/54.jpg", profit: "Clientes Globales", text: "Ahora tengo clientes de Europa y USA. La web multilenguaje me abrió las puertas al mundo.", stars: 5 },
+        { name: "Diego Vargas", role: "Startup Tech", img: "men/64.jpg", profit: "Crowdfunding", text: "Recaudamos 120% de nuestra meta en Kickstarter gracias a la landing de pre-lanzamiento.", stars: 5 },
+        { name: "Valentina B.", role: "Marca de Ropa", img: "women/86.jpg", profit: "Brand Awareness", text: "Logré posicionar mi marca personal. La estética de las plantillas es de otro nivel.", stars: 5 },
+        { name: "Hugo Castro", role: "Arquitecto", img: "men/36.jpg", profit: "Licitaciones", text: "Presento mis proyectos en landings privadas. He ganado 3 licitaciones grandes así.", stars: 5 },
+        { name: "Natalia Mora", role: "Nutricionista", img: "women/42.jpg", profit: "Telemedicina", text: "Mis pacientes reservan y pagan online. He automatizado el 80% de mi gestión administrativa.", stars: 5 },
+        { name: "Andrés Pinto", role: "Streamer", img: "men/18.jpg", profit: "Sponsors", text: "Conseguí 2 patrocinadores grandes porque mi media kit web se veía súper profesional.", stars: 5 },
+        { name: "Gabriela Torres", role: "Artesana", img: "women/65.jpg", profit: "Ventas Etsy", text: "Redirijo tráfico de mi web a Etsy. He aumentado mis ventas un 40% este trimestre.", stars: 5 }
+      ];
+
+      function renderStars(count) { return "★".repeat(count) + "☆".repeat(5 - count); }
+
+      function injectTestimonialSection() {
+        if (document.getElementById('success-stories-section')) return;
+
+        // 1. Create HTML
+        const section = document.createElement('section');
+        section.id = 'success-stories-section';
+        section.className = 'success-section';
+
+        let html = `
+          <div class="success-header">
+            <h2 class="section-title">Emprendedores ganando con FastPage 🚀</h2>
+            <p class="section-subtitle">Personas reales. Resultados reales. Únete a los más de 1,000 creadores.</p>
+          </div>
+          <div class="carousel-wrapper">
+             <button class="nav-btn prev-btn" aria-label="Anterior">
+               <svg viewBox="0 0 24 24" fill="none" class="arrow-icon">
+                 <path d="M15 19l-7-7 7-7" stroke="url(#gold1)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                   <defs><linearGradient id="gold1" x1="0" y1="0" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFD700"/><stop offset="100%" stop-color="#CA8A04"/></linearGradient></defs>
+               </svg>
+             </button>
+             <div class="success-grid" id="track">
+        `;
+
+        successStories.forEach((story) => {
+          html += `
+            <div class="success-card">
+              <div class="card-header">
+                <img src="https://randomuser.me/api/portraits/${story.img}" alt="${story.name}" loading="lazy" class="card-avatar">
+                <div class="card-info">
+                  <h4 class="card-name">${story.name}</h4>
+                  <span class="card-role">${story.role}</span>
+                </div>
+                <div class="card-profit">${story.profit}</div>
+              </div>
+              <div class="card-rating">${renderStars(story.stars)}</div>
+              <p class="card-text">"${story.text}"</p>
+            </div>
+          `;
+        });
+
+        html += `   </div>
+             <button class="nav-btn next-btn" aria-label="Siguiente">
+               <svg viewBox="0 0 24 24" fill="none" class="arrow-icon">
+                 <path d="M9 5l7 7-7 7" stroke="url(#gold2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                   <defs><linearGradient id="gold2" x1="0" y1="0" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFD700"/><stop offset="100%" stop-color="#CA8A04"/></linearGradient></defs>
+               </svg>
+             </button>
+          </div>
+        `;
+        section.innerHTML = html;
+
+        // 2. Styles
+        const style = document.createElement('style');
+        style.id = 'success-v3-css';
+        style.textContent = `
+          .success-section {
+            padding: 4rem 1.5rem;
+            background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(124, 58, 237, 0.05) 100%);
+            width: 100%; max-width: 1200px; margin: 0 auto;
+            position: relative; z-index: 10; opacity: 0; animation: fadeInSuccess 0.8s ease forwards;
+          }
+          @keyframes fadeInSuccess { to { opacity: 1; } }
+          .success-header { text-align: center; margin-bottom: 3rem; }
+          .section-title { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #7c3aed 0%, #db2777 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem; }
+          .section-subtitle { color: #6b7280; font-size: 1.1rem; }
+
+          .carousel-wrapper { position: relative; display: flex; align-items: center; justify-content: center; }
+          
+          .nav-btn {
+            background: white; border: 1px solid #FCD34D; width: 48px; height: 48px; border-radius: 50%;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 6px -1px rgba(255, 215, 0, 0.3); z-index: 20; transition: transform 0.2s;
+            position: absolute; top: 50%; transform: translateY(-50%);
+          }
+          .nav-btn:hover { transform: translateY(-50%) scale(1.1); background: #FFFBEB; }
+          .prev-btn { left: -10px; }
+          .next-btn { right: -10px; }
+          .nav-btn svg { width: 24px; height: 24px; }
+          
+          :root.dark .nav-btn { background: #1f2937; border-color: #B45309; }
+
+          .success-grid {
+            display: flex; gap: 1.5rem; overflow-x: auto; scroll-behavior: smooth;
+            padding: 1rem 0.5rem; scrollbar-width: none;
+            width: 100%; scroll-snap-type: x mandatory;
+          }
+          .success-grid::-webkit-scrollbar { display: none; }
+
+          .success-card {
+            background: white; border: 1px solid #e5e7eb; border-radius: 16px; padding: 1.5rem;
+            min-width: 280px; max-width: 280px; scroll-snap-align: center; flex-shrink: 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); transition: transform 0.3s;
+          }
+          .success-card:hover { transform: translateY(-5px); border-color: #FCD34D; }
+          :root.dark .success-card { background: #1f2937; border-color: #374151; }
+          
+          .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 1rem; }
+          .card-avatar { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid #FCD34D; }
+          .card-name { font-weight: 700; color: #111827; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 120px; }
+          :root.dark .card-name { color: white; }
+          .card-role { font-size: 0.75rem; color: #6b7280; display: block; }
+          .card-profit { background: #FFFBEB; color: #B45309; font-weight: 800; font-size: 0.7rem; padding: 4px 8px; border-radius: 12px; margin-left: auto; }
+          :root.dark .card-profit { background: #451a03; color: #fbbf24; }
+          .card-rating { color: #F59E0B; margin-bottom: 0.75rem; font-size: 1.1rem; }
+          .card-text { font-size: 0.9rem; line-height: 1.5; color: #374151; font-style: italic; }
+          :root.dark .card-text { color: #d1d5db; }
+
+          @media (min-width: 1024px) {
+             .success-grid {
+               /* 4 cards visible */
+             }
+             .success-card {
+                /* We want 4 cards. Container is 1200px (max). 
+                   Gap 1.5rem (24px). 3 gaps = 72px.
+                   Available for cards = 100% - 72px.
+                   Card = (100% - 72px) / 4. 
+                   Wait, we need to respect gap in calculation only if flexbasis or width.
+                   Let's use calc.
+                */
+                min-width: calc((100% - 4.5rem) / 4);
+                max-width: calc((100% - 4.5rem) / 4);
+             }
+             .prev-btn { left: -60px; width: 56px; height: 56px; }
+             .next-btn { right: -60px; width: 56px; height: 56px; }
+             
+             /* Hide scrollbar completely to force arrow use or trackpad */
+             .success-grid { overflow-x: hidden; } 
+          }
+        `;
+        document.head.appendChild(style);
+
+        // 3. Logic
+        function initCarousel() {
+          const track = document.getElementById('track');
+          const btnPrev = section.querySelector('.prev-btn');
+          const btnNext = section.querySelector('.next-btn');
+
+          if (btnPrev && btnNext && track) {
+            btnPrev.addEventListener('click', () => {
+              const w = track.clientWidth;
+              track.scrollBy({ left: -w, behavior: 'smooth' });
+            });
+            btnNext.addEventListener('click', () => {
+              const w = track.clientWidth;
+              track.scrollBy({ left: w, behavior: 'smooth' });
+            });
+          }
+        }
+
+        const findTarget = () => {
+          const walkers = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+          let node;
+          while (node = walkers.nextNode()) {
+            const t = node.nodeValue || '';
+            if (t.includes('Diseño Premium') || t.includes('Todo lo que necesitas')) {
+              let p = node.parentElement;
+              for (let i = 0; i < 6; i++) {
+                if (!p) break;
+                if (p.tagName === 'SECTION' || (p.parentElement && p.parentElement.id === 'root')) return p;
+                p = p.parentElement;
+              }
+              return node.parentElement.parentElement.parentElement;
+            }
+          }
+          return null;
+        };
+
+        const tryInsert = () => {
+          const target = findTarget();
+          if (target && target.parentNode) {
+            target.parentNode.insertBefore(section, target.nextSibling);
+            setTimeout(initCarousel, 100);
+            return true;
+          }
+          const root = document.getElementById('root');
+          if (root && root.children.length > 0) {
+            root.appendChild(section);
+            setTimeout(initCarousel, 100);
+            return true;
+          }
+          return false;
+        };
+
+        tryInsert();
+
+        let attempts = 0;
+        const interval = setInterval(() => {
+          if (tryInsert()) clearInterval(interval);
+          attempts++;
+          if (attempts > 10) {
+            clearInterval(interval);
+            if (!document.getElementById('success-stories-section')) document.body.appendChild(section);
+            setTimeout(initCarousel, 100);
+          }
+        }, 800);
+      }
+
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', injectTestimonialSection);
+      else injectTestimonialSection();
+    })();
+  </script>
+  <!-- DISABLE OLD -->
+  <!--
   <script>
     (function () {
       'use strict';
@@ -2437,6 +2669,7 @@
       }
     })();
   </script>
+  -->
 </body>
 
 </html>
