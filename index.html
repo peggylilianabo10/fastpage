@@ -2087,24 +2087,24 @@
 
           @media (min-width: 1024px) {
              .success-grid {
-               /* 4 cards visible */
+               display: flex; /* Flexbox para carrusel */
+               flex-wrap: nowrap; /* Una sola linea */
+               overflow-x: hidden; /* Ocultar barra, usar flechas */
+               gap: 1.5rem;
+               justify-content: flex-start;
              }
              .success-card {
-                /* We want 4 cards. Container is 1200px (max). 
-                   Gap 1.5rem (24px). 3 gaps = 72px.
-                   Available for cards = 100% - 72px.
-                   Card = (100% - 72px) / 4. 
-                   Wait, we need to respect gap in calculation only if flexbasis or width.
-                   Let's use calc.
-                */
+                /* Calculo exacto para 4 items: (100% - 3 gaps de 1.5rem) / 4 */
+                /* 1.5rem * 3 = 4.5rem */
+                flex: 0 0 calc((100% - 4.5rem) / 4);
                 min-width: calc((100% - 4.5rem) / 4);
                 max-width: calc((100% - 4.5rem) / 4);
              }
-             .prev-btn { left: -60px; width: 56px; height: 56px; }
-             .next-btn { right: -60px; width: 56px; height: 56px; }
+             .prev-btn { left: -70px; width: 64px; height: 64px; }
+             .next-btn { right: -70px; width: 64px; height: 64px; }
              
-             /* Hide scrollbar completely to force arrow use or trackpad */
-             .success-grid { overflow-x: hidden; } 
+             /* Aumentar tamaño flechas en desktop */
+             .nav-btn svg { width: 32px; height: 32px; }
           }
         `;
         document.head.appendChild(style);
