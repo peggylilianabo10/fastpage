@@ -1054,6 +1054,114 @@
     }
   </style>
 
+  <!-- ===== PROFESSIONAL CHAT WIDGET HTML ===== -->
+  <div id="chat-widget-container">
+    <!-- Chat Bubble -->
+    <button id="chat-bubble" class="chat-bubble">
+      <div class="unread-badge">1</div>
+      <div class="online-indicator"></div>
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+      </svg>
+    </button>
+
+    <!-- Chat Window -->
+    <div id="chat-window" class="chat-window">
+      <!-- Header -->
+      <div class="chat-header">
+        <div class="chat-header-info">
+          <div class="agent-avatar">👨‍💼</div>
+          <div class="chat-header-text">
+            <h3 id="chat-title">Soporte FastPage 💬</h3>
+            <div class="chat-status">
+              <span class="status-dot"></span>
+              <span id="chat-status-text">En línea • Responde en ~1 min</span>
+            </div>
+          </div>
+        </div>
+        <button class="chat-close">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Messages Area -->
+      <div class="chat-messages" id="chat-messages">
+        <!-- Welcome Message -->
+        <div class="message">
+          <div class="message-avatar">💬</div>
+          <div class="message-content">
+            <div class="message-bubble">
+              <p id="chat-welcome">👋 ¡Hola! Soy el equipo de FastPage.</p>
+              <p id="chat-question">¿En qué podemos ayudarte hoy?</p>
+              <span class="message-time" id="chat-time">Ahora</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonials Carousel -->
+        <div class="testimonials-section">
+          <div class="testimonials-carousel">
+            <div class="testimonial active">
+              <p class="testimonial-text" data-es="Increíble herramienta. Creé mi landing en minutos."
+                data-en="Amazing tool. Built my landing in minutes.">"Increíble herramienta. Creé mi landing en
+                minutos."
+              </p>
+              <p class="testimonial-author" data-es="- Juan P., Emprendedor" data-en="- Juan P., Entrepreneur">- Juan
+                P., Emprendedor</p>
+            </div>
+            <div class="testimonial">
+              <p class="testimonial-text" data-es="El soporte es excelente y muy rápido."
+                data-en="Support is excellent and very fast.">"El soporte es excelente y muy rápido."</p>
+              <p class="testimonial-author" data-es="- Maria G., Diseñadora" data-en="- Maria G., Designer">- Maria G.,
+                Diseñadora</p>
+            </div>
+            <div class="testimonial">
+              <p class="testimonial-text" data-es="Mis conversiones aumentaron un 200%."
+                data-en="My conversions increased by 200%.">"Mis conversiones aumentaron un 200%."</p>
+              <p class="testimonial-author" data-es="- Carlos R., Marketing" data-en="- Carlos R., Marketing">- Carlos
+                R., Marketing</p>
+            </div>
+          </div>
+          <div class="carousel-dots">
+            <span class="dot active"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Options -->
+      <div class="quick-options" style="padding: 0 16px 16px 16px;">
+        <button class="quick-option" id="quick-demo" data-action="demo">💡 Ver Demo</button>
+        <button class="quick-option" id="quick-pricing" data-action="pricing">💰 Precios</button>
+        <button class="quick-option" id="quick-start" data-action="start">🚀 Empezar</button>
+        <button class="quick-option" id="quick-talk" data-action="talk">💬 Hablar con alguien</button>
+      </div>
+
+      <!-- Input Area -->
+      <div class="chat-input-area">
+        <input type="text" id="chat-input" class="chat-input" placeholder="Escribe tu mensaje... 💬">
+        <button class="chat-send">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Footer -->
+      <div class="chat-footer">
+        <p id="chat-footer-text">🔒 Soporte 24/7 • Respuesta garantizada</p>
+      </div>
+    </div>
+  </div>
+
   <script type="module" crossorigin src="./assets/index-BIkGezMg.js"></script>
 
   <script>
