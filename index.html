@@ -135,124 +135,465 @@
   </button>
 
   <!-- Contact Form Modal -->
-  <!-- Professional Chat Widget - Window -->
-  <div id="chat-window" class="chat-window">
-    <!-- Header -->
-    <div class="chat-header">
-      <div class="chat-header-info">
-        <div class="agent-avatar">👨‍💼</div>
-        <div class="chat-header-text">
-          <h3 id="chat-title">Soporte FastPage 💬</h3>
-          <p class="chat-status">
-            <span class="status-dot"></span>
-            <span id="chat-status-text">En línea • Responde en ~1 min</span>
-          </p>
-        </div>
+
+  <!-- === NEW RESPONSIVE CHAT WIDGET === -->
+  <div id="new-chat-widget">
+    <!-- Chat Button -->
+    <button id="chat-toggle-btn" class="chat-toggle-btn" onclick="toggleChat()">
+      <div class="chat-icon-open">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
       </div>
-      <button class="chat-close" aria-label="Cerrar chat">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <div class="chat-icon-close" style="display: none;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
-      </button>
-    </div>
-
-    <!-- Messages Area -->
-    <div class="chat-messages">
-      <!-- Welcome Message -->
-      <div class="message agent-message">
-        <div class="message-avatar">👨‍💼</div>
-        <div class="message-content">
-          <div class="message-bubble">
-            <p id="chat-welcome">👋 ¡Hola! Soy el equipo de FastPage.</p>
-            <p id="chat-question">¿En qué podemos ayudarte hoy?</p>
-          </div>
-          <span class="message-time" id="chat-time">Ahora</span>
-        </div>
       </div>
+      <span class="chat-notification">1</span>
+    </button>
 
-      <!-- Quick Options -->
-      <div class="quick-options">
-        <button class="quick-option" data-action="demo">
-          <span id="quick-demo">💡 Ver Demo</span>
-        </button>
-        <button class="quick-option" data-action="pricing">
-          <span id="quick-pricing">💰 Precios</span>
-        </button>
-        <button class="quick-option" data-action="start">
-          <span id="quick-start">🚀 Empezar</span>
-        </button>
-        <button class="quick-option" data-action="talk">
-          <span id="quick-talk">💬 Hablar con alguien</span>
+    <!-- Chat Container -->
+    <div id="chat-container" class="chat-container">
+      <div class="chat-header-new">
+        <div class="header-profile">
+          <div class="avatar-new">👨‍💼</div>
+          <div class="header-info">
+            <h3 class="header-title">Soporte FastPage</h3>
+            <span class="header-status">
+              <span class="status-dot-new"></span> En línea
+            </span>
+          </div>
+        </div>
+        <button class="close-btn-mobile" onclick="toggleChat()">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
         </button>
       </div>
 
-      <!-- Testimonials Carousel -->
-      <div class="testimonials-section">
-        <div class="testimonials-carousel">
-          <div class="testimonial active" data-index="0">
-            <p class="testimonial-text"
-              data-es='"FastPage me ayudó a lanzar mi landing en 10 minutos. ¡Increíble!" ⭐⭐⭐⭐⭐'
-              data-en='"FastPage helped me launch my landing page in 10 minutes. Amazing!" ⭐⭐⭐⭐⭐'>
-              "FastPage me ayudó a lanzar mi landing en 10 minutos. ¡Increíble!" ⭐⭐⭐⭐⭐
-            </p>
-            <p class="testimonial-author" data-es="— María G., Emprendedora" data-en="— Maria G., Entrepreneur">
-              — María G., Emprendedora
-            </p>
-          </div>
-          <div class="testimonial" data-index="1">
-            <p class="testimonial-text" data-es='"El soporte es increíble. Respondieron en menos de 2 minutos." ⭐⭐⭐⭐⭐'
-              data-en='"The support is amazing. They responded in less than 2 minutes." ⭐⭐⭐⭐⭐'>
-              "El soporte es increíble. Respondieron en menos de 2 minutos." ⭐⭐⭐⭐⭐
-            </p>
-            <p class="testimonial-author" data-es="— Carlos R., Diseñador" data-en="— Carlos R., Designer">
-              — Carlos R., Diseñador
-            </p>
-          </div>
-          <div class="testimonial" data-index="2">
-            <p class="testimonial-text" data-es='"Perfecto para startups. Sin código, sin complicaciones." ⭐⭐⭐⭐⭐'
-              data-en='"Perfect for startups. No code, no complications." ⭐⭐⭐⭐⭐'>
-              "Perfecto para startups. Sin código, sin complicaciones." ⭐⭐⭐⭐⭐
-            </p>
-            <p class="testimonial-author" data-es="— Ana L., CEO" data-en="— Ana L., CEO">
-              — Ana L., CEO
-            </p>
+      <div class="chat-body-new">
+        <div class="message-row agent">
+          <div class="msg-avatar">👨‍💼</div>
+          <div class="msg-content">
+            <p>👋 ¡Hola! Soy el asistente virtual de FastPage.</p>
+            <p>¿En qué puedo ayudarte hoy?</p>
+            <span class="msg-time">Ahora</span>
           </div>
         </div>
-        <div class="carousel-dots">
-          <span class="dot active" data-index="0"></span>
-          <span class="dot" data-index="1"></span>
-          <span class="dot" data-index="2"></span>
+
+        <div class="quick-replies">
+          <button onclick="sendQuickReply(this)" data-reply="Ver Demo">💡 Ver Demo</button>
+          <button onclick="sendQuickReply(this)" data-reply="Precios">💰 Precios</button>
+          <button onclick="sendQuickReply(this)" data-reply="Empezar">🚀 Empezar</button>
+          <button onclick="sendQuickReply(this)" data-reply="Soporte">💬 Hablar con agente</button>
         </div>
+
+        <!-- Aquí se agregarán los nuevos mensajes -->
+        <div id="chat-log"></div>
       </div>
-    </div>
 
-    <!-- Input Area -->
-    <div class="chat-input-area">
-      <input type="text" id="chat-input" placeholder="Escribe tu mensaje... 💬" class="chat-input"
-        aria-label="Mensaje de chat" />
-      <button class="chat-send" aria-label="Enviar mensaje">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="22" y1="2" x2="11" y2="13"></line>
-          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-        </svg>
-      </button>
-    </div>
-
-    <!-- Footer -->
-    <div class="chat-footer">
-      <p id="chat-footer-text">🔒 Soporte 24/7 • Respuesta garantizada</p>
+      <div class="chat-footer-new">
+        <input type="text" id="chat-input-new" placeholder="Escribe un mensaje..." onkeypress="handleEnter(event)">
+        <button class="send-btn-new" onclick="sendUserMessage()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </div>
     </div>
   </div>
 
-  <!-- Professional Chat Widget - Bubble -->
-  <button id="chat-bubble" class="chat-bubble" aria-label="Abrir chat de soporte">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-    </svg>
-    <span class="online-indicator"></span>
-    <span class="unread-badge">1</span>
-  </button>
+  <style>
+    /* === NEW CHAT CSS === */
+    .chat-toggle-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      background: #7c3aed;
+      border-radius: 50%;
+      color: white;
+      border: none;
+      box-shadow: 0 4px 14px rgba(124, 58, 237, 0.4);
+      cursor: pointer;
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .chat-toggle-btn:active {
+      transform: scale(0.95);
+    }
+
+    .chat-notification {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: #ef4444;
+      color: white;
+      font-size: 12px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      border: 2px solid #fff;
+    }
+
+    .chat-container {
+      position: fixed;
+      bottom: 90px;
+      right: 20px;
+      width: 360px;
+      height: 500px;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 5px 30px rgba(0, 0, 0, 0.15);
+      z-index: 99998;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(20px);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .chat-container.open {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateY(0);
+    }
+
+    /* Dark Mode Support from existing app */
+    :root.dark .chat-container {
+      background: #1e1e1e;
+      border-color: #333;
+    }
+
+    .chat-header-new {
+      background: #7c3aed;
+      color: white;
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar-new {
+      background: rgba(255, 255, 255, 0.2);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .header-info h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .header-status {
+      font-size: 12px;
+      opacity: 0.9;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .status-dot-new {
+      width: 8px;
+      height: 8px;
+      background: #4ade80;
+      border-radius: 50%;
+    }
+
+    .close-btn-mobile {
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      display: none;
+      /* Only show on mobile */
+    }
+
+    .chat-body-new {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+      background: #f9fafb;
+    }
+
+    :root.dark .chat-body-new {
+      background: #121212;
+    }
+
+    .message-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .message-row.user {
+      flex-direction: row-reverse;
+    }
+
+    .msg-avatar {
+      width: 32px;
+      height: 32px;
+      background: #eee;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .msg-content {
+      max-width: 80%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .msg-content p {
+      background: white;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border-top-left-radius: 2px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      margin: 0 0 4px 0;
+      font-size: 14px;
+      color: #374151;
+    }
+
+    :root.dark .msg-content p {
+      background: #2d2d2d;
+      color: #e5e7eb;
+    }
+
+    .message-row.user .msg-content p {
+      background: #7c3aed;
+      color: white;
+      border-radius: 12px;
+      border-top-right-radius: 2px;
+    }
+
+    .quick-replies {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .quick-replies button {
+      background: white;
+      border: 1px solid #e5e7eb;
+      padding: 8px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      color: #4b5563;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .quick-replies button:hover {
+      background: #f3f4f6;
+      border-color: #d1d5db;
+    }
+
+    :root.dark .quick-replies button {
+      background: #2d2d2d;
+      border-color: #404040;
+      color: #d1d5db;
+    }
+
+    .chat-footer-new {
+      padding: 12px;
+      background: white;
+      border-top: 1px solid #f3f4f6;
+      display: flex;
+      gap: 10px;
+    }
+
+    :root.dark .chat-footer-new {
+      background: #1e1e1e;
+      border-color: #333;
+    }
+
+    #chat-input-new {
+      flex: 1;
+      border: 1px solid #e5e7eb;
+      border-radius: 24px;
+      padding: 10px 16px;
+      font-size: 14px;
+      outline: none;
+      background: white;
+      color: #1f2937;
+    }
+
+    :root.dark #chat-input-new {
+      background: #2d2d2d;
+      border-color: #404040;
+      color: white;
+    }
+
+    .send-btn-new {
+      background: #7c3aed;
+      color: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* === MOBILE OPTIMIZATION === */
+    @media (max-width: 768px) {
+      .chat-container {
+        width: 100%;
+        height: 100%;
+        /* Full screen on mobile or very tall */
+        max-height: 85vh;
+        /* Leave some space at top */
+        bottom: 0;
+        right: 0;
+        left: 0;
+        border-radius: 20px 20px 0 0;
+        box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .close-btn-mobile {
+        display: block;
+      }
+
+      .chat-toggle-btn {
+        bottom: 20px;
+        right: 20px;
+      }
+    }
+  </style>
+
+  <script>
+    // === CHAT JS LOGIC ===
+    function toggleChat() {
+      const container = document.getElementById('chat-container');
+      const openIcon = document.querySelector('.chat-icon-open');
+      const closeIcon = document.querySelector('.chat-icon-close');
+      const notification = document.querySelector('.chat-notification');
+
+      container.classList.toggle('open');
+
+      if (container.classList.contains('open')) {
+        openIcon.style.display = 'none';
+        closeIcon.style.display = 'block';
+        if (notification) notification.style.display = 'none';
+      } else {
+        openIcon.style.display = 'block';
+        closeIcon.style.display = 'none';
+      }
+    }
+
+    function sendQuickReply(btn) {
+      const text = btn.getAttribute('data-reply') || btn.innerText;
+      addMessage(text, 'user');
+      simulateBotResponse(text);
+    }
+
+    function sendUserMessage() {
+      const input = document.getElementById('chat-input-new');
+      const text = input.value.trim();
+      if (!text) return;
+
+      addMessage(text, 'user');
+      input.value = '';
+      simulateBotResponse(text);
+    }
+
+    function handleEnter(e) {
+      if (e.key === 'Enter') sendUserMessage();
+    }
+
+    function addMessage(text, sender) {
+      const log = document.getElementById('chat-log');
+      const row = document.createElement('div');
+      row.className = `message-row ${sender}`;
+
+      const avatar = sender === 'agent' ? '👨‍💼' : '👤';
+
+      row.innerHTML = `
+        <div class="msg-avatar">${avatar}</div>
+        <div class="msg-content">
+          <p>${text}</p>
+          <span class="msg-time">Ahora</span>
+        </div>
+      `;
+
+      log.appendChild(row);
+
+      // Auto scroll
+      const body = document.querySelector('.chat-body-new');
+      body.scrollTop = body.scrollHeight;
+    }
+
+    function simulateBotResponse(userText) {
+      const log = document.getElementById('chat-log');
+
+      // Typing indicator could go here
+
+      setTimeout(() => {
+        let reply = "Gracias por tu mensaje. Un agente te atenderá en breve.";
+
+        if (userText.toLowerCase().includes('demo')) {
+          reply = "¡Claro! Puedes ver nuestra demo aquí: https://fastpage-coral.vercel.app. ¿Te gustaría que te guíe?";
+        } else if (userText.toLowerCase().includes('precio')) {
+          reply = "Nuestros planes empiezan desde GRATIS. El plan PRO cuesta $9/mes. ¿Cuál te interesa?";
+        } else if (userText.toLowerCase().includes('hola')) {
+          reply = "¡Hola! ¿En qué puedo ayudarte hoy?";
+        }
+
+        addMessage(reply, 'agent');
+      }, 1000);
+    }
+  </script>
+  <!-- Professional Chat Widget - Window -->
+
 
   <style>
     /* ===== LOADING SKELETON ===== */
@@ -1072,112 +1413,7 @@
   </style>
 
   <!-- ===== PROFESSIONAL CHAT WIDGET HTML ===== -->
-  <div id="chat-widget-container">
-    <!-- Chat Bubble -->
-    <button id="chat-bubble" class="chat-bubble">
-      <div class="unread-badge">1</div>
-      <div class="online-indicator"></div>
-      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
-        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-      </svg>
-    </button>
 
-    <!-- Chat Window -->
-    <div id="chat-window" class="chat-window">
-      <!-- Header -->
-      <div class="chat-header">
-        <div class="chat-header-info">
-          <div class="agent-avatar">👨‍💼</div>
-          <div class="chat-header-text">
-            <h3 id="chat-title">Soporte FastPage 💬</h3>
-            <div class="chat-status">
-              <span class="status-dot"></span>
-              <span id="chat-status-text">En línea • Responde en ~1 min</span>
-            </div>
-          </div>
-        </div>
-        <button class="chat-close">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-      </div>
-
-      <!-- Messages Area -->
-      <div class="chat-messages" id="chat-messages">
-        <!-- Welcome Message -->
-        <div class="message">
-          <div class="message-avatar">💬</div>
-          <div class="message-content">
-            <div class="message-bubble">
-              <p id="chat-welcome">👋 ¡Hola! Soy el equipo de FastPage.</p>
-              <p id="chat-question">¿En qué podemos ayudarte hoy?</p>
-              <span class="message-time" id="chat-time">Ahora</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Testimonials Carousel -->
-        <div class="testimonials-section">
-          <div class="testimonials-carousel">
-            <div class="testimonial active">
-              <p class="testimonial-text" data-es="Increíble herramienta. Creé mi landing en minutos."
-                data-en="Amazing tool. Built my landing in minutes.">"Increíble herramienta. Creé mi landing en
-                minutos."
-              </p>
-              <p class="testimonial-author" data-es="- Juan P., Emprendedor" data-en="- Juan P., Entrepreneur">- Juan
-                P., Emprendedor</p>
-            </div>
-            <div class="testimonial">
-              <p class="testimonial-text" data-es="El soporte es excelente y muy rápido."
-                data-en="Support is excellent and very fast.">"El soporte es excelente y muy rápido."</p>
-              <p class="testimonial-author" data-es="- Maria G., Diseñadora" data-en="- Maria G., Designer">- Maria G.,
-                Diseñadora</p>
-            </div>
-            <div class="testimonial">
-              <p class="testimonial-text" data-es="Mis conversiones aumentaron un 200%."
-                data-en="My conversions increased by 200%.">"Mis conversiones aumentaron un 200%."</p>
-              <p class="testimonial-author" data-es="- Carlos R., Marketing" data-en="- Carlos R., Marketing">- Carlos
-                R., Marketing</p>
-            </div>
-          </div>
-          <div class="carousel-dots">
-            <span class="dot active"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Quick Options -->
-      <div class="quick-options" style="padding: 0 16px 16px 16px;">
-        <button class="quick-option" id="quick-demo" data-action="demo">💡 Ver Demo</button>
-        <button class="quick-option" id="quick-pricing" data-action="pricing">💰 Precios</button>
-        <button class="quick-option" id="quick-start" data-action="start">🚀 Empezar</button>
-        <button class="quick-option" id="quick-talk" data-action="talk">💬 Hablar con alguien</button>
-      </div>
-
-      <!-- Input Area -->
-      <div class="chat-input-area">
-        <input type="text" id="chat-input" class="chat-input" placeholder="Escribe tu mensaje... 💬">
-        <button class="chat-send">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="22" y1="2" x2="11" y2="13"></line>
-            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-          </svg>
-        </button>
-      </div>
-
-      <!-- Footer -->
-      <div class="chat-footer">
-        <p id="chat-footer-text">🔒 Soporte 24/7 • Respuesta garantizada</p>
-      </div>
-    </div>
-  </div>
 
   <script type="module" crossorigin src="./assets/index-BIkGezMg.js"></script>
 
@@ -1669,247 +1905,10 @@
         });
       }
 
-      // ===== PROFESSIONAL CHAT WIDGET =====
-      const chatBubble = document.getElementById('chat-bubble');
-      const chatWindow = document.getElementById('chat-window');
-      const chatClose = document.querySelector('.chat-close');
-      const chatInput = document.getElementById('chat-input');
-      const chatSend = document.querySelector('.chat-send');
-      const quickOptions = document.querySelectorAll('.quick-option');
-
-
-      // Toggle chat window
-      function toggleChat() {
-        if (!chatWindow) return;
-        const isActive = chatWindow.classList.toggle('active');
-
-        if (isActive) {
-          // Hide unread badge when opening
-          const unreadBadge = document.querySelector('.unread-badge');
-          if (unreadBadge) {
-            unreadBadge.style.display = 'none';
-          }
-
-          // Track chat open
-          if (typeof gtag !== 'undefined') {
-            gtag('event', 'chat_open', {
-              'event_category': 'engagement'
-            });
-          }
-        }
-      }
-
-      function closeChat() {
-        if (chatWindow) {
-          chatWindow.classList.remove('active');
-        }
-      }
-
-      if (chatBubble) {
-        chatBubble.addEventListener('click', toggleChat);
-      }
-
-      if (chatClose) {
-        chatClose.addEventListener('click', closeChat);
-      }
-
-      // Handle quick options with automatic bot responses
-      const botResponses = {
-        es: {
-          demo: {
-            title: 'Ver Demo',
-            response: 'Excelente eleccion! Puedes ver nuestra demo interactiva aqui: https://fastpage-coral.vercel.app\n\nEn la demo puedes:\n- Crear una landing page en minutos\n- Personalizar colores y estilos\n- Agregar formularios y botones\n- Publicar al instante\n\nTe gustaria que te guie paso a paso?'
-          },
-          pricing: {
-            title: 'Precios',
-            response: 'Nuestros planes:\n\nGRATIS - Por siempre\n- 1 landing page\n- Subdominio fastpage.app\n- Plantillas basicas\n\nPRO - $9/mes\n- Landing pages ilimitadas\n- Dominio personalizado\n- Analytics avanzados\n- Soporte prioritario\n\nBUSINESS - $29/mes\n- Todo de PRO\n- Multiples usuarios\n- Integraciones API\n- Soporte 24/7 dedicado\n\nCual plan te interesa?'
-          },
-          start: {
-            title: 'Empezar',
-            response: 'Empecemos!\n\n3 pasos simples:\n\n1. Crea tu cuenta gratis - Haz clic en Registrarse\n2. Elige una plantilla - Tenemos +50 disenos profesionales\n3. Personaliza y publica - En menos de 5 minutos tendras tu web lista\n\nNecesitas ayuda con algun paso?'
-          },
-          talk: {
-            title: 'Hablar con alguien',
-            response: 'Claro que si!\n\nCanales de contacto:\n- Email: soporte@fastpage.app\n- WhatsApp: +1 (555) 123-4567\n- Twitter: @FastPageApp\n\nHorarios de atencion:\n- Lunes a Viernes: 9am - 6pm\n- Sabados: 10am - 2pm\n\nPrefieres que te llamemos nosotros? Dejanos tu numero y te contactamos en menos de 5 minutos.'
-          }
-        },
-        en: {
-          demo: {
-            title: 'View Demo',
-            response: 'Great choice! You can see our interactive demo here: https://fastpage-coral.vercel.app\n\nIn the demo you can:\n- Create a landing page in minutes\n- Customize colors and styles\n- Add forms and buttons\n- Publish instantly\n\nWould you like me to guide you step by step?'
-          },
-          pricing: {
-            title: 'Pricing',
-            response: 'Our plans:\n\nFREE - Forever\n- 1 landing page\n- fastpage.app subdomain\n- Basic templates\n\nPRO - $9/month\n- Unlimited landing pages\n- Custom domain\n- Advanced analytics\n- Priority support\n\nBUSINESS - $29/month\n- Everything in PRO\n- Multiple users\n- API integrations\n- Dedicated 24/7 support\n\nWhich plan interests you?'
-          },
-          start: {
-            title: 'Get Started',
-            response: 'Lets get started!\n\n3 simple steps:\n\n1. Create your free account - Click on Sign Up\n2. Choose a template - We have +50 professional designs\n3. Customize and publish - In less than 5 minutes your website will be ready\n\nDo you need help with any step?'
-          },
-          talk: {
-            title: 'Talk to someone',
-            response: 'Of course!\n\nContact channels:\n- Email: support@fastpage.app\n- WhatsApp: +1 (555) 123-4567\n- Twitter: @FastPageApp\n\nBusiness hours:\n- Monday to Friday: 9am - 6pm\n- Saturdays: 10am - 2pm\n\nWould you prefer us to call you? Leave your number and we will contact you in less than 5 minutes.'
-          }
-        }
-      };
-
-      // Function to add bot message
-      function addBotMessage(text) {
-        const chatMessages = document.querySelector('.chat-messages');
-        if (!chatMessages) return;
-
-        const replyEl = document.createElement('div');
-        replyEl.className = 'message agent-message';
-        replyEl.innerHTML = `
-          <div class="message-avatar">👨‍💼</div>
-          <div class="message-content">
-            <div class="message-bubble">
-              <p style="white-space: pre-line;">${text}</p>
-              <span class="message-time">${currentLang === 'en' ? 'Now' : 'Ahora'}</span>
-            </div>
-          </div>
-        `;
-        chatMessages.appendChild(replyEl);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-      }
-
-      // Function to add user message
-      function addUserMessage(text) {
-        const chatMessages = document.querySelector('.chat-messages');
-        if (!chatMessages) return;
-
-        const messageEl = document.createElement('div');
-        messageEl.className = 'message user-message';
-        messageEl.innerHTML = `
-          <div class="message-content" style="margin-left: auto;">
-            <div class="message-bubble" style="background: var(--primary); color: white;">
-              <p>${text}</p>
-              <span class="message-time" style="color: rgba(255,255,255,0.7);">${currentLang === 'en' ? 'Now' : 'Ahora'}</span>
-            </div>
-          </div>
-        `;
-        chatMessages.appendChild(messageEl);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-      }
-
-
-      if (quickOptions) {
-        quickOptions.forEach(option => {
-          option.addEventListener('click', () => {
-            const action = option.getAttribute('data-action');
-            const responses = botResponses[currentLang];
-
-            if (responses && responses[action]) {
-              // Add user's selection as a message
-              addUserMessage(responses[action].title);
-
-              // Show typing indicator
-              const chatMessages = document.querySelector('.chat-messages');
-              const typingEl = document.createElement('div');
-              typingEl.className = 'message agent-message typing-indicator';
-              typingEl.innerHTML = `
-                <div class="message-avatar">👨‍💼</div>
-                <div class="message-content">
-                  <div class="message-bubble">
-                    <p>✍️ ${currentLang === 'en' ? 'Typing...' : 'Escribiendo...'}</p>
-                  </div>
-                </div>
-              `;
-              if (chatMessages) {
-                chatMessages.appendChild(typingEl);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-              }
-
-              // Simulate bot response after delay
-              setTimeout(() => {
-                // Remove typing indicator
-                const typing = document.querySelector('.typing-indicator');
-                if (typing) typing.remove();
-
-                // Add bot response
-                addBotMessage(responses[action].response);
-              }, 1500);
-            }
-
-            // Track quick option click
-            if (typeof gtag !== 'undefined') {
-              gtag('event', 'quick_option_click', {
-                'event_category': 'engagement',
-                'event_label': action
-              });
-            }
-          });
-        });
-      }
-
-      // Handle send message
-      function sendMessage() {
-        if (!chatInput) return;
-        const message = chatInput.value.trim();
-        if (message) {
-          console.log('Message sent:', message);
-
-          // Track message send
-          if (typeof gtag !== 'undefined') {
-            gtag('event', 'chat_message_send', {
-              'event_category': 'engagement'
-            });
-          }
-
-          // Visual feedback - Add user message
-          const chatMessages = document.querySelector('.chat-messages');
-          if (chatMessages) {
-            const messageEl = document.createElement('div');
-            messageEl.className = 'message';
-            messageEl.style.justifyContent = 'flex-end';
-            messageEl.innerHTML = `
-              <div class="message-content">
-                <div class="message-bubble" style="background: var(--primary); color: white;">
-                  <p>${message}</p>
-                  <span class="message-time" style="color: rgba(255,255,255,0.7); text-align: right;">Now</span>
-                </div>
-              </div>
-            `;
-            chatMessages.appendChild(messageEl);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-
-            // Simulate bot reply
-            setTimeout(() => {
-              const replyEl = document.createElement('div');
-              replyEl.className = 'message';
-              const replyText = currentLang === 'en'
-                ? 'Thanks for reaching out! A team member will be with you shortly.'
-                : '¡Gracias por contactarnos! Un miembro del equipo te atenderá pronto.';
-
-              replyEl.innerHTML = `
-                <div class="message-avatar">💬</div>
-                <div class="message-content">
-                  <div class="message-bubble">
-                    <p>${replyText}</p>
-                    <span class="message-time">Now</span>
-                  </div>
-                </div>
-              `;
-              chatMessages.appendChild(replyEl);
-              chatMessages.scrollTop = chatMessages.scrollHeight;
-            }, 1000);
-          }
-
-          chatInput.value = '';
-        }
-      }
-
-      if (chatSend) {
-        chatSend.addEventListener('click', sendMessage);
-      }
-
-      if (chatInput) {
-        chatInput.addEventListener('keypress', (e) => {
-          if (e.key === 'Enter') {
-            sendMessage();
-          }
-        });
-      }
+      /* 
+      // ===== PROFESSIONAL CHAT WIDGET (DEPRECATED - REMOVED) =====
+      // Code removed to prevent conflicts with new responsive chat widget
+      */
 
       // Testimonials Carousel
       let currentTestimonial = 0;
