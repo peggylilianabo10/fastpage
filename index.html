@@ -1,27 +1,107 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- TODO: Set the document title to the name of your application -->
-    <title>Lovable App</title>
-    <meta name="description" content="Lovable Generated Project" />
-    <meta name="author" content="Lovable" />
 
-    <!-- TODO: Update og:title to match your application name -->
-    <meta property="og:title" content="Lovable App" />
-    <meta property="og:description" content="Lovable Generated Project" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/9f9d19f4-c0a7-4029-a948-08aaeda4305f/id-preview-ab7ae2ec--ae0330eb-3006-4257-af87-4465de4f888e.lovable.app-1770395148305.png" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- TODO: Set the document title to the name of your application -->
+  <title>Lovable App</title>
+  <meta name="description" content="Lovable Generated Project" />
+  <meta name="author" content="Lovable" />
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@Lovable" />
-    <meta name="twitter:image" content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/9f9d19f4-c0a7-4029-a948-08aaeda4305f/id-preview-ab7ae2ec--ae0330eb-3006-4257-af87-4465de4f888e.lovable.app-1770395148305.png" />
-    <script type="module" crossorigin src="./assets/index-BIkGezMg.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-upvKpgH8.css">
-  <script defer src="https://fastpage.lovable.app/~flock.js" data-proxy-url="https://fastpage.lovable.app/~api/analytics"></script></head>
+  <!-- TODO: Update og:title to match your application name -->
+  <meta property="og:title" content="Lovable App" />
+  <meta property="og:description" content="Lovable Generated Project" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image"
+    content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/9f9d19f4-c0a7-4029-a948-08aaeda4305f/id-preview-ab7ae2ec--ae0330eb-3006-4257-af87-4465de4f888e.lovable.app-1770395148305.png" />
 
-  <body>
-    <div id="root"></div>
-  </body>
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@Lovable" />
+  <meta name="twitter:image"
+    content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/9f9d19f4-c0a7-4029-a948-08aaeda4305f/id-preview-ab7ae2ec--ae0330eb-3006-4257-af87-4465de4f888e.lovable.app-1770395148305.png" />
+  <script type="module" crossorigin src="./assets/index-BIkGezMg.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-upvKpgH8.css">
+  <script defer src="https://fastpage.lovable.app/~flock.js"
+    data-proxy-url="https://fastpage.lovable.app/~api/analytics"></script>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <!-- Theme Toggle Implementation -->
+  <button id="theme-toggle" aria-label="Toggle Dark Mode">
+    <span id="theme-icon">🌙</span>
+    <span id="theme-text">Modo Oscuro</span>
+  </button>
+
+  <style>
+    #theme-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 50px;
+      border: 1px solid var(--border);
+      background-color: var(--card);
+      color: var(--foreground);
+      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 500;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    #theme-toggle:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    }
+
+    /* Dark mode overrides for the button itself if needed, 
+           but it uses css variables so it should adapt automatically */
+  </style>
+
+  <script>
+    (function () {
+      const toggle = document.getElementById('theme-toggle');
+      const icon = document.getElementById('theme-icon');
+      const text = document.getElementById('theme-text');
+      const html = document.documentElement;
+
+      // Function to update UI
+      function updateUI(isDark) {
+        if (isDark) {
+          icon.textContent = '☀️';
+          text.textContent = 'Modo Claro';
+          html.classList.add('dark');
+        } else {
+          icon.textContent = '🌙';
+          text.textContent = 'Modo Oscuro';
+          html.classList.remove('dark');
+        }
+      }
+
+      // Check saved preference or system preference
+      const savedTheme = localStorage.getItem('theme');
+      const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      let isDark = savedTheme === 'dark' || (!savedTheme && systemDark);
+
+      // Initial Apply
+      updateUI(isDark);
+
+      // Click Handler
+      toggle.addEventListener('click', () => {
+        isDark = !isDark;
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        updateUI(isDark);
+      });
+    })();
+  </script>
+</body>
+
 </html>
