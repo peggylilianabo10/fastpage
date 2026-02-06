@@ -94,7 +94,7 @@
   <!-- Main App -->
   <div id="root"></div>
 
-  <!-- Language Selector -->
+  <!-- Language Selector (Bottom-Left) -->
   <div id="lang-selector" class="lang-selector" aria-label="Selector de idioma">
     <button id="lang-toggle" aria-label="Cambiar idioma">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -231,11 +231,11 @@
       }
     }
 
-    /* ===== LANGUAGE SELECTOR ===== */
+    /* ===== LANGUAGE SELECTOR (BOTTOM-LEFT) ===== */
     .lang-selector {
       position: fixed;
-      top: 20px;
-      right: 20px;
+      bottom: 20px;
+      left: 20px;
       z-index: 9998;
     }
 
@@ -243,22 +243,22 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      padding: 8px 12px;
-      border-radius: 8px;
+      padding: 10px 14px;
+      border-radius: 50px;
       border: 1px solid var(--border);
       background-color: var(--card);
       color: var(--foreground);
       cursor: pointer;
       font-family: inherit;
-      font-weight: 500;
+      font-weight: 600;
       font-size: 14px;
-      transition: all 0.2s ease;
-      box-shadow: 0 2px 4px rgb(0 0 0 / 0.05);
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
     }
 
     #lang-toggle:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 8px rgb(0 0 0 / 0.1);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 16px rgb(0 0 0 / 0.15);
     }
 
     /* ===== ENHANCED THEME TOGGLE ===== */
@@ -305,7 +305,7 @@
     #back-to-top {
       position: fixed;
       bottom: 20px;
-      left: 20px;
+      left: 90px;
       z-index: 9999;
       width: 48px;
       height: 48px;
@@ -522,8 +522,13 @@
       }
 
       .lang-selector {
-        top: 10px;
-        right: 10px;
+        bottom: 80px;
+        left: 10px;
+      }
+
+      #back-to-top {
+        bottom: 80px;
+        left: 70px;
       }
 
       .modal-content {
@@ -662,6 +667,107 @@
         currentLang = currentLang === 'es' ? 'en' : 'es';
         localStorage.setItem('lang', currentLang);
         updateLanguage();
+        translatePlatformContent();
+      });
+
+      // ===== PLATFORM CONTENT TRANSLATION =====
+      const platformTranslations = {
+        es: {
+          // Header
+          'Login': 'Login',
+          'Registrarse': 'Registrarse',
+
+          // Hero Section
+          'No-Code Builder — Sin código, sin límites': 'No-Code Builder — Sin código, sin límites',
+          'Crea tu web': 'Crea tu web',
+          'en segundos': 'en segundos',
+          'Arrastra bloques, personaliza el contenido y publica tu landing page profesional en minutos. Sin código, sin complicaciones.': 'Arrastra bloques, personaliza el contenido y publica tu landing page profesional en minutos. Sin código, sin complicaciones.',
+          'Empezar Gratis': 'Empezar Gratis',
+          'Ver Demo': 'Ver Demo',
+
+          // Features Section
+          'Todo lo que necesitas': 'Todo lo que necesitas',
+          'Herramientas poderosas para crear páginas que convierten.': 'Herramientas poderosas para crear páginas que convierten.',
+          'Velocidad': 'Velocidad',
+          'Diseño Premium': 'Diseño Premium',
+          'Analítica': 'Analítica'
+        },
+        en: {
+          // Header
+          'Login': 'Login',
+          'Registrarse': 'Sign Up',
+
+          // Hero Section
+          'No-Code Builder — Sin código, sin límites': 'No-Code Builder — No code, no limits',
+          'Crea tu web': 'Create your web',
+          'en segundos': 'in seconds',
+          'Arrastra bloques, personaliza el contenido y publica tu landing page profesional en minutos. Sin código, sin complicaciones.': 'Drag blocks, customize content and publish your professional landing page in minutes. No code, no complications.',
+          'Empezar Gratis': 'Start Free',
+          'Ver Demo': 'View Demo',
+
+          // Features Section
+          'Todo lo que necesitas': 'Everything you need',
+          'Herramientas poderosas para crear páginas que convierten.': 'Powerful tools to create pages that convert.',
+          'Velocidad': 'Speed',
+          'Diseño Premium': 'Premium Design',
+          'Analítica': 'Analytics'
+        }
+      };
+
+      function translatePlatformContent() {
+        const translations = platformTranslations[currentLang];
+
+        // Function to translate text nodes
+        function translateNode(node) {
+          if (node.nodeType === Node.TEXT_NODE) {
+            const text = node.textContent.trim();
+            if (text && translations[text]) {
+              node.textContent = node.textContent.replace(text, translations[text]);
+            }
+          } else if (node.nodeType === Node.ELEMENT_NODE) {
+            // Skip script, style, and our custom elements
+            if (!['SCRIPT', 'STYLE', 'NOSCRIPT'].includes(node.tagName) &&
+              !node.id.startsWith('theme-') &&
+              !node.id.startsWith('lang-') &&
+              !node.id.startsWith('contact-') &&
+              !node.id.startsWith('back-to-')) {
+
+              // Translate child nodes
+              Array.from(node.childNodes).forEach(translateNode);
+            }
+          }
+        }
+
+        // Translate all content in #root
+        const root = document.getElementById('root');
+        if (root) {
+          translateNode(root);
+        }
+
+        // Also observe for dynamic content changes
+        if (!window.translationObserver) {
+          window.translationObserver = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+              mutation.addedNodes.forEach((node) => {
+                if (node.nodeType === Node.ELEMENT_NODE) {
+                  translateNode(node);
+                }
+              });
+            });
+          });
+
+          if (root) {
+            window.translationObserver.observe(root, {
+              childList: true,
+              subtree: true
+            });
+          }
+        }
+      }
+
+      // Initial translation when page loads
+      window.addEventListener('load', () => {
+        setTimeout(translatePlatformContent, 1500);
       });
 
       // ===== BACK TO TOP BUTTON =====
