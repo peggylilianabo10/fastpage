@@ -671,58 +671,65 @@
       });
 
       // ===== PLATFORM CONTENT TRANSLATION =====
-      const platformTranslations = {
-        es: {
-          // Header
-          'Login': 'Login',
-          'Registrarse': 'Registrarse',
+      // Bidirectional translation map
+      const translationMap = {
+        // Header
+        'Login': { es: 'Login', en: 'Login' },
+        'Registrarse': { es: 'Registrarse', en: 'Sign Up' },
+        'Sign Up': { es: 'Registrarse', en: 'Sign Up' },
 
-          // Hero Section
-          'No-Code Builder — Sin código, sin límites': 'No-Code Builder — Sin código, sin límites',
-          'Crea tu web': 'Crea tu web',
-          'en segundos': 'en segundos',
-          'Arrastra bloques, personaliza el contenido y publica tu landing page profesional en minutos. Sin código, sin complicaciones.': 'Arrastra bloques, personaliza el contenido y publica tu landing page profesional en minutos. Sin código, sin complicaciones.',
-          'Empezar Gratis': 'Empezar Gratis',
-          'Ver Demo': 'Ver Demo',
+        // Hero Section
+        'No-Code Builder — Sin código, sin límites': { es: 'No-Code Builder — Sin código, sin límites', en: 'No-Code Builder — No code, no limits' },
+        'No-Code Builder — No code, no limits': { es: 'No-Code Builder — Sin código, sin límites', en: 'No-Code Builder — No code, no limits' },
 
-          // Features Section
-          'Todo lo que necesitas': 'Todo lo que necesitas',
-          'Herramientas poderosas para crear páginas que convierten.': 'Herramientas poderosas para crear páginas que convierten.',
-          'Velocidad': 'Velocidad',
-          'Diseño Premium': 'Diseño Premium',
-          'Analítica': 'Analítica'
+        'Crea tu web': { es: 'Crea tu web', en: 'Create your web' },
+        'Create your web': { es: 'Crea tu web', en: 'Create your web' },
+
+        'en segundos': { es: 'en segundos', en: 'in seconds' },
+        'in seconds': { es: 'en segundos', en: 'in seconds' },
+
+        'Arrastra bloques, personaliza el contenido y publica tu landing page profesional en minutos. Sin código, sin complicaciones.': {
+          es: 'Arrastra bloques, personaliza el contenido y publica tu landing page profesional en minutos. Sin código, sin complicaciones.',
+          en: 'Drag blocks, customize content and publish your professional landing page in minutes. No code, no complications.'
         },
-        en: {
-          // Header
-          'Login': 'Login',
-          'Registrarse': 'Sign Up',
+        'Drag blocks, customize content and publish your professional landing page in minutes. No code, no complications.': {
+          es: 'Arrastra bloques, personaliza el contenido y publica tu landing page profesional en minutos. Sin código, sin complicaciones.',
+          en: 'Drag blocks, customize content and publish your professional landing page in minutes. No code, no complications.'
+        },
 
-          // Hero Section
-          'No-Code Builder — Sin código, sin límites': 'No-Code Builder — No code, no limits',
-          'Crea tu web': 'Create your web',
-          'en segundos': 'in seconds',
-          'Arrastra bloques, personaliza el contenido y publica tu landing page profesional en minutos. Sin código, sin complicaciones.': 'Drag blocks, customize content and publish your professional landing page in minutes. No code, no complications.',
-          'Empezar Gratis': 'Start Free',
-          'Ver Demo': 'View Demo',
+        'Empezar Gratis': { es: 'Empezar Gratis', en: 'Start Free' },
+        'Start Free': { es: 'Empezar Gratis', en: 'Start Free' },
 
-          // Features Section
-          'Todo lo que necesitas': 'Everything you need',
-          'Herramientas poderosas para crear páginas que convierten.': 'Powerful tools to create pages that convert.',
-          'Velocidad': 'Speed',
-          'Diseño Premium': 'Premium Design',
-          'Analítica': 'Analytics'
-        }
+        'Ver Demo': { es: 'Ver Demo', en: 'View Demo' },
+        'View Demo': { es: 'Ver Demo', en: 'View Demo' },
+
+        // Features Section
+        'Todo lo que necesitas': { es: 'Todo lo que necesitas', en: 'Everything you need' },
+        'Everything you need': { es: 'Todo lo que necesitas', en: 'Everything you need' },
+
+        'Herramientas poderosas para crear páginas que convierten.': { es: 'Herramientas poderosas para crear páginas que convierten.', en: 'Powerful tools to create pages that convert.' },
+        'Powerful tools to create pages that convert.': { es: 'Herramientas poderosas para crear páginas que convierten.', en: 'Powerful tools to create pages that convert.' },
+
+        'Velocidad': { es: 'Velocidad', en: 'Speed' },
+        'Speed': { es: 'Velocidad', en: 'Speed' },
+
+        'Diseño Premium': { es: 'Diseño Premium', en: 'Premium Design' },
+        'Premium Design': { es: 'Diseño Premium', en: 'Premium Design' },
+
+        'Analítica': { es: 'Analítica', en: 'Analytics' },
+        'Analytics': { es: 'Analítica', en: 'Analytics' }
       };
 
       function translatePlatformContent() {
-        const translations = platformTranslations[currentLang];
-
         // Function to translate text nodes
         function translateNode(node) {
           if (node.nodeType === Node.TEXT_NODE) {
             const text = node.textContent.trim();
-            if (text && translations[text]) {
-              node.textContent = node.textContent.replace(text, translations[text]);
+            if (text && translationMap[text]) {
+              const translated = translationMap[text][currentLang];
+              if (translated && translated !== text) {
+                node.textContent = node.textContent.replace(text, translated);
+              }
             }
           } else if (node.nodeType === Node.ELEMENT_NODE) {
             // Skip script, style, and our custom elements
@@ -743,31 +750,49 @@
         if (root) {
           translateNode(root);
         }
-
-        // Also observe for dynamic content changes
-        if (!window.translationObserver) {
-          window.translationObserver = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-              mutation.addedNodes.forEach((node) => {
-                if (node.nodeType === Node.ELEMENT_NODE) {
-                  translateNode(node);
-                }
-              });
-            });
-          });
-
-          if (root) {
-            window.translationObserver.observe(root, {
-              childList: true,
-              subtree: true
-            });
-          }
-        }
       }
 
       // Initial translation when page loads
+      let translationInitialized = false;
       window.addEventListener('load', () => {
-        setTimeout(translatePlatformContent, 1500);
+        setTimeout(() => {
+          if (!translationInitialized) {
+            translatePlatformContent();
+            translationInitialized = true;
+
+            // Set up observer for dynamic content
+            const root = document.getElementById('root');
+            if (root && !window.translationObserver) {
+              window.translationObserver = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                  mutation.addedNodes.forEach((node) => {
+                    if (node.nodeType === Node.ELEMENT_NODE) {
+                      function translateNewNode(n) {
+                        if (n.nodeType === Node.TEXT_NODE) {
+                          const text = n.textContent.trim();
+                          if (text && translationMap[text]) {
+                            const translated = translationMap[text][currentLang];
+                            if (translated && translated !== text) {
+                              n.textContent = n.textContent.replace(text, translated);
+                            }
+                          }
+                        } else if (n.nodeType === Node.ELEMENT_NODE) {
+                          Array.from(n.childNodes).forEach(translateNewNode);
+                        }
+                      }
+                      translateNewNode(node);
+                    }
+                  });
+                });
+              });
+
+              window.translationObserver.observe(root, {
+                childList: true,
+                subtree: true
+              });
+            }
+          }
+        }, 1500);
       });
 
       // ===== BACK TO TOP BUTTON =====
