@@ -671,6 +671,12 @@
       });
 
       // ===== PLATFORM CONTENT TRANSLATION =====
+      // HOW TO ADD NEW TRANSLATIONS FOR FUTURE CONTENT:
+      // For each new text, add BOTH language versions to the map below:
+      // 'Spanish Text': { es: 'Spanish Text', en: 'English Text' },
+      // 'English Text': { es: 'Spanish Text', en: 'English Text' }
+      // This ensures bidirectional translation works correctly.
+
       // Bidirectional translation map
       const translationMap = {
         // Header
@@ -717,7 +723,86 @@
         'Premium Design': { es: 'Diseño Premium', en: 'Premium Design' },
 
         'Analítica': { es: 'Analítica', en: 'Analytics' },
-        'Analytics': { es: 'Analítica', en: 'Analytics' }
+        'Analytics': { es: 'Analítica', en: 'Analytics' },
+
+        // Features Section - Descriptions
+        'Tu página lista en minutos. Sin esperas, sin procesos complicados.': {
+          es: 'Tu página lista en minutos. Sin esperas, sin procesos complicados.',
+          en: 'Your page ready in minutes. No waiting, no complicated processes.'
+        },
+        'Your page ready in minutes. No waiting, no complicated processes.': {
+          es: 'Tu página lista en minutos. Sin esperas, sin procesos complicados.',
+          en: 'Your page ready in minutes. No waiting, no complicated processes.'
+        },
+
+        'Bloques profesionales diseñados para convertir visitantes en clientes.': {
+          es: 'Bloques profesionales diseñados para convertir visitantes en clientes.',
+          en: 'Professional blocks designed to convert visitors into customers.'
+        },
+        'Professional blocks designed to convert visitors into customers.': {
+          es: 'Bloques profesionales diseñados para convertir visitantes en clientes.',
+          en: 'Professional blocks designed to convert visitors into customers.'
+        },
+
+        'Métricas en tiempo real para optimizar el rendimiento de tu landing page.': {
+          es: 'Métricas en tiempo real para optimizar el rendimiento de tu landing page.',
+          en: 'Real-time metrics to optimize your landing page performance.'
+        },
+        'Real-time metrics to optimize your landing page performance.': {
+          es: 'Métricas en tiempo real para optimizar el rendimiento de tu landing page.',
+          en: 'Real-time metrics to optimize your landing page performance.'
+        },
+
+        // Footer
+        'Términos': { es: 'Términos', en: 'Terms' },
+        'Terms': { es: 'Términos', en: 'Terms' },
+
+        'Privacidad': { es: 'Privacidad', en: 'Privacy' },
+        'Privacy': { es: 'Privacidad', en: 'Privacy' },
+
+        'Contacto': { es: 'Contacto', en: 'Contact' },
+        'Contact': { es: 'Contacto', en: 'Contact' },
+
+        '© 2026 FastPage. Todos los derechos reservados.': {
+          es: '© 2026 FastPage. Todos los derechos reservados.',
+          en: '© 2026 FastPage. All rights reserved.'
+        },
+        '© 2026 FastPage. All rights reserved.': {
+          es: '© 2026 FastPage. Todos los derechos reservados.',
+          en: '© 2026 FastPage. All rights reserved.'
+        },
+
+        // Dashboard
+        'Hola, Admin': { es: 'Hola, Admin', en: 'Hello, Admin' },
+        'Hello, Admin': { es: 'Hola, Admin', en: 'Hello, Admin' },
+
+        'Gestiona y edita tus landing pages.': {
+          es: 'Gestiona y edita tus landing pages.',
+          en: 'Manage and edit your landing pages.'
+        },
+        'Manage and edit your landing pages.': {
+          es: 'Gestiona y edita tus landing pages.',
+          en: 'Manage and edit your landing pages.'
+        },
+
+        'Dashboard': { es: 'Dashboard', en: 'Dashboard' },
+        'Admin': { es: 'Admin', en: 'Admin' },
+
+        'Crear Nuevo Sitio': { es: 'Crear Nuevo Sitio', en: 'Create New Site' },
+        'Create New Site': { es: 'Crear Nuevo Sitio', en: 'Create New Site' },
+
+        'Editar': { es: 'Editar', en: 'Edit' },
+        'Edit': { es: 'Editar', en: 'Edit' },
+
+        'Borrador': { es: 'Borrador', en: 'Draft' },
+        'Draft': { es: 'Borrador', en: 'Draft' },
+
+        'Publicado': { es: 'Publicado', en: 'Published' },
+        'Published': { es: 'Publicado', en: 'Published' },
+
+        // Dynamic content (partial matches)
+        'vistas': { es: 'vistas', en: 'views' },
+        'views': { es: 'vistas', en: 'views' }
       };
 
       function translatePlatformContent() {
