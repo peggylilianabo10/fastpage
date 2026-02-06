@@ -12,6 +12,9 @@
         :root {
             --primary: #7c3aed;
             --primary-dark: #6d28d9;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
             --background: #f8fafc;
             --surface: #ffffff;
             --text: #1e293b;
@@ -26,28 +29,69 @@
         }
 
         body {
-            background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+            background: #f5f3ff;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animated Background */
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.6;
+            animation: float 20s infinite alternate;
+        }
+
+        .blob-1 {
+            top: -10%;
+            left: -10%;
+            width: 500px;
+            height: 500px;
+            background: #ddd6fe;
+            animation-delay: 0s;
+        }
+
+        .blob-2 {
+            bottom: -10%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: #fae8ff;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            100% {
+                transform: translate(30px, 50px) scale(1.1);
+            }
         }
 
         .auth-container {
-            background: var(--surface);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
             width: 100%;
             max-width: 420px;
             border-radius: 20px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 20px 40px -10px rgba(124, 58, 237, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.5);
             overflow: hidden;
-            animation: slideUp 0.5s ease-out;
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         @keyframes slideUp {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(30px);
             }
 
             to {
@@ -58,7 +102,7 @@
 
         .auth-header {
             background: var(--primary);
-            padding: 2rem;
+            padding: 2.5rem 2rem 2rem;
             text-align: center;
             color: white;
             position: relative;
@@ -67,61 +111,67 @@
         .auth-header::after {
             content: '';
             position: absolute;
-            bottom: -10px;
+            bottom: -1px;
             left: 0;
             width: 100%;
-            height: 20px;
+            height: 24px;
             background: var(--surface);
-            border-radius: 20px 20px 0 0;
+            border-radius: 24px 24px 0 0;
         }
 
         .logo {
-            font-size: 2rem;
+            font-size: 2.2rem;
             font-weight: 800;
             margin-bottom: 0.5rem;
             display: inline-block;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .auth-title {
             font-size: 0.95rem;
             opacity: 0.9;
-            font-weight: 300;
+            font-weight: 400;
+            letter-spacing: 0.02em;
         }
 
         .auth-body {
-            padding: 2rem;
+            padding: 1.5rem 2rem 2rem;
         }
 
         /* Tabs */
         .tabs {
             display: flex;
             background: #f1f5f9;
-            padding: 4px;
-            border-radius: 12px;
-            margin-bottom: 1.5rem;
+            padding: 5px;
+            border-radius: 14px;
+            margin-bottom: 1.8rem;
         }
 
         .tab {
             flex: 1;
             padding: 0.75rem;
             text-align: center;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
             font-weight: 600;
             color: var(--text-light);
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             font-size: 0.9rem;
+            position: relative;
+            z-index: 1;
         }
 
         .tab.active {
             background: white;
             color: var(--primary);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transform: scale(1.02);
         }
 
         /* Forms */
         .form-group {
-            margin-bottom: 1.25rem;
+            margin-bottom: 1.4rem;
+            position: relative;
         }
 
         label {
@@ -130,24 +180,35 @@
             font-size: 0.85rem;
             font-weight: 600;
             color: var(--text);
+            margin-left: 4px;
         }
 
         input {
             width: 100%;
-            padding: 0.75rem 1rem;
-            border: 1px solid #cbd5e1;
-            border-radius: 10px;
+            padding: 0.875rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
             font-size: 1rem;
             transition: all 0.2s;
             outline: none;
+            background: #f8fafc;
         }
 
         input:focus {
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.05);
         }
 
-        /* Password Toggle Wrapper */
+        input.valid {
+            border-color: var(--success);
+        }
+
+        input.invalid {
+            border-color: var(--error);
+        }
+
+        /* Password Toggle & Strength */
         .password-wrapper {
             position: relative;
             display: flex;
@@ -164,34 +225,93 @@
             display: flex;
             align-items: center;
             padding: 0;
+            transition: color 0.2s;
         }
 
         .toggle-password:hover {
             color: var(--primary);
         }
 
+        .strength-meter {
+            height: 4px;
+            background: #e2e8f0;
+            margin-top: 8px;
+            border-radius: 2px;
+            overflow: hidden;
+            display: flex;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .strength-meter.visible {
+            opacity: 1;
+        }
+
+        .strength-bar {
+            height: 100%;
+            width: 0%;
+            border-radius: 2px;
+            transition: width 0.3s, background-color 0.3s;
+        }
+
         .btn-submit {
             width: 100%;
-            padding: 0.875rem;
+            padding: 1rem;
             background: var(--primary);
             color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             font-weight: 700;
-            font-size: 1rem;
+            font-size: 1.05rem;
             cursor: pointer;
-            transition: transform 0.2s, background 0.2s;
+            transition: all 0.2s;
             margin-top: 0.5rem;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 10px 20px -5px rgba(124, 58, 237, 0.3);
         }
 
         .btn-submit:hover {
             background: var(--primary-dark);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 15px 25px -5px rgba(124, 58, 237, 0.4);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .btn-submit.loading {
+            color: transparent;
+            pointer-events: none;
+        }
+
+        .spinner {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+
+        .btn-submit.loading .spinner {
+            display: block;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         .divider {
             text-align: center;
-            margin: 1.5rem 0;
+            margin: 1.8rem 0;
             position: relative;
         }
 
@@ -206,11 +326,12 @@
         }
 
         .divider span {
-            background: white;
-            padding: 0 10px;
+            background: var(--surface);
+            padding: 0 12px;
             position: relative;
             color: #94a3b8;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
+            font-weight: 500;
         }
 
         .social-btns {
@@ -223,20 +344,22 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            padding: 0.75rem;
+            gap: 10px;
+            padding: 0.85rem;
             border: 1px solid #e2e8f0;
             background: white;
-            border-radius: 10px;
+            border-radius: 12px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: var(--text);
+            font-weight: 600;
             transition: all 0.2s;
         }
 
         .social-btn:hover {
             background: #f8fafc;
             border-color: #cbd5e1;
+            transform: translateY(-1px);
         }
 
         /* Utilities */
@@ -253,18 +376,34 @@
             text-decoration: none;
             font-weight: 600;
             font-size: 0.85rem;
+            transition: color 0.2s;
+        }
+
+        .link:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
         }
 
         .footer-text {
-            margin-top: 1.5rem;
-            font-size: 0.85rem;
+            margin-top: 2rem;
+            font-size: 0.8rem;
             color: var(--text-light);
             text-align: center;
+            line-height: 1.5;
+        }
+
+        .footer-text a {
+            color: var(--primary);
+            text-decoration: none;
         }
     </style>
 </head>
 
 <body>
+
+    <!-- Floating Background Blobs -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
 
     <div class="auth-container">
         <div class="auth-header">
@@ -279,11 +418,10 @@
             </div>
 
             <!-- Login Form -->
-            <form id="form-login"
-                onsubmit="event.preventDefault(); alert('Login simulado correctamente!'); window.location.href='/';">
+            <form id="form-login" onsubmit="handleLogin(event)">
                 <div class="form-group">
                     <label>Correo Electrónico</label>
-                    <input type="email" placeholder="nombre@ejemplo.com" required>
+                    <input type="email" placeholder="nombre@ejemplo.com" required oninput="validateEmail(this)">
                 </div>
                 <div class="form-group">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
@@ -292,7 +430,8 @@
                     </div>
                     <div class="password-wrapper">
                         <input type="password" id="login-password" placeholder="••••••••" required>
-                        <button type="button" class="toggle-password" onclick="togglePassword('login-password', this)">
+                        <button type="button" class="toggle-password" onclick="togglePassword('login-password', this)"
+                            tabindex="-1">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2">
                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -301,26 +440,29 @@
                         </button>
                     </div>
                 </div>
-                <button type="submit" class="btn-submit">Entrar</button>
+                <button type="submit" class="btn-submit" id="btn-login">
+                    <span class="btn-text">Entrar</span>
+                    <div class="spinner"></div>
+                </button>
             </form>
 
             <!-- Register Form -->
-            <form id="form-register" class="hidden"
-                onsubmit="event.preventDefault(); alert('Cuenta creada! Redirigiendo...'); window.location.href='/';">
+            <form id="form-register" class="hidden" onsubmit="handleRegister(event)">
                 <div class="form-group">
                     <label>Nombre Completo</label>
-                    <input type="text" placeholder="Tu nombre" required>
+                    <input type="text" placeholder="Ej. Juan Pérez" required>
                 </div>
                 <div class="form-group">
                     <label>Correo Electrónico</label>
-                    <input type="email" placeholder="nombre@ejemplo.com" required>
+                    <input type="email" placeholder="nombre@ejemplo.com" required oninput="validateEmail(this)">
                 </div>
                 <div class="form-group">
                     <label>Contraseña</label>
                     <div class="password-wrapper">
-                        <input type="password" id="register-password" placeholder="Mínimo 8 caracteres" required>
+                        <input type="password" id="register-password" placeholder="Mínimo 8 caracteres" required
+                            oninput="checkStrength(this)">
                         <button type="button" class="toggle-password"
-                            onclick="togglePassword('register-password', this)">
+                            onclick="togglePassword('register-password', this)" tabindex="-1">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2">
                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -328,8 +470,15 @@
                             </svg>
                         </button>
                     </div>
+                    <!-- Strength Meter -->
+                    <div class="strength-meter" id="strength-meter">
+                        <div class="strength-bar" id="strength-bar"></div>
+                    </div>
                 </div>
-                <button type="submit" class="btn-submit">Crear Cuenta Gratis</button>
+                <button type="submit" class="btn-submit" id="btn-register">
+                    <span class="btn-text">Crear Cuenta Gratis</span>
+                    <div class="spinner"></div>
+                </button>
             </form>
 
             <div class="divider"><span>O continúa con</span></div>
@@ -352,7 +501,6 @@
                     </svg>
                     Google
                 </button>
-                <!-- Cambiado GitHub por Facebook -->
                 <button type="button" class="social-btn"
                     style="color: #1877F2; background: #fff; border-color: #dbeafe;">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="#1877F2">
@@ -364,7 +512,8 @@
             </div>
 
             <p class="footer-text">
-                Al continuar, aceptas nuestros Términos de Servicio y Política de Privacidad.
+                Al continuar, aceptas nuestros <a href="#">Términos de Servicio</a> y <a href="#">Política de
+                    Privacidad</a>.
             </p>
         </div>
     </div>
@@ -391,18 +540,79 @@
             }
         }
 
-        // Toggle Password Visibility Logic
         function togglePassword(inputId, btn) {
             const input = document.getElementById(inputId);
             if (input.type === "password") {
                 input.type = "text";
-                // Cambiar icono a "No ver"
                 btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>';
             } else {
                 input.type = "password";
-                // Restaurar icono "Ver"
                 btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
             }
+        }
+
+        // Real-time Email Validation
+        function validateEmail(input) {
+            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (input.value.length === 0) {
+                input.classList.remove('valid', 'invalid');
+                return;
+            }
+            if (regex.test(input.value)) {
+                input.classList.add('valid');
+                input.classList.remove('invalid');
+            } else {
+                input.classList.add('invalid');
+                input.classList.remove('valid');
+            }
+        }
+
+        // Checking Password Strength
+        function checkStrength(input) {
+            const meter = document.getElementById('strength-meter');
+            const bar = document.getElementById('strength-bar');
+            const val = input.value;
+
+            if (val.length > 0) meter.classList.add('visible');
+            else meter.classList.remove('visible');
+
+            let strength = 0;
+            if (val.length >= 6) strength += 25;
+            if (val.length >= 10) strength += 25;
+            if (/[A-Z]/.test(val)) strength += 25;
+            if (/[0-9!@#$%^&*]/.test(val)) strength += 25;
+
+            bar.style.width = strength + '%';
+
+            if (strength <= 25) bar.style.backgroundColor = '#ef4444'; // Red
+            else if (strength <= 50) bar.style.backgroundColor = '#f59e0b'; // Orange
+            else if (strength <= 75) bar.style.backgroundColor = '#3b82f6'; // Blue
+            else bar.style.backgroundColor = '#10b981'; // Green
+        }
+
+        // Simulate Loading Process
+        function simulateLoading(btnId, callback) {
+            const btn = document.getElementById(btnId);
+            btn.classList.add('loading');
+
+            setTimeout(() => {
+                btn.classList.remove('loading');
+                callback();
+            }, 1500); // 1.5s delay simulation
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            simulateLoading('btn-login', () => {
+                window.location.href = '/';
+            });
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            simulateLoading('btn-register', () => {
+                window.location.href = '/';
+            });
         }
 
         // Check hash on load
