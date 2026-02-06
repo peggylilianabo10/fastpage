@@ -348,9 +348,9 @@
     /* ===== ENHANCED THEME TOGGLE ===== */
     #theme-toggle {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 9999;
+      bottom: 80px;
+      left: 20px;
+      z-index: 9998;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -1702,11 +1702,123 @@
         chatClose.addEventListener('click', closeChat);
       }
 
-      // Handle quick options
+      // Handle quick options with automatic bot responses
+      const botResponses = {
+        es: {
+          demo: {
+            title: 'Ver Demo',
+            response: 'Excelente eleccion! Puedes ver nuestra demo interactiva aqui: https://fastpage-coral.vercel.app\n\nEn la demo puedes:\n- Crear una landing page en minutos\n- Personalizar colores y estilos\n- Agregar formularios y botones\n- Publicar al instante\n\nTe gustaria que te guie paso a paso?'
+          },
+          pricing: {
+            title: 'Precios',
+            response: 'Nuestros planes:\n\nGRATIS - Por siempre\n- 1 landing page\n- Subdominio fastpage.app\n- Plantillas basicas\n\nPRO - $9/mes\n- Landing pages ilimitadas\n- Dominio personalizado\n- Analytics avanzados\n- Soporte prioritario\n\nBUSINESS - $29/mes\n- Todo de PRO\n- Multiples usuarios\n- Integraciones API\n- Soporte 24/7 dedicado\n\nCual plan te interesa?'
+          },
+          start: {
+            title: 'Empezar',
+            response: 'Empecemos!\n\n3 pasos simples:\n\n1. Crea tu cuenta gratis - Haz clic en Registrarse\n2. Elige una plantilla - Tenemos +50 disenos profesionales\n3. Personaliza y publica - En menos de 5 minutos tendras tu web lista\n\nNecesitas ayuda con algun paso?'
+          },
+          talk: {
+            title: 'Hablar con alguien',
+            response: 'Claro que si!\n\nCanales de contacto:\n- Email: soporte@fastpage.app\n- WhatsApp: +1 (555) 123-4567\n- Twitter: @FastPageApp\n\nHorarios de atencion:\n- Lunes a Viernes: 9am - 6pm\n- Sabados: 10am - 2pm\n\nPrefieres que te llamemos nosotros? Dejanos tu numero y te contactamos en menos de 5 minutos.'
+          }
+        },
+        en: {
+          demo: {
+            title: 'View Demo',
+            response: 'Great choice! You can see our interactive demo here: https://fastpage-coral.vercel.app\n\nIn the demo you can:\n- Create a landing page in minutes\n- Customize colors and styles\n- Add forms and buttons\n- Publish instantly\n\nWould you like me to guide you step by step?'
+          },
+          pricing: {
+            title: 'Pricing',
+            response: 'Our plans:\n\nFREE - Forever\n- 1 landing page\n- fastpage.app subdomain\n- Basic templates\n\nPRO - $9/month\n- Unlimited landing pages\n- Custom domain\n- Advanced analytics\n- Priority support\n\nBUSINESS - $29/month\n- Everything in PRO\n- Multiple users\n- API integrations\n- Dedicated 24/7 support\n\nWhich plan interests you?'
+          },
+          start: {
+            title: 'Get Started',
+            response: 'Lets get started!\n\n3 simple steps:\n\n1. Create your free account - Click on Sign Up\n2. Choose a template - We have +50 professional designs\n3. Customize and publish - In less than 5 minutes your website will be ready\n\nDo you need help with any step?'
+          },
+          talk: {
+            title: 'Talk to someone',
+            response: 'Of course!\n\nContact channels:\n- Email: support@fastpage.app\n- WhatsApp: +1 (555) 123-4567\n- Twitter: @FastPageApp\n\nBusiness hours:\n- Monday to Friday: 9am - 6pm\n- Saturdays: 10am - 2pm\n\nWould you prefer us to call you? Leave your number and we will contact you in less than 5 minutes.'
+          }
+        }
+      };
+
+      // Function to add bot message
+      function addBotMessage(text) {
+        const chatMessages = document.querySelector('.chat-messages');
+        if (!chatMessages) return;
+
+        const replyEl = document.createElement('div');
+        replyEl.className = 'message agent-message';
+        replyEl.innerHTML = `
+          <div class="message-avatar">👨‍💼</div>
+          <div class="message-content">
+            <div class="message-bubble">
+              <p style="white-space: pre-line;">${text}</p>
+              <span class="message-time">${currentLang === 'en' ? 'Now' : 'Ahora'}</span>
+            </div>
+          </div>
+        `;
+        chatMessages.appendChild(replyEl);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+
+      // Function to add user message
+      function addUserMessage(text) {
+        const chatMessages = document.querySelector('.chat-messages');
+        if (!chatMessages) return;
+
+        const messageEl = document.createElement('div');
+        messageEl.className = 'message user-message';
+        messageEl.innerHTML = `
+          <div class="message-content" style="margin-left: auto;">
+            <div class="message-bubble" style="background: var(--primary); color: white;">
+              <p>${text}</p>
+              <span class="message-time" style="color: rgba(255,255,255,0.7);">${currentLang === 'en' ? 'Now' : 'Ahora'}</span>
+            </div>
+          </div>
+        `;
+        chatMessages.appendChild(messageEl);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+
+
       if (quickOptions) {
         quickOptions.forEach(option => {
           option.addEventListener('click', () => {
             const action = option.getAttribute('data-action');
+            const responses = botResponses[currentLang];
+
+            if (responses && responses[action]) {
+              // Add user's selection as a message
+              addUserMessage(responses[action].title);
+
+              // Show typing indicator
+              const chatMessages = document.querySelector('.chat-messages');
+              const typingEl = document.createElement('div');
+              typingEl.className = 'message agent-message typing-indicator';
+              typingEl.innerHTML = `
+                <div class="message-avatar">👨‍💼</div>
+                <div class="message-content">
+                  <div class="message-bubble">
+                    <p>✍️ ${currentLang === 'en' ? 'Typing...' : 'Escribiendo...'}</p>
+                  </div>
+                </div>
+              `;
+              if (chatMessages) {
+                chatMessages.appendChild(typingEl);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+              }
+
+              // Simulate bot response after delay
+              setTimeout(() => {
+                // Remove typing indicator
+                const typing = document.querySelector('.typing-indicator');
+                if (typing) typing.remove();
+
+                // Add bot response
+                addBotMessage(responses[action].response);
+              }, 1500);
+            }
 
             // Track quick option click
             if (typeof gtag !== 'undefined') {
@@ -1714,22 +1826,6 @@
                 'event_category': 'engagement',
                 'event_label': action
               });
-            }
-
-            // Handle different actions
-            switch (action) {
-              case 'demo':
-                console.log('Ver Demo clicked');
-                break;
-              case 'pricing':
-                console.log('Precios clicked');
-                break;
-              case 'start':
-                console.log('Empezar clicked');
-                break;
-              case 'talk':
-                console.log('Hablar con alguien clicked');
-                break;
             }
           });
         });
