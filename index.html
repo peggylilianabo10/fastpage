@@ -1,41 +1,267 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!-- TODO: Set the document title to the name of your application -->
-  <title>Lovable App</title>
-  <meta name="description" content="Lovable Generated Project" />
-  <meta name="author" content="Lovable" />
 
-  <!-- TODO: Update og:title to match your application name -->
-  <meta property="og:title" content="Lovable App" />
-  <meta property="og:description" content="Lovable Generated Project" />
+  <!-- SEO Optimization -->
+  <title>FastPage - Crea tu web en segundos | Landing Pages Profesionales</title>
+  <meta name="description"
+    content="Crea landing pages profesionales en minutos. Sin código, sin complicaciones. Arrastra bloques, personaliza el contenido y publica tu página web al instante." />
+  <meta name="keywords" content="landing page, crear web, sin código, no-code, página web rápida, diseño web" />
+  <meta name="author" content="FastPage" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://fastpage-coral.vercel.app" />
+
+  <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://fastpage-coral.vercel.app" />
+  <meta property="og:title" content="FastPage - Crea tu web en segundos" />
+  <meta property="og:description"
+    content="Crea landing pages profesionales en minutos. Sin código, sin complicaciones." />
   <meta property="og:image"
     content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/9f9d19f4-c0a7-4029-a948-08aaeda4305f/id-preview-ab7ae2ec--ae0330eb-3006-4257-af87-4465de4f888e.lovable.app-1770395148305.png" />
 
+  <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:site" content="@Lovable" />
+  <meta name="twitter:url" content="https://fastpage-coral.vercel.app" />
+  <meta name="twitter:title" content="FastPage - Crea tu web en segundos" />
+  <meta name="twitter:description"
+    content="Crea landing pages profesionales en minutos. Sin código, sin complicaciones." />
   <meta name="twitter:image"
     content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/9f9d19f4-c0a7-4029-a948-08aaeda4305f/id-preview-ab7ae2ec--ae0330eb-3006-4257-af87-4465de4f888e.lovable.app-1770395148305.png" />
-  <script type="module" crossorigin src="./assets/index-BIkGezMg.js"></script>
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="./manifest.json" />
+  <meta name="theme-color" content="#8b5cf6" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="FastPage" />
+
+  <!-- Preload Critical Assets -->
+  <link rel="preload" href="./assets/index-upvKpgH8.css" as="style" />
+  <link rel="preload" href="./assets/index-BIkGezMg.js" as="script" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
+
+  <!-- Stylesheets -->
   <link rel="stylesheet" crossorigin href="./assets/index-upvKpgH8.css">
-  <script defer src="https://fastpage.lovable.app/~flock.js"
-    data-proxy-url="https://fastpage.lovable.app/~api/analytics"></script>
+
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX', {
+      'anonymize_ip': true,
+      'cookie_flags': 'SameSite=None;Secure'
+    });
+  </script>
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "FastPage",
+    "description": "Crea landing pages profesionales en minutos",
+    "url": "https://fastpage-coral.vercel.app",
+    "applicationCategory": "WebApplication",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
 </head>
 
 <body>
+  <!-- Loading Skeleton -->
+  <div id="loading-skeleton" class="loading-skeleton">
+    <div class="skeleton-header"></div>
+    <div class="skeleton-content">
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line short"></div>
+    </div>
+  </div>
+
+  <!-- Main App -->
   <div id="root"></div>
 
-  <!-- Theme Toggle Implementation -->
-  <button id="theme-toggle" aria-label="Toggle Dark Mode">
-    <span id="theme-icon">🌙</span>
+  <!-- Language Selector -->
+  <div id="lang-selector" class="lang-selector" aria-label="Selector de idioma">
+    <button id="lang-toggle" aria-label="Cambiar idioma">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="2" y1="12" x2="22" y2="12"></line>
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+      </svg>
+      <span id="lang-text">ES</span>
+    </button>
+  </div>
+
+  <!-- Enhanced Theme Toggle -->
+  <button id="theme-toggle" aria-label="Cambiar tema">
+    <svg id="theme-icon-svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2">
+      <path id="moon-icon" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      <g id="sun-icon" style="display: none;">
+        <circle cx="12" cy="12" r="5"></circle>
+        <line x1="12" y1="1" x2="12" y2="3"></line>
+        <line x1="12" y1="21" x2="12" y2="23"></line>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+        <line x1="1" y1="12" x2="3" y2="12"></line>
+        <line x1="21" y1="12" x2="23" y2="12"></line>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+      </g>
+    </svg>
     <span id="theme-text">Modo Oscuro</span>
   </button>
 
+  <!-- Back to Top Button -->
+  <button id="back-to-top" aria-label="Volver arriba">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="12" y1="19" x2="12" y2="5"></line>
+      <polyline points="5 12 12 5 19 12"></polyline>
+    </svg>
+  </button>
+
+  <!-- Contact Form Modal -->
+  <div id="contact-modal" class="modal" role="dialog" aria-labelledby="contact-title" aria-hidden="true">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <button class="modal-close" aria-label="Cerrar">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <h2 id="contact-title">Contáctanos</h2>
+      <form id="contact-form">
+        <div class="form-group">
+          <label for="contact-name">Nombre</label>
+          <input type="text" id="contact-name" name="name" required />
+        </div>
+        <div class="form-group">
+          <label for="contact-email">Email</label>
+          <input type="email" id="contact-email" name="email" required />
+        </div>
+        <div class="form-group">
+          <label for="contact-message">Mensaje</label>
+          <textarea id="contact-message" name="message" rows="5" required></textarea>
+        </div>
+        <button type="submit" class="btn-primary">Enviar Mensaje</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Floating Contact Button -->
+  <button id="contact-trigger" class="floating-action" aria-label="Abrir formulario de contacto">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+    </svg>
+  </button>
+
   <style>
+    /* ===== LOADING SKELETON ===== */
+    .loading-skeleton {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--background);
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      padding: 2rem;
+      animation: fadeOut 0.3s ease 1s forwards;
+    }
+
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        pointer-events: none;
+      }
+    }
+
+    .skeleton-header {
+      width: 200px;
+      height: 40px;
+      background: linear-gradient(90deg, var(--muted) 25%, var(--muted-foreground) 50%, var(--muted) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+    }
+
+    .skeleton-content {
+      max-width: 600px;
+      margin-top: 4rem;
+    }
+
+    .skeleton-line {
+      height: 20px;
+      background: linear-gradient(90deg, var(--muted) 25%, var(--muted-foreground) 50%, var(--muted) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+
+    .skeleton-line.short {
+      width: 60%;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: -200% 0;
+      }
+
+      100% {
+        background-position: 200% 0;
+      }
+    }
+
+    /* ===== LANGUAGE SELECTOR ===== */
+    .lang-selector {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9998;
+    }
+
+    #lang-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background-color: var(--card);
+      color: var(--foreground);
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 500;
+      font-size: 14px;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 4px rgb(0 0 0 / 0.05);
+    }
+
+    #lang-toggle:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgb(0 0 0 / 0.1);
+    }
+
+    /* ===== ENHANCED THEME TOGGLE ===== */
     #theme-toggle {
       position: fixed;
       bottom: 20px;
@@ -44,62 +270,522 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 10px 16px;
+      padding: 12px 18px;
       border-radius: 50px;
       border: 1px solid var(--border);
       background-color: var(--card);
       color: var(--foreground);
-      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+      box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
       cursor: pointer;
       font-family: inherit;
       font-weight: 500;
       font-size: 14px;
-      transition: all 0.2s ease;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     #theme-toggle:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 24px rgb(0 0 0 / 0.15);
     }
 
-    /* Dark mode overrides for the button itself if needed, 
-           but it uses css variables so it should adapt automatically */
+    #theme-toggle:active {
+      transform: translateY(-1px);
+    }
+
+    /* Color transition for theme changes */
+    html {
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    * {
+      transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* ===== BACK TO TOP BUTTON ===== */
+    #back-to-top {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 9999;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background-color: var(--card);
+      color: var(--foreground);
+      box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+
+    #back-to-top.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #back-to-top:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 16px rgb(0 0 0 / 0.15);
+    }
+
+    /* ===== CONTACT MODAL ===== */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    .modal-content {
+      position: relative;
+      background: var(--card);
+      border-radius: 16px;
+      padding: 2rem;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 20px 40px rgb(0 0 0 / 0.2);
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: transparent;
+      border: none;
+      color: var(--foreground);
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 8px;
+      transition: background 0.2s ease;
+    }
+
+    .modal-close:hover {
+      background: var(--muted);
+    }
+
+    .modal-content h2 {
+      margin: 0 0 1.5rem 0;
+      color: var(--foreground);
+      font-size: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--foreground);
+      font-weight: 500;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--background);
+      color: var(--foreground);
+      font-family: inherit;
+      font-size: 14px;
+      transition: border-color 0.2s ease;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 0.75rem 1.5rem;
+      background: var(--primary);
+      color: var(--primary-foreground);
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px var(--primary) / 0.3;
+    }
+
+    /* ===== FLOATING CONTACT BUTTON ===== */
+    .floating-action {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      z-index: 9998;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: var(--primary-foreground);
+      border: none;
+      box-shadow: 0 4px 12px rgb(0 0 0 / 0.2);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .floating-action:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 20px rgb(0 0 0 / 0.3);
+    }
+
+    /* ===== SCROLL ANIMATIONS ===== */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      #theme-toggle {
+        bottom: 80px;
+        padding: 10px 14px;
+        font-size: 13px;
+      }
+
+      #theme-toggle span {
+        display: none;
+      }
+
+      #back-to-top {
+        bottom: 80px;
+        left: auto;
+        right: 90px;
+      }
+
+      .lang-selector {
+        top: 10px;
+        right: 10px;
+      }
+
+      .modal-content {
+        padding: 1.5rem;
+      }
+
+      .floating-action {
+        bottom: 10px;
+        right: 10px;
+      }
+    }
   </style>
+
+  <script type="module" crossorigin src="./assets/index-BIkGezMg.js"></script>
 
   <script>
     (function () {
-      const toggle = document.getElementById('theme-toggle');
-      const icon = document.getElementById('theme-icon');
-      const text = document.getElementById('theme-text');
+      'use strict';
+
+      // ===== TRANSLATIONS =====
+      const translations = {
+        es: {
+          themeLight: 'Modo Claro',
+          themeDark: 'Modo Oscuro',
+          contactTitle: 'Contáctanos',
+          contactName: 'Nombre',
+          contactEmail: 'Email',
+          contactMessage: 'Mensaje',
+          contactSubmit: 'Enviar Mensaje',
+          contactSuccess: '¡Mensaje enviado con éxito!',
+          backToTop: 'Volver arriba',
+          openContact: 'Abrir formulario de contacto'
+        },
+        en: {
+          themeLight: 'Light Mode',
+          themeDark: 'Dark Mode',
+          contactTitle: 'Contact Us',
+          contactName: 'Name',
+          contactEmail: 'Email',
+          contactMessage: 'Message',
+          contactSubmit: 'Send Message',
+          contactSuccess: 'Message sent successfully!',
+          backToTop: 'Back to top',
+          openContact: 'Open contact form'
+        }
+      };
+
+      let currentLang = localStorage.getItem('lang') || 'es';
+
+      function t(key) {
+        return translations[currentLang][key] || key;
+      }
+
+      // ===== THEME TOGGLE =====
+      const themeToggle = document.getElementById('theme-toggle');
+      const themeText = document.getElementById('theme-text');
+      const moonIcon = document.getElementById('moon-icon');
+      const sunIcon = document.getElementById('sun-icon');
       const html = document.documentElement;
 
-      // Function to update UI
-      function updateUI(isDark) {
+      function updateThemeUI(isDark) {
         if (isDark) {
-          icon.textContent = '☀️';
-          text.textContent = 'Modo Claro';
+          moonIcon.style.display = 'none';
+          sunIcon.style.display = 'block';
+          themeText.textContent = t('themeLight');
           html.classList.add('dark');
+
+          // Track theme change
+          if (typeof gtag !== 'undefined') {
+            gtag('event', 'theme_change', {
+              'theme': 'dark'
+            });
+          }
         } else {
-          icon.textContent = '🌙';
-          text.textContent = 'Modo Oscuro';
+          moonIcon.style.display = 'block';
+          sunIcon.style.display = 'none';
+          themeText.textContent = t('themeDark');
           html.classList.remove('dark');
+
+          // Track theme change
+          if (typeof gtag !== 'undefined') {
+            gtag('event', 'theme_change', {
+              'theme': 'light'
+            });
+          }
         }
       }
 
-      // Check saved preference or system preference
       const savedTheme = localStorage.getItem('theme');
       const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       let isDark = savedTheme === 'dark' || (!savedTheme && systemDark);
 
-      // Initial Apply
-      updateUI(isDark);
+      updateThemeUI(isDark);
 
-      // Click Handler
-      toggle.addEventListener('click', () => {
+      themeToggle.addEventListener('click', () => {
         isDark = !isDark;
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        updateUI(isDark);
+        updateThemeUI(isDark);
       });
+
+      // Keyboard accessibility
+      themeToggle.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          themeToggle.click();
+        }
+      });
+
+      // ===== LANGUAGE TOGGLE =====
+      const langToggle = document.getElementById('lang-toggle');
+      const langText = document.getElementById('lang-text');
+
+      function updateLanguage() {
+        langText.textContent = currentLang.toUpperCase();
+        document.documentElement.lang = currentLang;
+
+        // Update all translatable elements
+        themeText.textContent = isDark ? t('themeLight') : t('themeDark');
+        document.getElementById('contact-title').textContent = t('contactTitle');
+        document.querySelector('label[for="contact-name"]').textContent = t('contactName');
+        document.querySelector('label[for="contact-email"]').textContent = t('contactEmail');
+        document.querySelector('label[for="contact-message"]').textContent = t('contactMessage');
+        document.querySelector('.btn-primary').textContent = t('contactSubmit');
+
+        // Track language change
+        if (typeof gtag !== 'undefined') {
+          gtag('event', 'language_change', {
+            'language': currentLang
+          });
+        }
+      }
+
+      updateLanguage();
+
+      langToggle.addEventListener('click', () => {
+        currentLang = currentLang === 'es' ? 'en' : 'es';
+        localStorage.setItem('lang', currentLang);
+        updateLanguage();
+      });
+
+      // ===== BACK TO TOP BUTTON =====
+      const backToTop = document.getElementById('back-to-top');
+
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+          backToTop.classList.add('visible');
+        } else {
+          backToTop.classList.remove('visible');
+        }
+      });
+
+      backToTop.addEventListener('click', () => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+
+        // Track back to top click
+        if (typeof gtag !== 'undefined') {
+          gtag('event', 'click', {
+            'event_category': 'navigation',
+            'event_label': 'back_to_top'
+          });
+        }
+      });
+
+      // ===== CONTACT MODAL =====
+      const contactModal = document.getElementById('contact-modal');
+      const contactTrigger = document.getElementById('contact-trigger');
+      const modalClose = document.querySelector('.modal-close');
+      const modalOverlay = document.querySelector('.modal-overlay');
+      const contactForm = document.getElementById('contact-form');
+
+      function openModal() {
+        contactModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+
+        // Track modal open
+        if (typeof gtag !== 'undefined') {
+          gtag('event', 'modal_open', {
+            'modal_name': 'contact'
+          });
+        }
+      }
+
+      function closeModal() {
+        contactModal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      contactTrigger.addEventListener('click', openModal);
+      modalClose.addEventListener('click', closeModal);
+      modalOverlay.addEventListener('click', closeModal);
+
+      // Close on Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && contactModal.classList.contains('active')) {
+          closeModal();
+        }
+      });
+
+      // Handle form submission
+      contactForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(contactForm);
+        const data = Object.fromEntries(formData);
+
+        // Track form submission
+        if (typeof gtag !== 'undefined') {
+          gtag('event', 'form_submit', {
+            'form_name': 'contact'
+          });
+        }
+
+        // Here you would normally send the data to a server
+        console.log('Form data:', data);
+
+        alert(t('contactSuccess'));
+        contactForm.reset();
+        closeModal();
+      });
+
+      // ===== SCROLL ANIMATIONS =====
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, observerOptions);
+
+      // Observe all elements with fade-in class
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.fade-in').forEach(el => {
+          observer.observe(el);
+        });
+      });
+
+      // ===== LOADING SKELETON =====
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          const skeleton = document.getElementById('loading-skeleton');
+          if (skeleton) {
+            skeleton.style.display = 'none';
+          }
+        }, 1000);
+      });
+
+      // ===== SERVICE WORKER (PWA) =====
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(() => {
+            // Service worker registration failed, that's okay
+          });
+        });
+      }
     })();
   </script>
 </body>
