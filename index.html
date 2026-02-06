@@ -2211,54 +2211,107 @@
       else injectTestimonialSection();
     })();
   </script>
-  <!-- === AUTH REDIRECTOR === -->
-  <script>
-    (function () {
-      // Función para navegar a auth.html
-      const goToAuth = (mode, e) => {
-        if (e) { e.preventDefault(); e.stopPropagation(); }
-        window.location.href = 'auth.html' + (mode === 'register' ? '#register' : '#login');
-      };
+  <!-- === SESSION MANAGER & AUTH REDIRECTOR === -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
 
-      const updateAuthLinks = () => {
-        // Selectores amplios para capturar botones generados por React
-        // Buscamos por texto porque las clases son dinámicas/ofuscadas
-        const targets = document.querySelectorAll('a, button, div[role="button"]');
+    const firebaseConfig = {
+      apiKey: "AIzaSyBwG1SGZvp97zau4AGOIQxnIlNt9ig8dbs",
+      authDomain: "fast-page-726db.firebaseapp.com",
+      projectId: "fast-page-726db",
+      storageBucket: "fast-page-726db.firebasestorage.app",
+      messagingSenderId: "850638079580",
+      appId: "1:850638079580:web:0a70125759adced1d30899",
+      measurementId: "G-F22PMSZ703"
+    };
 
-        targets.forEach(el => {
-          // Evitar procesar si ya tiene el evento o es parte del chat widget
-          if (el.dataset.authProcessed || el.closest('#new-chat-widget')) return;
+    // Init Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    let currentUser = null;
 
-          const text = el.innerText ? el.innerText.toLowerCase().trim() : '';
+    // --- UI MANIPULATION ---
+    const goToAuth = (mode, e) => {
+      if (e) { e.preventDefault(); e.stopPropagation(); }
+      window.location.href = 'auth.html' + (mode === 'register' ? '#register' : '#login');
+    };
 
-          if (['login', 'iniciar sesión', 'entrar', 'acceder'].includes(text)) {
-            el.dataset.authProcessed = 'true';
-            el.style.cursor = 'pointer';
-            el.addEventListener('click', (e) => goToAuth('login', e));
-            if (el.tagName === 'A') el.setAttribute('href', 'auth.html#login');
+    const handleLogout = async (e) => {
+      if (e) e.preventDefault();
+      try {
+        await signOut(auth);
+        window.location.reload(); // Recargar para limpiar estado
+      } catch (error) {
+        console.error("Logout error", error);
+        alert("Error al cerrar sesión");
+      }
+    };
+
+    const updateHeaderUI = () => {
+      // Buscar botones de autenticación generados por React
+      const targets = document.querySelectorAll('a, button, div[role="button"]');
+
+      targets.forEach(el => {
+        // Ignorar si es el chat o ya procesado (aunque si cambia el estado auth, quizás debamos reprocesar)
+        // Para simplificar, si ya tiene nuestro ID de logout, no tocamos
+        if (el.dataset.sessionAction === 'logout' || el.closest('#new-chat-widget')) return;
+
+        const text = el.innerText ? el.innerText.toLowerCase().trim() : '';
+
+        // Detectar botones de Login/Registro
+        if (['login', 'iniciar sesión', 'entrar'].includes(text) ||
+          ['registrarse', 'crear cuenta', 'sign up', 'empieza gratis', 'comenzar ahora'].includes(text)) {
+
+          if (currentUser) {
+            // USUARIO LOGUEADO: Reemplazar Login por saludo o ocultar, y Registro por Logout
+            if (['login', 'iniciar sesión', 'entrar'].includes(text)) {
+              el.style.display = 'none'; // Ocultar Login
+            } else {
+              // Transformar botón de registro en "Cerrar Sesión"
+              el.innerText = "Cerrar Sesión";
+              el.style.backgroundColor = "#ef4444"; // Rojo para logout
+              el.style.borderColor = "#ef4444";
+              el.dataset.sessionAction = 'logout';
+              el.onclick = handleLogout;
+              if (el.tagName === 'A') el.setAttribute('href', '#');
+              el.title = `Hola, ${currentUser.displayName || currentUser.email}`;
+            }
+          } else {
+            // USUARIO NO LOGUEADO: Comportamiento normal (Redirigir a auth.html)
+            el.style.display = ''; // Asegurar visible
+            el.style.backgroundColor = ''; // Restaurar estilo original aprox (difícil saberlo exacto, pero quitamos el inline)
+            el.dataset.sessionAction = 'auth';
+
+            if (['login', 'iniciar sesión', 'entrar'].includes(text)) {
+              el.onclick = (e) => goToAuth('login', e);
+              if (el.tagName === 'A') el.setAttribute('href', 'auth.html#login');
+            } else {
+              el.onclick = (e) => goToAuth('register', e);
+              if (el.tagName === 'A') el.setAttribute('href', 'auth.html#register');
+            }
           }
-
-          if (['registrarse', 'crear cuenta', 'sign up', 'empieza gratis', 'comenzar ahora', 'crear mi web'].includes(text)) {
-            el.dataset.authProcessed = 'true';
-            el.style.cursor = 'pointer';
-            el.addEventListener('click', (e) => goToAuth('register', e));
-            if (el.tagName === 'A') el.setAttribute('href', 'auth.html#register');
-          }
-        });
-      };
-
-      // Observar cambios en el DOM (React render)
-      const observer = new MutationObserver((mutations) => {
-        updateAuthLinks();
+        }
       });
+    };
 
-      observer.observe(document.body, { childList: true, subtree: true });
+    // --- LOGIC ---
+    onAuthStateChanged(auth, (user) => {
+      currentUser = user;
+      console.log("FastPage Session State:", user ? "Logged In as " + user.email : "Guest");
+      updateHeaderUI();
+    });
 
-      // Ejecución inicial y periódica por si acaso
-      document.addEventListener('DOMContentLoaded', updateAuthLinks);
-      setTimeout(updateAuthLinks, 500);
-      setTimeout(updateAuthLinks, 2000);
-    })();
+    // Observer para cambios en el DOM (React render)
+    const observer = new MutationObserver(() => {
+      updateHeaderUI();
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    // Failsafes
+    setTimeout(updateHeaderUI, 1000);
+    setTimeout(updateHeaderUI, 3000);
   </script>
 </body>
 
