@@ -1970,43 +1970,12 @@
       // ===== SERVICE WORKER (PWA) =====
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          // Add version param to force browser to check for new SW file
-          navigator.serviceWorker.register('/sw.js?v=' + new Date().getTime()).then(registration => {
-
-            // Check for updates periodically
-            setInterval(() => {
-              registration.update();
-            }, 60 * 60 * 1000); // Check every hour
-
-            // If there's a waiting worker, it means an update is ready but waiting for tabs to close
-            if (registration.waiting) {
-              registration.waiting.postMessage({ type: 'SKIP_WAITING' });
-            }
-
-            registration.addEventListener('updatefound', () => {
-              const newWorker = registration.installing;
-              newWorker.addEventListener('statechange', () => {
-                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                  // Auto-update silently - no popup
-                  console.log('🔄 Nueva versión disponible - actualizando automáticamente...');
-                  newWorker.postMessage({ type: 'SKIP_WAITING' });
-                  // The page will reload via controllerchange event
-                }
-              });
-            });
-          }).catch(() => {
-            // Service worker registration failed
-          });
-
-          // Reload page when new SW takes control
-          let refreshing;
-          navigator.serviceWorker.addEventListener('controllerchange', () => {
-            if (refreshing) return;
-            window.location.reload();
-            refreshing = true;
+          navigator.serviceWorker.register('/sw.js').catch(() => {
+            // Service worker registration failed - silently ignore
           });
         });
       }
+
 
       /* 
       // ===== PROFESSIONAL CHAT WIDGET (DEPRECATED - REMOVED) =====
