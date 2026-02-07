@@ -2326,39 +2326,69 @@
       // Only run this if we are NOT in dashboard mode
       if (window.location.pathname === '/dashboard') return;
 
+      console.log('🔄 Updating Landing UI for:', user ? user.email : 'Guest');
+
       const targets = document.querySelectorAll('a, button, div[role="button"]');
+      let loginButtonFound = false;
+      let registerButtonFound = false;
+
       targets.forEach(el => {
         if (el.dataset.sessionAction === 'logout' || el.closest('#new-chat-widget') || el.closest('.dash-nav')) return;
         const text = el.innerText ? el.innerText.toLowerCase().trim() : '';
 
-        // Detectar botones de Login/Registro
-        if (['login', 'iniciar sesión', 'entrar'].includes(text) ||
-          ['registrarse', 'crear cuenta', 'sign up', 'empieza gratis', 'comenzar ahora', 'empezar gratis'].includes(text)) {
+        // Save original text if not saved yet
+        if (!el.dataset.originalText && text) {
+          el.dataset.originalText = el.innerText;
+        }
 
+        // Detectar botones de Login
+        const isLoginButton = ['login', 'iniciar sesión', 'entrar'].includes(text);
+
+        // Detectar botones de Registro/CTA
+        const isRegisterButton = ['registrarse', 'crear cuenta', 'sign up', 'empieza gratis',
+          'comenzar ahora', 'empezar gratis', 'ir al dashboard'].includes(text);
+
+        if (isLoginButton || isRegisterButton) {
           if (user) {
             // USER LOGGED IN ON LANDING PAGE
-            if (['login', 'iniciar sesión', 'entrar'].includes(text)) {
-              el.style.display = 'none'; // Hide "Login"
+            if (isLoginButton) {
+              el.style.display = 'none';
+              loginButtonFound = true;
             } else {
-              // Change "Register" to "Go to Dashboard"
-              el.innerText = "Ir al Dashboard";
-              el.style.backgroundColor = ""; // Keep original style or modify
+              // Change to "Ir al Dashboard"
+              if (el.innerText !== "Ir al Dashboard") {
+                el.innerText = "Ir al Dashboard";
+              }
               el.onclick = (e) => { e.preventDefault(); window.location.href = '/dashboard'; };
               if (el.tagName === 'A') el.setAttribute('href', '/dashboard');
+              registerButtonFound = true;
             }
           } else {
-            // GUEST
+            // GUEST - restore original behavior
             el.style.display = '';
-            if (['login', 'iniciar sesión', 'entrar'].includes(text)) {
+
+            if (isLoginButton) {
+              // Restore original text if it was changed
+              if (el.dataset.originalText && el.innerText !== el.dataset.originalText) {
+                el.innerText = el.dataset.originalText;
+              }
               el.onclick = (e) => goToAuth('login', e);
               if (el.tagName === 'A') el.setAttribute('href', 'auth.html#login');
+              loginButtonFound = true;
             } else {
+              // Restore original register button text
+              if (el.innerText === "Ir al Dashboard" && el.dataset.originalText) {
+                el.innerText = el.dataset.originalText;
+              }
               el.onclick = (e) => goToAuth('register', e);
               if (el.tagName === 'A') el.setAttribute('href', 'auth.html#register');
+              registerButtonFound = true;
             }
           }
         }
       });
+
+      console.log('✅ Buttons found - Login:', loginButtonFound, 'Register:', registerButtonFound);
     };
 
     // --- MAIN AUTH OBSERVER ---
