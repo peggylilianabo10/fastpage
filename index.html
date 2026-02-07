@@ -1987,10 +1987,10 @@
               const newWorker = registration.installing;
               newWorker.addEventListener('statechange', () => {
                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                  // Update available
-                  if (confirm("Nueva version disponible. ¿Recargar para actualizar?")) {
-                    window.location.reload();
-                  }
+                  // Auto-update silently - no popup
+                  console.log('🔄 Nueva versión disponible - actualizando automáticamente...');
+                  newWorker.postMessage({ type: 'SKIP_WAITING' });
+                  // The page will reload via controllerchange event
                 }
               });
             });

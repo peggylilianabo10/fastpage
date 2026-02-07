@@ -6,14 +6,18 @@ const urlsToCache = [
     '/assets/index-BIkGezMg.js'
 ];
 
-// Install event - cache resources
+// Install event - cache resources and auto-activate
 self.addEventListener('install', (event) => {
-    // Force this service worker to become the active service worker immediately
+    // Force this service worker to become active immediately (no popup)
     self.skipWaiting();
 
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then((cache) => cache.addAll(urlsToCache))
+            .catch(() => {
+                // Silently fail if assets can't be cached
+                console.log('SW: Asset caching failed, continuing anyway');
+            })
     );
 });
 
