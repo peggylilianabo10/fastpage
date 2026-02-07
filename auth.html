@@ -564,7 +564,7 @@
         // --- FIREBASE CONFIGURATION & LOGIC ---
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-analytics.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBwG1SGZvp97zau4AGOIQxnIlNt9ig8dbs",
@@ -580,6 +580,19 @@
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
         const auth = getAuth(app);
+
+        // --- AUTH STATE OBSERVER ---
+
+
+        // Auto-redirect if already logged in
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // If we are just checking state and user is found, redirect.
+                // We verify we are not in the middle of a logout action (optional but good practice)
+                console.log("User already logged in, redirecting...");
+                window.location.href = '/dashboard';
+            }
+        });
 
         // --- UI HELPERS ---
         const getEl = (id) => document.getElementById(id);
@@ -607,7 +620,7 @@
             toggleLoading('btn-login', true);
             try {
                 await signInWithEmailAndPassword(auth, email, password);
-                window.location.href = '/'; // Redirigir al dashboard
+                window.location.href = '/dashboard';
             } catch (error) {
                 console.error(error);
                 let msg = "Error al iniciar sesión.";
@@ -632,7 +645,7 @@
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 // Actualizar nombre
                 await updateProfile(userCredential.user, { displayName: name });
-                window.location.href = '/'; // Redirigir al dashboard
+                window.location.href = '/dashboard';
             } catch (error) {
                 console.error(error);
                 let msg = "Error al crear cuenta.";
@@ -648,7 +661,7 @@
         const handleSocialLogin = async (provider) => {
             try {
                 await signInWithPopup(auth, provider);
-                window.location.href = '/';
+                window.location.href = '/dashboard';
             } catch (error) {
                 console.error(error);
                 let msg = "Error con inicio de sesión social.";

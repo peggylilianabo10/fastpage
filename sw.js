@@ -1,18 +1,19 @@
 // Service Worker for PWA
-const CACHE_NAME = 'fastpage-v1';
+const CACHE_NAME = 'fastpage-v5'; // Updated version to force cache refresh
+// Only cache static assets, NOT the HTML page preventing stale content issues
 const urlsToCache = [
-    '/',
-    '/index.html',
     '/assets/index-upvKpgH8.css',
     '/assets/index-BIkGezMg.js'
 ];
 
 // Install event - cache resources
 self.addEventListener('install', (event) => {
+    // Force this service worker to become the active service worker immediately
+    self.skipWaiting();
+
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then((cache) => cache.addAll(urlsToCache))
-            .then(() => self.skipWaiting())
     );
 });
 
@@ -27,36 +28,42 @@ self.addEventListener('activate', (event) => {
                     }
                 })
             );
-        }).then(() => self.clients.claim())
+        }).then(() => self.clients.claim()) // Claim clients immediately
     );
 });
 
-// Fetch event - serve from cache, fallback to network
+// Fetch event
 self.addEventListener('fetch', (event) => {
+    // 1. Navigation (HTML) -> NETWORK ONLY with fallback to index.html
+    // This ensures the user ALWAYS sees the latest version when refreshing
+    if (event.request.mode === 'navigate') {
+        event.respondWith(
+            fetch(event.request)
+                .catch(() => {
+                    // If network fails or 404, try to serve index.html
+                    return fetch('/index.html');
+                })
+        );
+        return;
+    }
+
+    // 2. Assets (CSS, JS, Images) -> Cache First, Network Fallback
     event.respondWith(
         caches.match(event.request)
             .then((response) => {
-                // Cache hit - return response
                 if (response) {
                     return response;
                 }
-
-                // Clone the request
-                const fetchRequest = event.request.clone();
-
-                return fetch(fetchRequest).then((response) => {
+                return fetch(event.request).then((response) => {
                     // Check if valid response
                     if (!response || response.status !== 200 || response.type !== 'basic') {
                         return response;
                     }
 
-                    // Clone the response
                     const responseToCache = response.clone();
-
-                    caches.open(CACHE_NAME)
-                        .then((cache) => {
-                            cache.put(event.request, responseToCache);
-                        });
+                    caches.open(CACHE_NAME).then((cache) => {
+                        cache.put(event.request, responseToCache);
+                    });
 
                     return response;
                 });

@@ -78,6 +78,76 @@
     }
   }
   </script>
+
+  <!-- ⚠️ NUCLEAR ROUTING CONTROL - ABSOLUTE PRIORITY ⚠️ -->
+  <script>
+    (function () {
+      'use strict';
+
+      // STEP 1: Detect if we're accessing dashboard
+      const isDashboardRoute = window.location.pathname.startsWith('/dashboard');
+
+      if (isDashboardRoute) {
+        console.log('🔒 [DASHBOARD LOCK] Activated - Blocking all navigation for 3 seconds');
+
+        // STEP 2: Create a LOCK that prevents ANY navigation away from dashboard
+        window.__DASHBOARD_LOCK__ = true;
+
+        // STEP 3: Override ALL navigation methods
+        const originalPushState = window.history.pushState;
+        const originalReplaceState = window.history.replaceState;
+        const originalAssign = Object.getOwnPropertyDescriptor(window.location, 'href').set;
+
+        // Block pushState
+        window.history.pushState = function (state, title, url) {
+          if (window.__DASHBOARD_LOCK__ && !url.includes('/dashboard')) {
+            console.log('🚫 [BLOCKED] pushState to:', url, '→ Keeping /dashboard');
+            return originalPushState.call(this, state, title, '/dashboard');
+          }
+          return originalPushState.call(this, state, title, url);
+        };
+
+        // Block replaceState
+        window.history.replaceState = function (state, title, url) {
+          if (window.__DASHBOARD_LOCK__ && !url.includes('/dashboard')) {
+            console.log('🚫 [BLOCKED] replaceState to:', url, '→ Keeping /dashboard');
+            return originalReplaceState.call(this, state, title, '/dashboard');
+          }
+          return originalReplaceState.call(this, state, title, url);
+        };
+
+        // Block location.href changes
+        Object.defineProperty(window.location, 'href', {
+          set: function (url) {
+            if (window.__DASHBOARD_LOCK__ && !url.includes('/dashboard')) {
+              console.log('🚫 [BLOCKED] location.href to:', url, '→ Staying on /dashboard');
+              return;
+            }
+            originalAssign.call(this, url);
+          },
+          get: function () {
+            return window.location.toString();
+          }
+        });
+
+        // STEP 4: Release lock after 3 seconds (enough time for React to initialize)
+        setTimeout(() => {
+          console.log('🔓 [DASHBOARD LOCK] Released - Navigation enabled');
+          window.__DASHBOARD_LOCK__ = false;
+        }, 3000);
+      } else {
+        // Not dashboard - check if we just came from login
+        const urlParams = new URLSearchParams(window.location.search);
+        const justLoggedIn = urlParams.get('logged') === 'true';
+
+        if (justLoggedIn) {
+          console.log('🔄 [AUTO-REDIRECT] Just logged in, redirecting to dashboard...');
+          window.location.replace('/dashboard');
+        }
+      }
+    })();
+  </script>
+
 </head>
 
 <body>
@@ -93,6 +163,7 @@
 
   <!-- Main App -->
   <div id="root"></div>
+
 
   <!-- Language Selector (Bottom-Left) -->
   <div id="lang-selector" class="lang-selector" aria-label="Selector de idioma">
@@ -1899,8 +1970,40 @@
       // ===== SERVICE WORKER (PWA) =====
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js').catch(() => {
-            // Service worker registration failed, that's okay
+          // Add version param to force browser to check for new SW file
+          navigator.serviceWorker.register('/sw.js?v=' + new Date().getTime()).then(registration => {
+
+            // Check for updates periodically
+            setInterval(() => {
+              registration.update();
+            }, 60 * 60 * 1000); // Check every hour
+
+            // If there's a waiting worker, it means an update is ready but waiting for tabs to close
+            if (registration.waiting) {
+              registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+            }
+
+            registration.addEventListener('updatefound', () => {
+              const newWorker = registration.installing;
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  // Update available
+                  if (confirm("Nueva version disponible. ¿Recargar para actualizar?")) {
+                    window.location.reload();
+                  }
+                }
+              });
+            });
+          }).catch(() => {
+            // Service worker registration failed
+          });
+
+          // Reload page when new SW takes control
+          let refreshing;
+          navigator.serviceWorker.addEventListener('controllerchange', () => {
+            if (refreshing) return;
+            window.location.reload();
+            refreshing = true;
           });
         });
       }
@@ -2231,58 +2334,52 @@
     const auth = getAuth(app);
     let currentUser = null;
 
-    // --- UI MANIPULATION ---
-    const goToAuth = (mode, e) => {
-      if (e) { e.preventDefault(); e.stopPropagation(); }
-      window.location.href = 'auth.html' + (mode === 'register' ? '#register' : '#login');
-    };
-
+    // --- LOGOUT LOGIC ---
     const handleLogout = async (e) => {
       if (e) e.preventDefault();
       try {
         await signOut(auth);
-        window.location.reload(); // Recargar para limpiar estado
+        window.location.href = '/'; // Redirect to Landing Page
       } catch (error) {
         console.error("Logout error", error);
         alert("Error al cerrar sesión");
       }
     };
 
-    const updateHeaderUI = () => {
-      // Buscar botones de autenticación generados por React
+
+    // --- LANDING PAGE UI HELPER ---
+    const goToAuth = (mode, e) => {
+      if (e) { e.preventDefault(); e.stopPropagation(); }
+      window.location.href = 'auth.html' + (mode === 'register' ? '#register' : '#login');
+    };
+
+    const updateLandingUI = (user) => {
+      // Only run this if we are NOT in dashboard mode
+      if (window.location.pathname === '/dashboard') return;
+
       const targets = document.querySelectorAll('a, button, div[role="button"]');
-
       targets.forEach(el => {
-        // Ignorar si es el chat o ya procesado (aunque si cambia el estado auth, quizás debamos reprocesar)
-        // Para simplificar, si ya tiene nuestro ID de logout, no tocamos
-        if (el.dataset.sessionAction === 'logout' || el.closest('#new-chat-widget')) return;
-
+        if (el.dataset.sessionAction === 'logout' || el.closest('#new-chat-widget') || el.closest('.dash-nav')) return;
         const text = el.innerText ? el.innerText.toLowerCase().trim() : '';
 
         // Detectar botones de Login/Registro
         if (['login', 'iniciar sesión', 'entrar'].includes(text) ||
-          ['registrarse', 'crear cuenta', 'sign up', 'empieza gratis', 'comenzar ahora'].includes(text)) {
+          ['registrarse', 'crear cuenta', 'sign up', 'empieza gratis', 'comenzar ahora', 'empezar gratis'].includes(text)) {
 
-          if (currentUser) {
-            // USUARIO LOGUEADO: Reemplazar Login por saludo o ocultar, y Registro por Logout
+          if (user) {
+            // USER LOGGED IN ON LANDING PAGE
             if (['login', 'iniciar sesión', 'entrar'].includes(text)) {
-              el.style.display = 'none'; // Ocultar Login
+              el.style.display = 'none'; // Hide "Login"
             } else {
-              // Transformar botón de registro en "Cerrar Sesión"
-              el.innerText = "Cerrar Sesión";
-              el.style.backgroundColor = "#ef4444"; // Rojo para logout
-              el.style.borderColor = "#ef4444";
-              el.dataset.sessionAction = 'logout';
-              el.onclick = handleLogout;
-              if (el.tagName === 'A') el.setAttribute('href', '#');
-              el.title = `Hola, ${currentUser.displayName || currentUser.email}`;
+              // Change "Register" to "Go to Dashboard"
+              el.innerText = "Ir al Dashboard";
+              el.style.backgroundColor = ""; // Keep original style or modify
+              el.onclick = (e) => { e.preventDefault(); window.location.href = '/dashboard'; };
+              if (el.tagName === 'A') el.setAttribute('href', '/dashboard');
             }
           } else {
-            // USUARIO NO LOGUEADO: Comportamiento normal (Redirigir a auth.html)
-            el.style.display = ''; // Asegurar visible
-            el.style.backgroundColor = ''; // Restaurar estilo original aprox (difícil saberlo exacto, pero quitamos el inline)
-            el.dataset.sessionAction = 'auth';
-
+            // GUEST
+            el.style.display = '';
             if (['login', 'iniciar sesión', 'entrar'].includes(text)) {
               el.onclick = (e) => goToAuth('login', e);
               if (el.tagName === 'A') el.setAttribute('href', 'auth.html#login');
@@ -2295,23 +2392,24 @@
       });
     };
 
-    // --- LOGIC ---
+    // --- MAIN AUTH OBSERVER ---
+    // Note: Dashboard routing is handled by head script
     onAuthStateChanged(auth, (user) => {
       currentUser = user;
-      console.log("FastPage Session State:", user ? "Logged In as " + user.email : "Guest");
-      updateHeaderUI();
+      console.log("Firebase Auth State:", user ? user.email : "Guest");
+
+      // Only update landing page UI
+      const path = window.location.pathname;
+      if (path === '/' || path === '/index.html') {
+        updateLandingUI(user);
+
+        // Observe DOM updates
+        if (!window.landingObserver) {
+          window.landingObserver = new MutationObserver(() => updateLandingUI(user));
+          window.landingObserver.observe(document.body, { childList: true, subtree: true });
+        }
+      }
     });
-
-    // Observer para cambios en el DOM (React render)
-    const observer = new MutationObserver(() => {
-      updateHeaderUI();
-    });
-
-    observer.observe(document.body, { childList: true, subtree: true });
-
-    // Failsafes
-    setTimeout(updateHeaderUI, 1000);
-    setTimeout(updateHeaderUI, 3000);
   </script>
 </body>
 
