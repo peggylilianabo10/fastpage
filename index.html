@@ -2038,6 +2038,54 @@
   </svg>`;
       }
 
+      // === FAQ SECTION === 
+      function injectFAQSection() {
+        if (document.getElementById('faq')) return;
+        const faqHTML = `
+          <section id="faq" style="max-width: 800px; margin: 60px auto; padding: 0 20px; font-family: 'Inter', sans-serif; color: var(--foreground);">
+            <h2 style="text-align: center; font-size: 2.5em; margin-bottom: 40px; color: var(--primary); font-weight: 700;">Preguntas Frecuentes</h2>
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+              <details style="background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                <summary style="font-size: 1.3em; font-weight: 600; cursor: pointer; color: var(--foreground); display: flex; align-items: center; justify-content: space-between;"><span>¿Qué es FastPage y cómo me ayuda a crear mi web?</span><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.3s ease;"><polyline points="6 9 12 15 18 9"></polyline></svg></summary>
+                <p style="margin-top: 15px; line-height: 1.7; color: var(--muted-foreground);">FastPage es una plataforma que te permite crear landing pages y sitios web profesionales de manera rápida y sin necesidad de escribir código. Utilizando nuestro intuitivo editor de arrastrar y soltar, puedes construir, personalizar y publicar tu sitio en cuestión de minutos.</p>
+              </details>
+              <details style="background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                <summary style="font-size: 1.3em; font-weight: 600; cursor: pointer; color: var(--foreground); display: flex; align-items: center; justify-content: space-between;"><span>¿Necesito conocimientos técnicos para usar FastPage?</span><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.3s ease;"><polyline points="6 9 12 15 18 9"></polyline></svg></summary>
+                <p style="margin-top: 15px; line-height: 1.7; color: var(--muted-foreground);">¡Absolutamente no! FastPage está diseñado para ser extremadamente amigable para principiantes. Con nuestra interfaz visual, cualquiera puede crear una página web impresionante, independientemente de su experiencia técnica.</p>
+              </details>
+              <details style="background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                <summary style="font-size: 1.3em; font-weight: 600; cursor: pointer; color: var(--foreground); display: flex; align-items: center; justify-content: space-between;"><span>¿FastPage es gratuito? ¿Cuáles son los planes de precios?</span><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.3s ease;"><polyline points="6 9 12 15 18 9"></polyline></svg></summary>
+                <p style="margin-top: 15px; line-height: 1.7; color: var(--muted-foreground);">Sí, FastPage ofrece un plan gratuito con funcionalidades esenciales para que puedas empezar. También tenemos planes PRO con características avanzadas como métricas de conversión, soporte prioritario, acceso al 'God Mode' Editor y mucho más, a partir de $9/mes. Puedes ver todos los detalles en nuestra sección de precios.</p>
+              </details>
+              <details style="background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                <summary style="font-size: 1.3em; font-weight: 600; cursor: pointer; color: var(--foreground); display: flex; align-items: center; justify-content: space-between;"><span>¿Puedo conectar mi propio dominio a las páginas creadas en FastPage?</span><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.3s ease;"><polyline points="6 9 12 15 18 9"></polyline></svg></summary>
+                <p style="margin-top: 15px; line-height: 1.7; color: var(--muted-foreground);">¡Claro que sí! Con los planes de pago de FastPage, tienes la opción de conectar tu dominio personalizado a tus landing pages, dándoles una apariencia aún más profesional y de marca.</p>
+              </details>
+              <details style="background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                <summary style="font-size: 1.3em; font-weight: 600; cursor: pointer; color: var(--foreground); display: flex; align-items: center; justify-content: space-between;"><span>¿Cómo funciona el soporte técnico en FastPage?</span><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.3s ease;"><polyline points="6 9 12 15 18 9"></polyline></svg></summary>
+                <p style="margin-top: 15px; line-height: 1.7; color: var(--muted-foreground);">Ofrecemos soporte comunitario a todos nuestros usuarios. Para los usuarios de los planes PRO, disponemos de soporte prioritario 24/7 para ayudarte con cualquier duda o problema que pueda surgir.</p>
+              </details>
+            </div>
+          </section>
+        `;
+        const container = document.querySelector('main') || document.querySelector('.container') || document.body;
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = faqHTML;
+        container.insertBefore(tempDiv.firstElementChild, container.querySelector('#pricing-section-v2') || null);
+        
+        // Add accordion animation
+        document.querySelectorAll('#faq details').forEach(detail => {
+          detail.addEventListener('toggle', () => {
+            const svg = detail.querySelector('svg');
+            if (detail.open) {
+              svg.style.transform = 'rotate(180deg)';
+            } else {
+              svg.style.transform = 'rotate(0deg)';
+            }
+          });
+        });
+      }
+
       function injectPricingSection() {
         if (document.getElementById('pricing-section-v2')) return;
 
@@ -2100,9 +2148,6 @@
             highlight: true
           }
         ];
-
-        // Ensure highlighted plans appear first (PRO above Starter)
-        pricingPlans.sort((a, b) => (b.highlight ? 1 : 0) - (a.highlight ? 1 : 0));
 
         pricingPlans.forEach(plan => {
           const isPro = plan.highlight;
@@ -2644,97 +2689,7 @@
       }
     });
   </script>
-  <section id="faq" style="max-width: 800px; margin: 60px auto; padding: 0 20px; font-family: 'Inter', sans-serif; color: var(--foreground);">
-    <h2 style="text-align: center; font-size: 2.5em; margin-bottom: 40px; color: var(--primary); font-weight: 700;">Preguntas Frecuentes</h2>
 
-    <div style="display: flex; flex-direction: column; gap: 20px;">
-      <details style="background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-        <summary style="font-size: 1.3em; font-weight: 600; cursor: pointer; color: var(--foreground); display: flex; align-items: center; justify-content: space-between;">
-          <span>¿Qué es FastPage y cómo me ayuda a crear mi web?</span>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.3s ease;"><polyline points="6 9 12 15 18 9"></polyline></svg>
-        </summary>
-        <p style="margin-top: 15px; line-height: 1.7; color: var(--muted-foreground);">FastPage es una plataforma que te permite crear landing pages y sitios web profesionales de manera rápida y sin necesidad de escribir código. Utilizando nuestro intuitivo editor de arrastrar y soltar, puedes construir, personalizar y publicar tu sitio en cuestión de minutos.</p>
-      </details>
-
-      <details style="background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-        <summary style="font-size: 1.3em; font-weight: 600; cursor: pointer; color: var(--foreground); display: flex; align-items: center; justify-content: space-between;">
-          <span>¿Necesito conocimientos técnicos para usar FastPage?</span>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.3s ease;"><polyline points="6 9 12 15 18 9"></polyline></svg>
-        </summary>
-        <p style="margin-top: 15px; line-height: 1.7; color: var(--muted-foreground);">¡Absolutamente no! FastPage está diseñado para ser extremadamente amigable para principiantes. Con nuestra interfaz visual, cualquiera puede crear una página web impresionante, independientemente de su experiencia técnica.</p>
-      </details>
-
-      <details style="background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-        <summary style="font-size: 1.3em; font-weight: 600; cursor: pointer; color: var(--foreground); display: flex; align-items: center; justify-content: space-between;">
-          <span>¿FastPage es gratuito? ¿Cuáles son los planes de precios?</span>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.3s ease;"><polyline points="6 9 12 15 18 9"></polyline></svg>
-        </summary>
-        <p style="margin-top: 15px; line-height: 1.7; color: var(--muted-foreground);">Sí, FastPage ofrece un plan gratuito con funcionalidades esenciales para que puedas empezar. También tenemos planes PRO con características avanzadas como métricas de conversión, soporte prioritario, acceso al 'God Mode' Editor y mucho más, a partir de $9/mes. Puedes ver todos los detalles en nuestra sección de precios.</p>
-      </details>
-
-      <details style="background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-        <summary style="font-size: 1.3em; font-weight: 600; cursor: pointer; color: var(--foreground); display: flex; align-items: center; justify-content: space-between;">
-          <span>¿Puedo conectar mi propio dominio a las páginas creadas en FastPage?</span>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.3s ease;"><polyline points="6 9 12 15 18 9"></polyline></svg>
-        </summary>
-        <p style="margin-top: 15px; line-height: 1.7; color: var(--muted-foreground);">¡Claro que sí! Con los planes de pago de FastPage, tienes la opción de conectar tu dominio personalizado a tus landing pages, dándoles una apariencia aún más profesional y de marca.</p>
-      </details>
-
-      <details style="background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-        <summary style="font-size: 1.3em; font-weight: 600; cursor: pointer; color: var(--foreground); display: flex; align-items: center; justify-content: space-between;">
-          <span>¿Cómo funciona el soporte técnico en FastPage?</span>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.3s ease;"><polyline points="6 9 12 15 18 9"></polyline></svg>
-        </summary>
-        <p style="margin-top: 15px; line-height: 1.7; color: var(--muted-foreground);">Ofrecemos soporte comunitario a todos nuestros usuarios. Para los usuarios de los planes PRO, disponemos de soporte prioritario 24/7 para ayudarte con cualquier duda o problema que pueda surgir.</p>
-      </details>
-    </div>
-  </section>
-
-  <script>
-    // JavaScript para la funcionalidad de acordeón del FAQ
-    document.querySelectorAll('#faq details').forEach(detail => {
-      detail.addEventListener('toggle', () => {
-        const svg = detail.querySelector('svg');
-        if (detail.open) {
-          svg.style.transform = 'rotate(180deg)';
-        } else {
-          svg.style.transform = 'rotate(0deg)';
-        }
-      });
-    });
-
-    // Mover el FAQ al final del documento después de que la página y los scripts se hayan cargado
-    function moveFaqToEnd() {
-      const faq = document.getElementById('faq');
-      if (!faq) return;
-
-      // Try to move after a short delay to let dynamic content inject (footer, etc.)
-      setTimeout(() => {
-        try {
-          document.body.appendChild(faq);
-          console.log('FAQ movido al final del body');
-        } catch (e) {
-          console.warn('No se pudo mover el FAQ al final:', e);
-        }
-      }, 500);
-
-      // Also observe for late-injected footers and ensure FAQ remains last
-      const observer = new MutationObserver(() => {
-        const last = document.body.lastElementChild;
-        if (last && last.id !== 'faq') {
-          document.body.appendChild(faq);
-        }
-      });
-      observer.observe(document.body, { childList: true, subtree: false });
-
-      // Stop observing after 10s
-      setTimeout(() => observer.disconnect(), 10000);
-    }
-
-    if (document.readyState === 'complete') moveFaqToEnd();
-    else window.addEventListener('load', moveFaqToEnd);
-
-  </script>
 
 </body>
 
