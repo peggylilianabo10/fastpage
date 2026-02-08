@@ -2733,52 +2733,6 @@
       if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', injectTestimonialSection);
       else injectTestimonialSection();
     })();
-
-    // === FOOTER REPOSITIONER ===
-    (function() {
-      function moveFooterToBottom() {
-        // Look for footer-like sections by searching for text patterns
-        const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-        let node;
-        while (node = walker.nextNode()) {
-          const text = node.nodeValue || '';
-          // Look for footer indicators like copyright text or footer links
-          if (text.includes('© 2026') || text.includes('Todos los derechos reservados') || 
-              text.includes('All rights reserved') || text.includes('Términos')) {
-            let parent = node.parentElement;
-            // Climb up to find the footer section/container
-            for (let i = 0; i < 10; i++) {
-              if (!parent) break;
-              // Check if this is a footer or similar container
-              if (parent.className && (parent.className.includes('footer') || parent.className.includes('muted') || parent.className.includes('border-t'))) {
-                // Found footer! Move it to end
-                if (parent.closest('main, #root, body')) {
-                  const root = document.getElementById('root') || document.querySelector('main') || document.body;
-                  root.appendChild(parent);
-                  console.log('✅ Footer repositioned to bottom');
-                  return true;
-                }
-              }
-              parent = parent.parentElement;
-            }
-          }
-        }
-        return false;
-      }
-
-      // Try immediately and then watch for footer
-      setTimeout(moveFooterToBottom, 1000);
-      
-      // Also watch for DOM changes
-      const observer = new MutationObserver(() => {
-        moveFooterToBottom();
-      });
-
-      observer.observe(document.body, { childList: true, subtree: true });
-
-      // Stop after 10 seconds
-      setTimeout(() => observer.disconnect(), 10000);
-    })();
   </script>
   <!-- === SESSION MANAGER & AUTH REDIRECTOR === -->
   <script type="module">
