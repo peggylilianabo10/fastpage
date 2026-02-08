@@ -82,22 +82,27 @@
     const db = getFirestore(app);
 
     let currentUser = null;
-    onAuthStateChanged(auth, (user) => {
-      currentUser = user;
-    });
+    onAuthStateChanged(auth, (user) => { currentUser = user; });
 
-    // Simple drag & drop block builder (minimal, client-side only)
+    // Mobile-first responsive behavior: panels collapse under 900px
     const blocks = document.querySelectorAll('.block[draggable]');
     const canvas = document.getElementById('canvas');
     const inspector = document.getElementById('inspector');
     const inspectorEmpty = document.getElementById('inspectorEmpty');
+    const leftPanel = document.querySelector('.panel.left');
+    const rightPanel = document.querySelector('.panel.right');
 
-    let dragData = null;
+    // Device preview
+    const previewMode = { device: 'desktop' };
+    function setDevice(mode){ previewMode.device = mode; document.body.dataset.device = mode; }
+    // expose for UI (could add buttons later)
+    window.setDevice = setDevice;
 
+    // Enhance blocks list with emoji and descriptive icons
+    // Turn nodeList into live drag handlers
     blocks.forEach(b=>{
       b.addEventListener('dragstart', (e)=>{
-        dragData = {type: b.dataset.type, label: b.textContent.trim()};
-        e.dataTransfer.setData('text/plain', JSON.stringify(dragData));
+        e.dataTransfer.setData('text/plain', JSON.stringify({type: b.dataset.type, label: b.dataset.label || b.textContent.trim()}));
       });
     });
 
@@ -105,148 +110,201 @@
     canvas.addEventListener('drop', e=>{
       e.preventDefault();
       let data = null;
-      try{ data = JSON.parse(e.dataTransfer.getData('text/plain')); }catch(err){ data = dragData; }
+      try{ data = JSON.parse(e.dataTransfer.getData('text/plain')); }catch(err){ }
       if(!data) return;
-      const el = document.createElement('div');
-      el.className = 'block';
-      el.textContent = data.label;
-      el.setAttribute('data-type', data.type);
-      el.setAttribute('draggable','true');
-      el.addEventListener('click', ()=> selectBlock(el));
+      const el = createBlockElement(data.type, data.label);
       canvas.appendChild(el);
       selectBlock(el);
     });
+
+    function createBlockElement(type, label){
+      const el = document.createElement('div');
+      el.className = 'block';
+      el.setAttribute('draggable','true');
+      el.dataset.type = type || 'block';
+      el.dataset.props = JSON.stringify({bg:'#ffffff', color:'#0f172a', fontSize:16, padding:20, radius:8});
+
+      // structured content for complex blocks
+      if(type==='hero'){
+        el.innerHTML = `<div style="font-weight:800;font-size:28px">${label}</div><div class="small">Subtítulo editable</div>`;
+      } else if(type==='features'){
+        el.innerHTML = `<div style="font-weight:700">Características</div><div class="small">Velocidad · Diseño · Analítica</div>`;
+      } else if(type==='testimonials'){
+        el.dataset.structure = JSON.stringify([{name:'CEO',text:'Excelente herramienta'},{name:'CTO',text:'Muy recomendable'}]);
+        el.innerHTML = renderTestimonials(JSON.parse(el.dataset.structure));
+      } else if(type==='pricing'){
+        el.innerHTML = `<div style="font-weight:700">Planes para Ganadores</div><div class="small">Starter • PRO Business</div>`;
+      } else if(type==='faq'){
+        el.dataset.structure = JSON.stringify([{q:'¿Qué es FastPage?', a:'Constructor de landings sin código.'}]);
+        el.innerHTML = renderFAQ(JSON.parse(el.dataset.structure));
+      } else if(type==='widget'){
+        el.innerHTML = `<div style="font-weight:700">Widget Embebido</div><div class="small">Inserta código HTML/iframe desde propiedades</div>`;
+      } else {
+        el.textContent = label || 'Bloque';
+      }
+
+      el.addEventListener('click', ()=> selectBlock(el));
+      el.addEventListener('dragstart', (e)=> e.dataTransfer.setData('text/plain', JSON.stringify({type: el.dataset.type, label: el.textContent})) );
+      return el;
+    }
 
     function selectBlock(el){
       document.querySelectorAll('#canvas .block').forEach(x=>x.style.outline='');
       el.style.outline = '2px solid rgba(124,58,237,0.2)';
       inspectorEmpty.style.display='none';
-      inspector.innerHTML = `
-        <div style="margin-bottom:8px;font-weight:700">${el.textContent}</div>
-        <label class="small">Texto</label>
-        <textarea id="propText" style="width:100%;height:80px">${el.textContent}</textarea>
-        <div style="margin-top:8px;display:flex;gap:8px"><button class="btn" onclick="applyProps()">Aplicar</button><button class="btn" onclick="removeBlock()">Eliminar</button></div>
-      `;
+      const props = JSON.parse(el.dataset.props || '{}');
+      const type = el.dataset.type || 'block';
+      const structure = el.dataset.structure ? JSON.parse(el.dataset.structure) : null;
+
+      inspector.innerHTML = '';
+      // Header
+      const header = document.createElement('div'); header.style.marginBottom='8px'; header.style.fontWeight='700'; header.textContent = type.toUpperCase(); inspector.appendChild(header);
+
+      // Properties: background, color, fontSize, padding, radius
+      inspector.appendChild(makeLabel('Fondo'));
+      const bgInput = makeInput('color', props.bg || '#ffffff'); inspector.appendChild(bgInput);
+      inspector.appendChild(makeLabel('Color Texto'));
+      const colorInput = makeInput('color', props.color || '#0f172a'); inspector.appendChild(colorInput);
+      inspector.appendChild(makeLabel('Tamaño Fuente'));
+      const sizeInput = makeInput('number', props.fontSize || 16); sizeInput.style.width='80px'; inspector.appendChild(sizeInput);
+      inspector.appendChild(makeLabel('Padding'));
+      const padInput = makeInput('number', props.padding || 20); padInput.style.width='80px'; inspector.appendChild(padInput);
+      inspector.appendChild(makeLabel('Redondeo'));
+      const radInput = makeInput('number', props.radius || 8); radInput.style.width='80px'; inspector.appendChild(radInput);
+
+      // Content editor
+      inspector.appendChild(makeLabel('Contenido'));
+      const txt = document.createElement('textarea'); txt.style.width='100%'; txt.style.height='90px';
+      if(structure && (type==='testimonials' || type==='faq')){
+        // structured editor
+        if(type==='testimonials'){
+          const list = document.createElement('div'); list.id='testiList'; list.style.marginBottom='8px';
+          structure.forEach((it,idx)=>{
+            const row = document.createElement('div'); row.style.display='flex'; row.style.gap='8px'; row.style.marginBottom='6px';
+            const name = document.createElement('input'); name.value = it.name; name.style.flex='0 0 120px';
+            const text = document.createElement('input'); text.value = it.text; text.style.flex='1';
+            const del = document.createElement('button'); del.textContent='Eliminar'; del.className='btn'; del.onclick=()=>{ structure.splice(idx,1); selectBlock(el); };
+            row.appendChild(name); row.appendChild(text); row.appendChild(del);
+            list.appendChild(row);
+          });
+          const addBtn = document.createElement('button'); addBtn.className='btn'; addBtn.textContent='➕ Añadir Testimonio'; addBtn.onclick=()=>{ structure.push({name:'Nuevo',text:'Comentario'}); el.dataset.structure = JSON.stringify(structure); selectBlock(el); };
+          inspector.appendChild(list); inspector.appendChild(addBtn);
+        } else if(type==='faq'){
+          const list = document.createElement('div'); list.id='faqList'; list.style.marginBottom='8px';
+          structure.forEach((it,idx)=>{
+            const row = document.createElement('div'); row.style.display='flex'; row.style.gap='8px'; row.style.marginBottom='6px';
+            const q = document.createElement('input'); q.value = it.q; q.style.flex='0 0 160px';
+            const a = document.createElement('input'); a.value = it.a; a.style.flex='1';
+            const del = document.createElement('button'); del.textContent='Eliminar'; del.className='btn'; del.onclick=()=>{ structure.splice(idx,1); el.dataset.structure = JSON.stringify(structure); selectBlock(el); };
+            row.appendChild(q); row.appendChild(a); row.appendChild(del);
+            list.appendChild(row);
+          });
+          const addBtn = document.createElement('button'); addBtn.className='btn'; addBtn.textContent='➕ Añadir FAQ'; addBtn.onclick=()=>{ structure.push({q:'Nueva pregunta',a:'Respuesta'}); el.dataset.structure = JSON.stringify(structure); selectBlock(el); };
+          inspector.appendChild(list); inspector.appendChild(addBtn);
+        }
+      } else {
+        txt.value = el.textContent;
+        inspector.appendChild(txt);
+      }
+
+      // Actions
+      const actions = document.createElement('div'); actions.style.display='flex'; actions.style.gap='8px'; actions.style.marginTop='8px';
+      const apply = document.createElement('button'); apply.className='btn primary'; apply.textContent='Aplicar'; apply.onclick=()=>{
+        // apply visual props
+        const newProps = { bg: bgInput.value, color: colorInput.value, fontSize: Number(sizeInput.value), padding: Number(padInput.value), radius: Number(radInput.value) };
+        el.dataset.props = JSON.stringify(newProps);
+        if(txt && !txt.hidden){ el.textContent = txt.value; }
+        // structured updates
+        if(el.dataset.structure){
+          // no-op here, selectBlock handles rendering
+        }
+        renderBlock(el);
+      };
+      const del = document.createElement('button'); del.className='btn'; del.textContent='Eliminar'; del.onclick=()=>{ el.remove(); inspector.innerHTML=''; inspectorEmpty.style.display='block'; };
+      actions.appendChild(apply); actions.appendChild(del); inspector.appendChild(actions);
+
       window._selected = el;
     }
 
-    function applyProps(){
-      const v = document.getElementById('propText').value;
-      if(window._selected) window._selected.textContent = v;
-    }
-    function removeBlock(){ if(window._selected){ window._selected.remove(); inspector.innerHTML=''; inspectorEmpty.style.display='block'; }}
+    function makeLabel(txt){ const l = document.createElement('div'); l.textContent = txt; l.style.marginTop='8px'; l.style.fontWeight='600'; l.className='small'; return l; }
+    function makeInput(type, val){ const i = document.createElement('input'); i.type = type; i.value = val; i.style.padding='8px'; i.style.marginBottom='6px'; i.style.border='1px solid rgba(0,0,0,0.08)'; i.style.borderRadius='6px'; return i; }
 
-    // Rich templates
-    function useTemplate(name){
+    function renderTestimonials(list){ return `<div><strong>Testimonios</strong><div class="small">` + list.map(it=>`<div style="padding:8px;border-radius:8px;background:#fff;margin:6px 0"><strong>${it.name}</strong><div class="small">${it.text}</div></div>`).join('') + `</div></div>`; }
+    function renderFAQ(list){ return `<div><strong>FAQ</strong><div class="small">` + list.map(it=>`<details style="margin:6px 0"><summary style="font-weight:700">${it.q}</summary><div class="small">${it.a}</div></details>`).join('') + `</div></div>`; }
+
+    function renderBlock(el){
+      const props = JSON.parse(el.dataset.props || '{}');
+      el.style.background = props.bg || '#fff';
+      el.style.color = props.color || '#0f172a';
+      el.style.fontSize = (props.fontSize || 16) + 'px';
+      el.style.padding = (props.padding || 20) + 'px';
+      el.style.borderRadius = (props.radius || 8) + 'px';
+      // complex render
+      if(el.dataset.type==='testimonials' && el.dataset.structure){ el.innerHTML = renderTestimonials(JSON.parse(el.dataset.structure)); }
+      if(el.dataset.type==='faq' && el.dataset.structure){ el.innerHTML = renderFAQ(JSON.parse(el.dataset.structure)); }
+    }
+
+    // Templates buttons already call useTemplate
+    window.useTemplate = function(name){
       canvas.innerHTML = '';
       if(name==='startup'){
-        const hero=document.createElement('div'); hero.className='block'; hero.textContent='Hero - Crea tu web en segundos\nSubtítulo: Arrastra y publica tu landing'; canvas.appendChild(hero);
-        const feat=document.createElement('div'); feat.className='block'; feat.textContent='Características - Velocidad, Diseño Premium, Analítica Pro'; canvas.appendChild(feat);
-        const pricing=document.createElement('div'); pricing.className='block'; pricing.textContent='Planes para Ganadores\nStarter • PRO Business'; canvas.appendChild(pricing);
-        const faq=document.createElement('div'); faq.className='block'; faq.textContent='FAQ - ¿Qué es FastPage?\n¿Es gratis?\n¿Soporte?'; canvas.appendChild(faq);
+        canvas.appendChild(createBlockElement('hero','Hero — Crea tu web en segundos'));
+        canvas.appendChild(createBlockElement('features','Características — Velocidad, Diseño, Analítica'));
+        canvas.appendChild(createBlockElement('pricing','Planes para Ganadores'));
+        canvas.appendChild(createBlockElement('faq','FAQ'));
       } else if(name==='product'){
-        const hero=document.createElement('div'); hero.className='block'; hero.textContent='Hero - Producto Estrella'; canvas.appendChild(hero);
-        const test=document.createElement('div'); test.className='block'; test.textContent='Testimonios'; canvas.appendChild(test);
-        const faq=document.createElement('div'); faq.className='block'; faq.textContent='FAQ - Preguntas comunes'; canvas.appendChild(faq);
+        canvas.appendChild(createBlockElement('hero','Hero — Producto Estrella'));
+        canvas.appendChild(createBlockElement('testimonials','Testimonios'));
+        canvas.appendChild(createBlockElement('faq','FAQ'));
       }
-    }
+    };
 
-    // Remote save & publish
+    // Remote save & publish (keep as before but include props/structure)
     async function saveRemote() {
-      if(!currentUser){
-        if(confirm('Necesitas iniciar sesión para guardar en la nube. Ir a iniciar sesión ahora?')){
-          window.location.href = '/auth.html';
-        }
-        return;
-      }
-
-      const content = Array.from(document.querySelectorAll('#canvas .block')).map(b=>({type:b.dataset.type || 'block', text:b.textContent}));
-      const title = (content[0] && content[0].text.split('\n')[0]) || ('Proyecto ' + new Date().toISOString());
-
+      if(!currentUser){ if(confirm('Necesitas iniciar sesión para guardar en la nube. Ir a iniciar sesión ahora?')) window.location.href = '/auth.html'; return; }
+      const content = Array.from(document.querySelectorAll('#canvas .block')).map(b=>({type:b.dataset.type || 'block', text:b.textContent, props: b.dataset.props ? JSON.parse(b.dataset.props) : {}, structure: b.dataset.structure ? JSON.parse(b.dataset.structure) : null}));
+      const title = (content[0] && (content[0].text.split('\n')[0] || content[0].type)) || ('Proyecto ' + new Date().toISOString());
       try{
-        const docRef = await addDoc(collection(db, 'projects'), {
-          uid: currentUser.uid,
-          title,
-          content,
-          published: false,
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp()
-        });
+        const docRef = await addDoc(collection(db, 'projects'), { uid: currentUser.uid, title, content, published: false, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
         localStorage.setItem('last_project_id', docRef.id);
         alert('✓ Guardado en la nube (ID: ' + docRef.id + ')');
-      } catch(err){
-        console.error('Save error', err);
-        alert('Error guardando en la nube');
-      }
+      } catch(err){ console.error('Save error', err); alert('Error guardando en la nube'); }
     }
 
     async function publishRemote(){
-      if(!currentUser){
-        if(confirm('Necesitas iniciar sesión para publicar. Ir a iniciar sesión ahora?')){
-          window.location.href = '/auth.html';
-        }
-        return;
-      }
-
-      const content = Array.from(document.querySelectorAll('#canvas .block')).map(b=>({type:b.dataset.type || 'block', text:b.textContent}));
-      const html = content.map(b=>`<section style="padding:40px;border-bottom:1px solid #eee">${b.text}</section>`).join('');
+      if(!currentUser){ if(confirm('Necesitas iniciar sesión para publicar. Ir a iniciar sesión ahora?')) window.location.href = '/auth.html'; return; }
+      const nodes = Array.from(document.querySelectorAll('#canvas .block'));
+      const content = nodes.map(b=>({type:b.dataset.type || 'block', text:b.textContent, props: b.dataset.props ? JSON.parse(b.dataset.props) : {}, structure: b.dataset.structure ? JSON.parse(b.dataset.structure) : null}));
+      const html = nodes.map(b=>{
+        const props = JSON.parse(b.dataset.props||'{}');
+        let inner = '';
+        if(b.dataset.type==='testimonials' && b.dataset.structure) inner = renderTestimonials(JSON.parse(b.dataset.structure));
+        else if(b.dataset.type==='faq' && b.dataset.structure) inner = renderFAQ(JSON.parse(b.dataset.structure));
+        else inner = `<div>${b.textContent}</div>`;
+        return `<section style="padding:${props.padding||40}px;background:${props.bg||'#fff'};color:${props.color||'#0f172a'};border-radius:${props.radius||8}px">${inner}</section>`;
+      }).join('');
       const projectId = localStorage.getItem('last_project_id');
-
       try{
         let ref;
-        if(projectId){
-          ref = doc(db, 'projects', projectId);
-          await setDoc(ref, {
-            content, html, published: true, updatedAt: serverTimestamp(), uid: currentUser.uid
-          }, { merge: true });
-        } else {
-          ref = await addDoc(collection(db, 'projects'), {
-            uid: currentUser.uid, title: (content[0] ? content[0].text.split('\n')[0] : 'Published'), content, html, published: true, createdAt: serverTimestamp(), updatedAt: serverTimestamp()
-          });
-        }
-
+        if(projectId){ ref = doc(db, 'projects', projectId); await setDoc(ref, { content, html, published: true, updatedAt: serverTimestamp(), uid: currentUser.uid }, { merge: true }); }
+        else { ref = await addDoc(collection(db, 'projects'), { uid: currentUser.uid, title: (content[0] ? content[0].text.split('\n')[0] : 'Published'), content, html, published: true, createdAt: serverTimestamp(), updatedAt: serverTimestamp() }); }
         localStorage.setItem('last_project_id', ref.id || projectId);
         const id = ref.id || projectId;
         alert('✓ Publicado. Vista pública: /preview.html?id=' + id);
         window.open('/preview.html?id=' + id, '_blank');
-      } catch(err){
-        console.error('Publish error', err);
-        alert('Error publicando en la nube');
-      }
+      } catch(err){ console.error('Publish error', err); alert('Error publicando en la nube'); }
     }
 
-    // Attach actions
-    document.getElementById('saveBtn').addEventListener('click', ()=>{
-      // Save locally and remotely
-      const content = Array.from(document.querySelectorAll('#canvas .block')).map(b=>({type:b.dataset.type || 'block', text:b.textContent}));
-      localStorage.setItem('editor_draft', JSON.stringify(content));
-      // Try remote save too
-      saveRemote();
-    });
+    // Attachments
+    document.getElementById('saveBtn').addEventListener('click', ()=>{ const content = Array.from(document.querySelectorAll('#canvas .block')).map(b=>({type:b.dataset.type||'block', text:b.textContent})); localStorage.setItem('editor_draft', JSON.stringify(content)); saveRemote(); });
+    document.getElementById('previewBtn').addEventListener('click', ()=>{ const content = Array.from(document.querySelectorAll('#canvas .block')).map(b=>`<section style="padding:40px;border-bottom:1px solid #eee">${b.textContent}</section>`).join(''); const preview = window.open('about:blank','preview'); preview.document.write(`<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Preview</title><style>body{font-family:Inter,system-ui,Arial;padding:20px}</style></head><body>${content}</body></html>`); preview.document.close(); });
+    document.getElementById('publishBtn').addEventListener('click', ()=>{ if(!confirm('¿Publicar Landing Page ahora?')) return; publishRemote(); });
 
-    document.getElementById('previewBtn').addEventListener('click', ()=>{
-      const content = Array.from(document.querySelectorAll('#canvas .block')).map(b=>`<section style="padding:40px;border-bottom:1px solid #eee">${b.textContent}</section>`).join('');
-      const preview = window.open('about:blank','preview');
-      preview.document.write(`<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Preview</title><style>body{font-family:Inter,system-ui,Arial;padding:20px}</style></head><body>${content}</body></html>`);
-      preview.document.close();
-    });
+    // Load draft
+    (function(){ const draft = localStorage.getItem('editor_draft'); if(draft){ const arr = JSON.parse(draft); canvas.innerHTML = ''; arr.forEach(item=>{ const el=createBlockElement(item.type || 'block', item.text || item.type); if(item.props) el.dataset.props = JSON.stringify(item.props); if(item.structure) el.dataset.structure = JSON.stringify(item.structure); renderBlock(el); canvas.appendChild(el); }); } })();
 
-    document.getElementById('publishBtn').addEventListener('click', ()=>{
-      if(!confirm('¿Publicar Landing Page ahora?')) return;
-      publishRemote();
-    });
-
-    // Load draft if exists
-    (function(){
-      const draft = localStorage.getItem('editor_draft');
-      if(draft){
-        const arr = JSON.parse(draft);
-        canvas.innerHTML = '';
-        arr.forEach(item=>{
-          const el=document.createElement('div');el.className='block';el.textContent=item.text;canvas.appendChild(el);
-        });
-      }
-    })();
+    // Expose some helpers
+    window.saveRemote = saveRemote; window.publishRemote = publishRemote; window.renderBlock = renderBlock; window.createBlockElement = createBlockElement;
 
   </script>
 </body>
