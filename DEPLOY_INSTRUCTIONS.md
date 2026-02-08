@@ -10,6 +10,9 @@ El error 404 que ves al refrescar es porque **Vercel necesita la nueva configura
 2. ✅ `auth.html` - Redirección directa a /dashboard
 3. ✅ `vercel.json` - Configuración SPA para manejar /dashboard
 4. ✅ `sw.js` - Service Worker actualizado (v5)
+5. ✅ `hub.html` - Nuevo Dashboard principal con Modo Clonación
+6. ✅ `cloning.html` - Selector de plantillas de negocio
+7. ✅ `template-preview.html` - Motor de vista previa dinámica
 
 ## 🔧 Opciones para Deploy:
 

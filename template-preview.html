@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vista Previa de Plantilla - FastPage</title>
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👀</text></svg>" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --text: #0f172a;
+        }
+
+        /* Dynamic Theme Colors injected via JS */
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            padding-top: 60px;
+            /* Space for preview bar */
+        }
+
+        /* --- PREVIEW BAR (Not part of template) --- */
+        .preview-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: #1e1e1e;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            z-index: 9999;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .preview-btn {
+            background: #7c3aed;
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .preview-btn:hover {
+            background: #6d28d9;
+            transform: translateY(-1px);
+        }
+
+        /* --- TEMPLATE STYLES --- */
+        .hero {
+            position: relative;
+            padding: 6rem 1rem 4rem;
+            text-align: center;
+            background: var(--surface);
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.1;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--secondary);
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.4);
+            transition: all 0.3s;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px -5px rgba(37, 99, 235, 0.5);
+        }
+
+        /* Trust Bar */
+        .trust-bar {
+            padding: 2rem;
+            border-top: 1px solid #f1f5f9;
+            border-bottom: 1px solid #f1f5f9;
+            text-align: center;
+            background: #fff;
+        }
+
+        .trust-logos {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            opacity: 0.5;
+            flex-wrap: wrap;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #94a3b8;
+        }
+
+        /* Features */
+        .section {
+            padding: 5rem 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin: 0 auto 1.5rem;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            background: #f8fafc;
+        }
+
+        .testimonial-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1rem;
+        }
+
+        .stars {
+            color: #f59e0b;
+            margin-bottom: 1rem;
+        }
+
+        /* FAQ */
+        .faq-item {
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        .faq-question {
+            padding: 1.25rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-answer {
+            padding: 0 1.25rem 1.25rem;
+            color: var(--secondary);
+            line-height: 1.6;
+            display: none;
+        }
+
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+
+        .faq-item.active .faq-question {
+            color: var(--primary);
+        }
+
+        /* Floating CTA */
+        .floating-cta {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #25D366;
+            /* Whatsapp green */
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 4px 14px rgba(37, 211, 102, 0.4);
+            cursor: pointer;
+            z-index: 100;
+            transition: transform 0.2s;
+        }
+
+        .floating-cta:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Preview Bar -->
+    <div class="preview-bar">
+        <span>👁️ Vista Previa: <strong id="template-name">Cargando...</strong></span>
+        <div>
+            <a href="/cloning.html" style="color:#a78bfa; text-decoration:none; margin-right:20px; font-size:0.9rem;">←
+                Cancelar</a>
+            <button class="preview-btn" onclick="startCloning()">⚡ Clonar Esta Plantilla</button>
+        </div>
+    </div>
+
+    <!-- Template Content -->
+    <div id="app">
+        <section class="hero">
+            <div class="hero-bg" id="hero-bg"></div>
+            <div class="hero-content">
+                <span class="badge" id="hero-badge">🏆 #1 en el Mercado</span>
+                <h1 id="hero-title">Tu Negocio, Al Siguiente Nivel</h1>
+                <p class="subtitle" id="hero-desc">La solución integral para gestionar, crecer y automatizar tu negocio
+                    con total confianza.</p>
+                <a href="#" class="cta-btn" id="hero-cta">Comenzar Ahora →</a>
+            </div>
+        </section>
+
+        <div class="trust-bar">
+            <p style="font-size:0.8rem; margin-bottom:1rem; text-transform:uppercase; letter-spacing:1px;">Confían en
+                nosotros</p>
+            <div class="trust-logos">
+                <span>VISA</span>
+                <span>Mastercard</span>
+                <span>PayPal</span>
+                <span>Stripe</span>
+                <span>Google</span>
+            </div>
+        </div>
+
+        <section class="section" style="background: white;">
+            <div class="section-title">
+                <h2>¿Por qué elegirnos?</h2>
+                <p style="color:var(--secondary)">Todo lo que necesitas para triunfar</p>
+            </div>
+            <div class="features-grid" id="features-container">
+                <!-- JS Injected -->
+            </div>
+        </section>
+
+        <section class="section testimonials">
+            <div class="section-title">
+                <h2>Lo que dicen nuestros clientes</h2>
+                <p>Miles de usuarios satisfechos</p>
+            </div>
+            <div class="features-grid" id="testimonials-container">
+                <!-- JS Injected -->
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-title">
+                <h2>Preguntas Frecuentes</h2>
+            </div>
+            <div style="max-width: 800px; margin: 0 auto;" id="faq-container">
+                <!-- JS Injected -->
+            </div>
+        </section>
+
+        <div class="floating-cta">💬</div>
+    </div>
+
+    <script>
+        // --- DATA ---
+        const data = {
+            restaurant: {
+                name: "Restaurante Gourmet",
+                color: "#ea580c", // Orange
+                bg: "linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%)",
+                badge: "🍔 El Mejor Sabor de la Ciudad",
+                title: "Disfruta de la Alta Cocina en Casa",
+                desc: "Pide tus platos favoritos con delivery rápido y seguro. Ingredientes frescos, chefs expertos y sabor inigualable.",
+                cta: "Ver Menú y Pedir",
+                features: [
+                    { icon: "⚡", title: "Entrega Rápida", desc: "Llegamos caliente a tu puerta en menos de 30 minutos." },
+                    { icon: "🥗", title: "Ingredientes Frescos", desc: "Seleccionamos lo mejor del mercado cada mañana." },
+                    { icon: "💳", title: "Pago Seguro", desc: "Aceptamos todas las tarjetas y pagos digitales." }
+                ],
+                testimonials: [
+                    { name: "María G.", text: "¡La comida llegó increíblemente caliente y deliciosa! Definitivamente pediré de nuevo." },
+                    { name: "Carlos R.", text: "La mejor hamburguesa que he probado en años. El servicio es impecable." },
+                    { name: "Lucía M.", text: "Me encanta la variedad del menú vegano. Muy recomendado." }
+                ],
+                faqs: [
+                    { q: "¿Hacen envíos a toda la ciudad?", a: "Sí, cubrimos toda el área metropolitana con nuestra propia flota." },
+                    { q: "¿Tienen opciones sin gluten?", a: "Por supuesto, tenemos una sección dedicada en el menú." }
+                ]
+            },
+            realestate: {
+                name: "Inmobiliaria Premium",
+                color: "#2563eb", // Blue
+                bg: "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)",
+                badge: "🏠 Encuentra tu Hogar Ideal",
+                title: "Propiedades Exclusivas al Mejor Precio",
+                desc: "Compra, vende o alquila con la inmobiliaria líder del mercado. Asesoría legal y financiera incluida.",
+                cta: "Ver Propiedades",
+                features: [
+                    { icon: "📍", title: "Ubicaciones Prime", desc: "Las mejores zonas de la ciudad para vivir o invertir." },
+                    { icon: "💰", title: "Financiamiento", desc: "Te ayudamos a conseguir la mejor hipoteca del mercado." },
+                    { icon: "📝", title: "Trámites Fáciles", desc: "Nos encargamos de todo el papeleo legal por ti." }
+                ],
+                testimonials: [
+                    { name: "Roberto F.", text: "Vendieron mi casa en menos de 2 semanas. Un servicio muy profesional." },
+                    { name: "Ana P.", text: "Gracias a ellos encontré el departamento de mis sueños. ¡Mil gracias!" },
+                    { name: "Jorge L.", text: "La mejor asesoría para invertir en bienes raíces. Muy transparentes." }
+                ],
+                faqs: [
+                    { q: "¿Cuáles son los requisitos para alquilar?", a: "DNI, recibos de ingresos y un garante (opcional)." },
+                    { q: "¿Cobran comisión al comprador?", a: "No, nuestros honorarios los cubre el vendedor." }
+                ]
+            },
+            lawyer: {
+                name: "Estudio Jurídico",
+                color: "#1e293b", // Slate
+                bg: "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)",
+                badge: "⚖️ Defensa Legal Experta",
+                title: "Protegemos tus Derechos con Experiencia",
+                desc: "Abogados especialistas en derecho civil, penal y corporativo. Tu tranquilidad es nuestra prioridad.",
+                cta: "Consulta Gratuita",
+                features: [
+                    { icon: "tm", title: "Confidencialidad", desc: "Tus casos tratados con la máxima discreción absoluta." },
+                    { icon: "🎓", title: "Expertos", desc: "Equipo con más de 20 años de experiencia en litigios." },
+                    { icon: "🤝", title: "Trato Humano", desc: "Entendemos tu situación y te acompañamos en todo el proceso." }
+                ],
+                testimonials: [
+                    { name: "Empresa XYZ", text: "Nos han asesorado en fusiones complejas con un resultado impecable." },
+                    { name: "Pedro S.", text: "Recuperaron mi indemnización en tiempo récord. Muy agradecido." }
+                ],
+                faqs: [
+                    { q: "¿La primera consulta tiene costo?", a: "No, la evaluación inicial de tu caso es 100% gratuita." },
+                    { q: "¿En qué áreas se especializan?", a: "Derecho Corporativo, Laboral y Civil." }
+                ]
+            }
+            // Add more as needed (gym, health, etc map to defaults if missing)
+        };
+
+        const defaultData = data.realestate;
+
+        // --- RENDER LOGIC ---
+        const params = new URLSearchParams(window.location.search);
+        const type = params.get('type') || 'realestate';
+        const content = data[type] || defaultData; // Fallback
+
+        // Update Theme
+        document.documentElement.style.setProperty('--primary', content.color);
+        document.getElementById('template-name').textContent = content.name;
+        document.getElementById('hero-bg').style.background = content.bg;
+
+        // Update Texts
+        document.getElementById('hero-badge').textContent = content.badge;
+        document.getElementById('hero-title').textContent = content.title;
+        document.getElementById('hero-desc').textContent = content.desc;
+        document.getElementById('hero-cta').textContent = content.cta;
+
+        // Render Features
+        const featContainer = document.getElementById('features-container');
+        content.features.forEach(f => {
+            featContainer.innerHTML += `
+                <div class="feature-card">
+                    <div class="feature-icon">${f.icon}</div>
+                    <h3 style="margin-bottom:0.5rem; font-size:1.2rem;">${f.title}</h3>
+                    <p style="color:var(--secondary)">${f.desc}</p>
+                </div>
+            `;
+        });
+
+        // Render Testimonials
+        const testContainer = document.getElementById('testimonials-container');
+        content.testimonials.forEach(t => {
+            testContainer.innerHTML += `
+                <div class="testimonial-card">
+                    <div class="stars">★★★★★</div>
+                    <p style="margin-bottom:1rem; font-style:italic;">"${t.text}"</p>
+                    <div style="font-weight:700; color:var(--text);">${t.name}</div>
+                </div>
+            `;
+        });
+
+        // Render FAQs
+        const faqContainer = document.getElementById('faq-container');
+        content.faqs.forEach((item, index) => {
+            faqContainer.innerHTML += `
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        ${item.q}
+                        <span>+</span>
+                    </div>
+                    <div class="faq-answer">
+                        ${item.a}
+                    </div>
+                </div>
+            `;
+        });
+
+        // Helper functions
+        function toggleFaq(el) {
+            el.classList.toggle('active');
+        }
+
+        function startCloning() {
+            const btn = document.querySelector('.preview-btn');
+            btn.innerHTML = '⚙️ Creando copia...';
+            btn.disabled = true;
+            setTimeout(() => {
+                alert('¡Sitio clonado exitosamente! Ahora puedes editar los textos.');
+                window.location.href = '/hub.html';
+            }, 1000);
+        }
+
+    </script>
+</body>
+
+</html>

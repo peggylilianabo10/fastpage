@@ -3,7 +3,10 @@ const CACHE_NAME = 'fastpage-v5'; // Updated version to force cache refresh
 // Only cache static assets, NOT the HTML page preventing stale content issues
 const urlsToCache = [
     '/assets/index-upvKpgH8.css',
-    '/assets/index-BIkGezMg.js'
+    '/assets/index-BIkGezMg.js',
+    '/hub.html',
+    '/cloning.html',
+    '/template-preview.html'
 ];
 
 // Install event - cache resources and auto-activate

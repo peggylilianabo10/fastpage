@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastPage Hub - Panel de Control</title>
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
+    <style>
+        :root {
+            --primary: #7c3aed;
+            --primary-light: #8b5cf6;
+            --secondary: #10b981;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        body {
+            background: #f5f3ff;
+            min-height: 100vh;
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #ddd6fe;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .welcome-header {
+            margin-bottom: 3rem;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .welcome-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--text) 0%, var(--primary) 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .welcome-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-light);
+        }
+
+        /* Grid */
+        .hub-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        .hub-card {
+            background: var(--surface);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .hub-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px -12px rgba(124, 58, 237, 0.15);
+            border-color: rgba(124, 58, 237, 0.1);
+        }
+
+        .card-icon-wrapper {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .hub-card:hover .card-icon-wrapper {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .card-desc {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .card-link {
+            font-weight: 600;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: gap 0.2s;
+        }
+
+        .hub-card:hover .card-link {
+            gap: 0.8rem;
+        }
+
+        /* Specific Card Styles */
+        .card-builder .card-icon-wrapper {
+            background: #fff7ed;
+            color: #ea580c;
+        }
+
+        .card-analytics .card-icon-wrapper {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .card-settings .card-icon-wrapper {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .card-cloning {
+            background: linear-gradient(135deg, #ffffff 0%, #f5f3ff 100%);
+            border: 2px solid rgba(124, 58, 237, 0.1);
+        }
+
+        .card-cloning .card-icon-wrapper {
+            background: #ddd6fe;
+            color: #7c3aed;
+        }
+
+        .new-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            box-shadow: 0 4px 10px rgba(124, 58, 237, 0.3);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .container {
+                padding: 2rem 1.5rem;
+            }
+
+            .welcome-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <a href="#" class="logo">⚡ FastPage <span
+                style="font-size:0.7em; background:#f1f5f9; padding:2px 8px; border-radius:12px; color:#64748b;">HUB</span></a>
+        <div class="user-menu">
+            <div class="user-avatar">JP</div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="welcome-header">
+            <h1 class="welcome-title">Bienvenido de nuevo 👋</h1>
+            <p class="welcome-subtitle">Selecciona un modo de trabajo para comenzar a escalar tu negocio.</p>
+        </div>
+
+        <div class="hub-grid">
+            <!-- 1. Modo Construcción -->
+            <a href="/index.html" class="hub-card card-builder">
+                <div class="card-icon-wrapper">🏗️</div>
+                <h3 class="card-title">Modo Construcción</h3>
+                <p class="card-desc">Diseña sitios web visualmente con bloques Drag & Drop. Optimizado para Mobile
+                    First.</p>
+                <div class="card-link">Entrar al Editor <span>→</span></div>
+            </a>
+
+            <!-- 2. NEW: Modo Clonación -->
+            <a href="/cloning.html" class="hub-card card-cloning">
+                <div class="new-badge">NUEVO</div>
+                <div class="card-icon-wrapper">🧬</div>
+                <h3 class="card-title">Modo Clonación IA</h3>
+                <p class="card-desc">Clona modelos de negocio exitosos (Restaurantes, Hoteles, Servicios) con 1 clic.
+                    Incluye testimonios y FAQs.</p>
+                <div class="card-link">Explorar Modelos <span>→</span></div>
+            </a>
+
+            <!-- 3. Analytics -->
+            <a href="#" class="hub-card card-analytics" onclick="alert('Próximamente: Estadísticas detalladas')">
+                <div class="card-icon-wrapper">📊</div>
+                <h3 class="card-title">Analytics Pro</h3>
+                <p class="card-desc">Estadísticas detalladas de visitas y conversión de tus sitios en tiempo real.</p>
+                <div class="card-link">Ver Gráficas <span>→</span></div>
+            </a>
+
+            <!-- 4. Settings -->
+            <a href="#" class="hub-card card-settings" onclick="alert('Configuración en desarrollo')">
+                <div class="card-icon-wrapper">⚙️</div>
+                <h3 class="card-title">Configuración</h3>
+                <p class="card-desc">Gestión de perfil, licencias, dominios y preferencias de cuenta.</p>
+                <div class="card-link">Configurar <span>→</span></div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Auth Check Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBwG1SGZvp97zau4AGOIQxnIlNt9ig8dbs",
+            authDomain: "fast-page-726db.firebaseapp.com",
+            projectId: "fast-page-726db",
+            storageBucket: "fast-page-726db.firebasestorage.app",
+            messagingSenderId: "850638079580",
+            appId: "1:850638079580:web:0a70125759adced1d30899",
+            measurementId: "G-F22PMSZ703"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                // Redirect if not logged in
+                window.location.href = '/auth.html';
+            } else {
+                // Update avatar with user initials
+                const name = user.displayName || user.email;
+                const initials = name.substring(0, 2).toUpperCase();
+                document.querySelector('.user-avatar').textContent = initials;
+            }
+        });
+    </script>
+</body>
+
+</html>

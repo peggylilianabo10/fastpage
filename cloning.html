@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modo Clonación - FastPage</title>
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧬</text></svg>" />
+    <style>
+        :root {
+            --primary: #7c3aed;
+            --secondary: #10b981;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        body {
+            background: #f1f5f9;
+            color: var(--text);
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            padding: 1rem 2rem;
+            z-index: 50;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .back-btn:hover {
+            color: var(--primary);
+        }
+
+        /* Hero */
+        .hero {
+            text-align: center;
+            padding: 4rem 1rem;
+            background: linear-gradient(180deg, #fff 0%, #f1f5f9 100%);
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #1e293b 0%, #7c3aed 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+        }
+
+        /* Grid */
+        .clone-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .template-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .template-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-preview {
+            height: 160px;
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-preview::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0.05) 0%, transparent 100%);
+        }
+
+        /* Specific Gradients for Types */
+        .preview-restaurant {
+            background: linear-gradient(135deg, #fef3c7 0%, #fcd34d 100%);
+        }
+
+        .preview-realestate {
+            background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%);
+        }
+
+        .preview-legal {
+            background: linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 100%);
+        }
+
+        .preview-health {
+            background: linear-gradient(135deg, #d1fae5 0%, #6ee7b7 100%);
+        }
+
+        .preview-gym {
+            background: linear-gradient(135deg, #ffe4e6 0%, #fda4af 100%);
+        }
+
+        .preview-shop {
+            background: linear-gradient(135deg, #ede9fe 0%, #c4b5fd 100%);
+        }
+
+        .card-body {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-features {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .feature-tag {
+            background: #f1f5f9;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .card-actions {
+            margin-top: auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn {
+            border: none;
+            padding: 0.6rem 1rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .btn-outline {
+            background: white;
+            border: 1px solid #e2e8f0;
+            color: var(--text);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: #f5f3ff;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(124, 58, 237, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: #6d28d9;
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <a href="/hub.html" class="back-btn">← Volver al Hub</a>
+        <div style="font-weight:700; font-size:1.2rem;">⚡ FastPage <span style="color:var(--primary)">Cloning</span>
+        </div>
+        <div style="width:100px"><!-- Spacer --></div>
+    </header>
+
+    <div class="hero">
+        <h1>Elige tu Modelo de Negocio</h1>
+        <p>Selecciona una plantilla optimizada, pre-cargada con textos persuasivos, testimonios reales y FAQs listas
+            para usar.</p>
+    </div>
+
+    <div class="clone-grid" id="grid">
+        <!-- Rendered via JS -->
+    </div>
+
+    <script>
+        const templates = [
+            {
+                id: 'restaurant',
+                title: 'Restaurante / Delivery',
+                icon: '🍔',
+                styleClass: 'preview-restaurant',
+                features: ['Menú Digital', 'Reservas', 'Galería'],
+                desc: 'Ideal para restaurantes, dark kitchens y cafeterías.'
+            },
+            {
+                id: 'realestate',
+                title: 'Inmobiliaria / Agente',
+                icon: '🏠',
+                styleClass: 'preview-realestate',
+                features: ['Propiedades', 'Formulario Lead', 'Mapa'],
+                desc: 'Captura leads interesados en comprar o alquilar.'
+            },
+            {
+                id: 'lawyer',
+                title: 'Servicios Legales',
+                icon: '⚖️',
+                styleClass: 'preview-legal',
+                features: ['Citas', 'Áreas Práctica', 'Blog'],
+                desc: 'Genera confianza y profesionalismo para tu firma.'
+            },
+            {
+                id: 'health',
+                title: 'Clínica / Salud',
+                icon: '🦷',
+                styleClass: 'preview-health',
+                features: ['Urgencias', 'Staff Médico', 'Reseñas'],
+                desc: 'Para odontólogos, médicos y centros de bienestar.'
+            },
+            {
+                id: 'gym',
+                title: 'Gimnasio / Fitness',
+                icon: '💪',
+                styleClass: 'preview-gym',
+                features: ['Clases', 'Membresías', 'Entrenadores'],
+                desc: 'Vende suscripciones y clases de prueba.'
+            },
+            {
+                id: 'shop',
+                title: 'E-commerce Niche',
+                icon: '🛍️',
+                styleClass: 'preview-shop',
+                features: ['Catálogo', 'Carrito', 'Ofertas'],
+                desc: 'Tienda optimizada para productos de alto valor.'
+            }
+        ];
+
+        const grid = document.getElementById('grid');
+
+        templates.forEach(t => {
+            const card = document.createElement('div');
+            card.className = 'template-card';
+            card.innerHTML = `
+                <div class="card-preview ${t.styleClass}">
+                    ${t.icon}
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">${t.title}</h3>
+                    <div class="card-features">
+                        ${t.features.map(f => `<span class="feature-tag">${f}</span>`).join('')}
+                    </div>
+                    <p style="font-size:0.9rem; color:#64748b; margin-bottom:1rem;">${t.desc}</p>
+                    <div class="card-actions">
+                        <a href="/template-preview.html?type=${t.id}" class="btn btn-outline" target="_blank">Ver Demo</a>
+                        <button onclick="cloneTemplate('${t.id}')" class="btn btn-primary">Clonar</button>
+                    </div>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+
+        function cloneTemplate(id) {
+            const btn = event.target;
+            const originalText = btn.innerText;
+            btn.innerText = 'Clonando...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                btn.innerText = '✅ ¡Listo!';
+                btn.style.background = '#10b981';
+                setTimeout(() => {
+                    alert('Sitio clonado con éxito. Redirigiendo al editor...');
+                    window.location.href = '/hub.html';
+                }, 500);
+            }, 1500);
+        }
+    </script>
+
+</body>
+
+</html>
