@@ -2038,11 +2038,11 @@
   </svg>`;
       }
 
-      // === FAQ SECTION === 
-      function injectFAQSection() {
-        if (document.getElementById('faq')) return;
+      // === FAQ SECTION BEFORE PRICING === 
+      function injectFAQBeforePricing() {
+        if (document.getElementById('faq-before-pricing')) return;
         const faqHTML = `
-          <section id="faq" style="max-width: 800px; margin: 60px auto; padding: 0 20px; font-family: 'Inter', sans-serif; color: var(--foreground);">
+          <section id="faq-before-pricing" style="max-width: 800px; margin: 60px auto; padding: 0 20px; font-family: 'Inter', sans-serif; color: var(--foreground);">
             <h2 style="text-align: center; font-size: 2.5em; margin-bottom: 40px; color: var(--primary); font-weight: 700;">Preguntas Frecuentes</h2>
             <div style="display: flex; flex-direction: column; gap: 20px;">
               <details style="background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
@@ -2055,7 +2055,7 @@
               </details>
               <details style="background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
                 <summary style="font-size: 1.3em; font-weight: 600; cursor: pointer; color: var(--foreground); display: flex; align-items: center; justify-content: space-between;"><span>¿FastPage es gratuito? ¿Cuáles son los planes de precios?</span><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.3s ease;"><polyline points="6 9 12 15 18 9"></polyline></svg></summary>
-                <p style="margin-top: 15px; line-height: 1.7; color: var(--muted-foreground);">Sí, FastPage ofrece un plan gratuito con funcionalidades esenciales para que puedas empezar. También tenemos planes PRO con características avanzadas como métricas de conversión, soporte prioritario, acceso al 'God Mode' Editor y mucho más, a partir de $9/mes. Puedes ver todos los detalles en nuestra sección de precios.</p>
+                <p style="margin-top: 15px; line-height: 1.7; color: var(--muted-foreground);">Sí, FastPage ofrece un plan gratuito con funcionalidades esenciales para que puedas empezar. También tenemos planes PRO con características avanzadas como métricas de conversión, soporte prioritario, acceso al 'God Mode' Editor y mucho más, a partir de S/50/mes.</p>
               </details>
               <details style="background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
                 <summary style="font-size: 1.3em; font-weight: 600; cursor: pointer; color: var(--foreground); display: flex; align-items: center; justify-content: space-between;"><span>¿Puedo conectar mi propio dominio a las páginas creadas en FastPage?</span><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.3s ease;"><polyline points="6 9 12 15 18 9"></polyline></svg></summary>
@@ -2071,10 +2071,13 @@
         const container = document.querySelector('main') || document.querySelector('.container') || document.body;
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = faqHTML;
-        container.insertBefore(tempDiv.firstElementChild, container.querySelector('#pricing-section-v2') || null);
+        const pricingSection = container.querySelector('#pricing-section-v2');
+        if (pricingSection) {
+          container.insertBefore(tempDiv.firstElementChild, pricingSection);
+        }
         
         // Add accordion animation
-        document.querySelectorAll('#faq details').forEach(detail => {
+        document.querySelectorAll('#faq-before-pricing details').forEach(detail => {
           detail.addEventListener('toggle', () => {
             const svg = detail.querySelector('svg');
             if (detail.open) {
@@ -2084,6 +2087,165 @@
             }
           });
         });
+      }
+
+      // === FAQ SECTION AFTER PRICING === 
+      function injectFAQAfterPricing() {
+        if (document.getElementById('faq-after-pricing')) return;
+
+        const section = document.createElement('section');
+        section.id = 'faq-after-pricing';
+        section.className = 'faq-section-pricing';
+
+        let html = `
+          <div class="faq-header-pricing">
+            <h2 class="faq-title-pricing">Preguntas Frecuentes</h2>
+            <p class="faq-subtitle-pricing">Resolvemos tus dudas sobre FastPage</p>
+          </div>
+          <div class="faq-container-pricing">
+        `;
+
+        const faqs = [
+          {
+            q: "¿Qué es FastPage y cómo me ayuda a crear mi web?",
+            a: "FastPage es una plataforma que te permite crear landing pages y sitios web profesionales de manera rápida y sin necesidad de escribir código. Utilizando nuestro intuitivo editor de arrastrar y soltar, puedes construir, personalizar y publicar tu sitio en cuestión de minutos."
+          },
+          {
+            q: "¿Necesito conocimientos técnicos para usar FastPage?",
+            a: "¡Absolutamente no! FastPage está diseñado para ser extremadamente amigable para principiantes. Con nuestra interfaz visual, cualquiera puede crear una página web impresionante, independientemente de su experiencia técnica."
+          },
+          {
+            q: "¿FastPage es gratuito? ¿Cuáles son los planes de precios?",
+            a: "Sí, FastPage ofrece un plan gratuito con funcionalidades esenciales para que puedas empezar. También tenemos planes PRO con características avanzadas como métricas de conversión, soporte prioritario, acceso al 'God Mode' Editor y mucho más, a partir de S/50/mes."
+          },
+          {
+            q: "¿Puedo conectar mi propio dominio a las páginas creadas en FastPage?",
+            a: "¡Claro que sí! Con los planes de pago de FastPage, tienes la opción de conectar tu dominio personalizado a tus landing pages, dándoles una apariencia aún más profesional y de marca."
+          },
+          {
+            q: "¿Cómo funciona el soporte técnico en FastPage?",
+            a: "Ofrecemos soporte comunitario a todos nuestros usuarios. Para los usuarios de los planes PRO, disponemos de soporte prioritario 24/7 para ayudarte con cualquier duda o problema que pueda surgir."
+          }
+        ];
+
+        faqs.forEach((item, index) => {
+          html += `
+            <details class="faq-item-pricing" onclick="toggleFaqDetail(this)">
+              <summary class="faq-question-pricing">
+                <span>${item.q}</span>
+                <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </summary>
+              <div class="faq-answer-pricing">
+                ${item.a}
+              </div>
+            </details>
+          `;
+        });
+
+        html += `</div>`;
+        section.innerHTML = html;
+
+        // Styles
+        const style = document.createElement('style');
+        style.textContent = `
+          .faq-section-pricing {
+            padding: 4rem 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+            font-family: 'Inter', system-ui, sans-serif;
+          }
+          
+          .faq-header-pricing {
+            text-align: center;
+            margin-bottom: 3rem;
+          }
+          
+          .faq-title-pricing {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--foreground, #000);
+            margin-bottom: 0.5rem;
+          }
+          
+          .faq-subtitle-pricing {
+            color: var(--muted-foreground, #666);
+            font-size: 1.05rem;
+          }
+          
+          .faq-container-pricing {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+          }
+          
+          .faq-item-pricing {
+            background: var(--card, white);
+            border: 1px solid var(--border, #e2e8f0);
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+          }
+          
+          .faq-item-pricing:hover {
+            border-color: #7c3aed;
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.1);
+          }
+          
+          .faq-item-pricing[open] {
+            border-color: #7c3aed;
+            background: var(--card, white);
+          }
+          
+          .faq-question-pricing {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--foreground, #000);
+            list-style: none;
+          }
+          
+          .faq-question-pricing::-webkit-details-marker {
+            display: none;
+          }
+          
+          .faq-icon {
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+            margin-left: 1rem;
+            color: #7c3aed;
+          }
+          
+          .faq-item-pricing[open] .faq-icon {
+            transform: rotate(180deg);
+          }
+          
+          .faq-answer-pricing {
+            margin-top: 1rem;
+            color: var(--muted-foreground, #666);
+            line-height: 1.6;
+            font-size: 0.95rem;
+          }
+        `;
+        document.head.appendChild(style);
+
+        // Inject AFTER Pricing Section
+        const pricingSection = document.getElementById('pricing-section-v2');
+        if (pricingSection && pricingSection.parentNode) {
+          pricingSection.parentNode.insertBefore(section, pricingSection.nextSibling);
+        }
+      }
+
+      // Call both FAQ injections
+      function initializeFAQs() {
+        injectFAQBeforePricing();
+        setTimeout(() => {
+          injectFAQAfterPricing();
+        }, 500);
       }
 
       function injectPricingSection() {
