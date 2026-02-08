@@ -1975,396 +1975,632 @@
 
     })();
   </script>
-  <!-- === SUCCESS STORIES INJECTOR V5 (MOBILE FIRST & CONTEXT AWARE) === -->
-  <script>
-    (function () {
-      'use strict';
+  (function () {
+  'use strict';
 
-      const successStories = [
-        { name: "Carlos Mendoza", role: "Agencia de Marketing", img: "men/32.jpg", profit: "+$15k/mes", text: "FastPage cambió mi agencia. Creamos landings para clientes en minutos y nuestros márgenes subieron un 200%.", stars: 5 },
-        { name: "Ana Paula Silva", role: "E-commerce Joyería", img: "women/44.jpg", profit: "+250% Ventas", text: "El diseño es precioso y carga volando. Mis ventas de joyería se triplicaron el primer mes.", stars: 5 },
-        { name: "David López", role: "Consultor Legal", img: "men/45.jpg", profit: "Agenda Llena", text: "Mis clientes aman la facilidad para reservar citas. Mi práctica legal nunca ha estado tan ocupada.", stars: 5 },
-        { name: "Elena Rojas", role: "Coach de Vida", img: "women/68.jpg", profit: "$8k Lanzamiento", text: "Lancé mi curso en 2 días. La plantilla de webinar convirtió al 15% de tráfico frío. ¡Increíble!", stars: 5 },
-        { name: "Javier Torres", role: "SaaS Founder", img: "men/22.jpg", profit: "Seed Round", text: "Usamos FastPage para nuestro MVP. Los inversores quedaron impresionados con la calidad profesional.", stars: 4 },
-        { name: "Carmen Soto", role: "Bienes Raíces", img: "women/12.jpg", profit: "2 Ventas/mes", text: "Cada propiedad tiene su landing. He vendido 2 casas extra al mes gracias a la presentación visual.", stars: 5 },
-        { name: "Roberto Fernández", role: "Restaurante Gourmet", img: "men/54.jpg", profit: "Reservas Top", text: "El sistema de reservas integrado funciona perfecto. No más mesas vacías los martes.", stars: 5 },
-        { name: "Isabel Díaz", role: "Clínica Dental", img: "women/33.jpg", profit: "+40 Pacientes", text: "Captamos 40 pacientes nuevos en la primera campaña. El formulario de contacto es muy efectivo.", stars: 5 },
-        { name: "Miguel Ángel", role: "Entrenador Personal", img: "men/76.jpg", profit: "$5k Recurrente", text: "Vendo mis planes de suscripción fácilmente. La integración de pagos fue súper sencilla.", stars: 5 },
-        { name: "Patricia Núñez", role: "Travel Blogger", img: "women/29.jpg", profit: "10k Visitas", text: "El SEO automático es real. Mi blog empezó a rankear en Google en semanas, no meses.", stars: 4 },
-        { name: "Fernando Gómez", role: "Consultor Financiero", img: "men/11.jpg", profit: "Alto Ticket", text: "Transmite la confianza que necesito para cerrar clientes de alto perfil. Diseño sobrio y elegante.", stars: 5 },
-        { name: "Lucía Herrera", role: "Fotógrafa", img: "women/91.jpg", profit: "Portafolio Viral", text: "La galería de fotos se ve espectacular en móviles. Mis clientes me contratan desde Instagram directo.", stars: 5 },
-        { name: "Pablo Jiménez", role: "Músico Independiente", img: "men/85.jpg", profit: "Sold Out", text: "Vendí todas las entradas de mi gira usando una landing de FastPage. ¡A mis fans les encantó!", stars: 5 },
-        { name: "Sara Klein", role: "Traductora", img: "women/54.jpg", profit: "Clientes Globales", text: "Ahora tengo clientes de Europa y USA. La web multilenguaje me abrió las puertas al mundo.", stars: 5 },
-        { name: "Diego Vargas", role: "Startup Tech", img: "men/64.jpg", profit: "Crowdfunding", text: "Recaudamos 120% de nuestra meta en Kickstarter gracias a la landing de pre-lanzamiento.", stars: 5 },
-        { name: "Valentina B.", role: "Marca de Ropa", img: "women/86.jpg", profit: "Brand Awareness", text: "Logré posicionar mi marca personal. La estética de las plantillas es de otro nivel.", stars: 5 },
-        { name: "Hugo Castro", role: "Arquitecto", img: "men/36.jpg", profit: "Licitaciones", text: "Presento mis proyectos en landings privadas. He ganado 3 licitaciones grandes así.", stars: 5 },
-        { name: "Natalia Mora", role: "Nutricionista", img: "women/42.jpg", profit: "Telemedicina", text: "Mis pacientes reservan y pagan online. He automatizado el 80% de mi gestión administrativa.", stars: 5 },
-        { name: "Andrés Pinto", role: "Streamer", img: "men/18.jpg", profit: "Sponsors", text: "Conseguí 2 patrocinadores grandes porque mi media kit web se veía súper profesional.", stars: 5 },
-        { name: "Gabriela Torres", role: "Artesana", img: "women/65.jpg", profit: "Ventas Etsy", text: "Redirijo tráfico de mi web a Etsy. He aumentado mis ventas un 40% este trimestre.", stars: 5 }
-      ];
+  const pricingPlans = [
+  {
+  name: "Starter",
+  price: "S/0",
+  period: "/mes",
+  desc: "Perfecto para validar tu idea sin riesgo.",
+  features: [
+  "1 Sitio Web Publicado",
+  "Dominio fastpage.app",
+  "Hosting Incluido",
+  "Editor Visual Básico",
+  "Soporte Comunitario"
+  ],
+  cta: "Empezar Gratis",
+  highlight: false
+  },
+  {
+  name: "PRO Business",
+  price: "S/50",
+  period: "/mes",
+  desc: "La caja de herramientas definitiva para vender.",
+  features: [
+  "Sitios Ilimitados",
+  "Dominio Personalizado",
+  "Botón WhatsApp Flotante",
+  "Eliminar Marca de Agua",
+  "Hosting CDN Ultra Rápido ⚡",
+  "Certificado SSL Seguro 🔒",
+  "Google Analytics Integration 📊",
+  "Facebook Pixel (Meta Ads) 🎯",
+  "Inyección de Código (JS/CSS) 👨‍💻",
+  "SEO Técnico Automático 🔍",
+  "Banner de Cookies (GDPR) 🍪",
+  "Modo Mantenimiento 🚧",
+  "Soporte Prioritario 24/7 💬",
+  "Plantillas Premium 'High Tech' 💎",
+  "Efectos y Animaciones Pro ✨",
+  "Métricas de Conversión 📈",
+  "Acceso 'God Mode' Editor 🛠️",
+  "Exportación de Leads 📥",
+  "Copias de Seguridad Diarias 💾",
+  "Actualizaciones Beta 🚀"
+  ],
+  cta: "¡QUIERO SER PRO! 🚀",
+  highlight: true
+  }
+  ];
 
-      function renderStars(count) { return "★".repeat(count) + "☆".repeat(5 - count); }
+  function renderCheck(isPro) {
+  return `<svg class="w-5 h-5 ${isPro ? 'text-green-400' : 'text-green-500'} mr-2 flex-shrink-0" fill="none"
+    stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+  </svg>`;
+  }
 
-      function injectTestimonialSection() {
-        if (document.getElementById('success-stories-section')) return;
+  function injectPricingSection() {
+  if (document.getElementById('pricing-section-v2')) return;
 
-        // 1. Create HTML Structure
-        const section = document.createElement('section');
-        section.id = 'success-stories-section';
-        section.className = 'success-section';
+  const section = document.createElement('section');
+  section.id = 'pricing-section-v2';
+  section.className = 'pricing-section';
 
-        let html = `
-          <div class="success-header">
-            <h2 class="section-title">Emprendedores ganando con FastPage 🚀</h2>
-            <p class="section-subtitle">Personas reales. Resultados reales. Únete a los más de 1,000 creadores.</p>
+  let html = `
+  <div class="pricing-header">
+    <h2 class="section-title">Planes para Ganadores 🏆</h2>
+    <p class="section-subtitle">Elige la herramienta que hará despegar tu negocio hoy mismo.</p>
+  </div>
+  <div class="pricing-grid">
+    `;
+
+    pricingPlans.forEach(plan => {
+    const isPro = plan.highlight;
+    html += `
+    <div class="pricing-card ${isPro ? 'pro-card' : ''}">
+      ${isPro ? '<div class="pro-badge">RECOMENDADO</div>' : ''}
+
+      <div class="plan-header">
+        <h3 class="plan-name">${plan.name} ${isPro ? '🔥' : ''}</h3>
+        <div class="plan-price">${plan.price}<span class="plan-period">${plan.period}</span></div>
+        <p class="plan-desc">${plan.desc}</p>
+      </div>
+
+      <ul class="plan-features">
+        ${plan.features.map(f => `<li>${renderCheck(isPro)} ${f}</li>`).join('')}
+        ${!isPro ? '<li class="disabled">Sin Analytics</li>
+        <li class="disabled">Marca de Agua FastPage</li>' : ''}
+      </ul>
+
+      <button class="plan-btn ${isPro ? 'btn-pro' : 'btn-starter'}"
+        onclick="window.location.href='auth.html#register'">${plan.cta}</button>
+    </div>
+    `;
+    });
+
+    html += `
+  </div>`;
+  section.innerHTML = html;
+
+  // Styles
+  const style = document.createElement('style');
+  style.textContent = `
+  .pricing-section {
+  padding: 4rem 1.5rem;
+  max-width: 1000px;
+  margin: 0 auto 4rem auto;
+  font-family: 'Inter', system-ui, sans-serif;
+  }
+  .pricing-header { text-align: center; margin-bottom: 3rem; }
+  .pricing-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  }
+  @media (min-width: 768px) {
+  .pricing-grid { grid-template-columns: 1fr 1.2fr; align-items: center; }
+  }
+
+  .pricing-card {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  border: 1px solid #e2e8f0;
+  position: relative;
+  transition: transform 0.3s;
+  }
+
+  .pricing-card:hover { transform: translateY(-5px); }
+
+  .pro-card {
+  background: #0f172a;
+  color: white;
+  border: none;
+  box-shadow: 0 20px 40px -12px rgba(124, 58, 237, 0.5);
+  padding: 2.5rem; /* Slightly larger */
+  }
+
+  .pro-badge {
+  position: absolute;
+  top: -12px;
+  right: 20px;
+  background: linear-gradient(90deg, #ec4899, #8b5cf6);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  }
+
+  .plan-name { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .plan-price { font-size: 3rem; font-weight: 800; line-height: 1; margin-bottom: 1rem; }
+  .plan-period { font-size: 1rem; font-weight: 400; color: #94a3b8; }
+  .plan-desc { color: #64748b; margin-bottom: 2rem; font-size: 0.95rem; }
+  .pro-card .plan-desc { color: #cbd5e1; }
+
+  .plan-features { list-style: none; padding: 0; margin: 0 0 2rem 0; text-align: left; }
+  .plan-features li { display: flex; align-items: center; margin-bottom: 0.75rem; font-size: 0.9rem; }
+  .plan-features li.disabled { color: #cbd5e1; text-decoration: line-through; opacity: 0.6; }
+
+  .plan-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  }
+
+  .btn-starter {
+  background: #f1f5f9;
+  color: #1e293b;
+  }
+  .btn-starter:hover { background: #e2e8f0; }
+
+  .btn-pro {
+  background: linear-gradient(90deg, #7c3aed, #db2777);
+  color: white;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+  }
+  .btn-pro:hover {
+  box-shadow: 0 8px 16px rgba(124, 58, 237, 0.5);
+  transform: scale(1.02);
+  }
+
+  /* Custom Check Icon */
+  .w-5 { width: 1.25rem; }
+  .h-5 { height: 1.25rem; }
+  .mr-2 { margin-right: 0.5rem; }
+  .flex-shrink-0 { flex-shrink: 0; }
+  .text-green-500 { color: #10b981; }
+  .text-green-400 { color: #4ade80; }
+  `;
+  document.head.appendChild(style);
+
+  // Inject BEFORE Success Stories
+  const storiesSection = document.getElementById('success-stories-section');
+  if (storiesSection) {
+  storiesSection.parentNode.insertBefore(section, storiesSection);
+  } else {
+  // Fallback: Try to find a good spot
+  const target = document.querySelector('.features-section') || document.querySelector('main') || document.body;
+  target.appendChild(section);
+  }
+  }
+
+  // Init on load
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', injectPricingSection);
+  else setTimeout(injectPricingSection, 500); // Wait a bit for other dynamic sections
+
+  })();
+
+  const successStories = [
+  { name: "Carlos Mendoza", role: "Agencia de Marketing", img: "men/32.jpg", profit: "+$15k/mes", text: "FastPage cambió
+  mi agencia. Creamos landings para clientes en minutos y nuestros márgenes subieron un 200%.", stars: 5 },
+  { name: "Ana Paula Silva", role: "E-commerce Joyería", img: "women/44.jpg", profit: "+250% Ventas", text: "El diseño
+  es precioso y carga volando. Mis ventas de joyería se triplicaron el primer mes.", stars: 5 },
+  { name: "David López", role: "Consultor Legal", img: "men/45.jpg", profit: "Agenda Llena", text: "Mis clientes aman la
+  facilidad para reservar citas. Mi práctica legal nunca ha estado tan ocupada.", stars: 5 },
+  { name: "Elena Rojas", role: "Coach de Vida", img: "women/68.jpg", profit: "$8k Lanzamiento", text: "Lancé mi curso en
+  2 días. La plantilla de webinar convirtió al 15% de tráfico frío. ¡Increíble!", stars: 5 },
+  { name: "Javier Torres", role: "SaaS Founder", img: "men/22.jpg", profit: "Seed Round", text: "Usamos FastPage para
+  nuestro MVP. Los inversores quedaron impresionados con la calidad profesional.", stars: 4 },
+  { name: "Carmen Soto", role: "Bienes Raíces", img: "women/12.jpg", profit: "2 Ventas/mes", text: "Cada propiedad tiene
+  su landing. He vendido 2 casas extra al mes gracias a la presentación visual.", stars: 5 },
+  { name: "Roberto Fernández", role: "Restaurante Gourmet", img: "men/54.jpg", profit: "Reservas Top", text: "El sistema
+  de reservas integrado funciona perfecto. No más mesas vacías los martes.", stars: 5 },
+  { name: "Isabel Díaz", role: "Clínica Dental", img: "women/33.jpg", profit: "+40 Pacientes", text: "Captamos 40
+  pacientes nuevos en la primera campaña. El formulario de contacto es muy efectivo.", stars: 5 },
+  { name: "Miguel Ángel", role: "Entrenador Personal", img: "men/76.jpg", profit: "$5k Recurrente", text: "Vendo mis
+  planes de suscripción fácilmente. La integración de pagos fue súper sencilla.", stars: 5 },
+  { name: "Patricia Núñez", role: "Travel Blogger", img: "women/29.jpg", profit: "10k Visitas", text: "El SEO automático
+  es real. Mi blog empezó a rankear en Google en semanas, no meses.", stars: 4 },
+  { name: "Fernando Gómez", role: "Consultor Financiero", img: "men/11.jpg", profit: "Alto Ticket", text: "Transmite la
+  confianza que necesito para cerrar clientes de alto perfil. Diseño sobrio y elegante.", stars: 5 },
+  { name: "Lucía Herrera", role: "Fotógrafa", img: "women/91.jpg", profit: "Portafolio Viral", text: "La galería de
+  fotos se ve espectacular en móviles. Mis clientes me contratan desde Instagram directo.", stars: 5 },
+  { name: "Pablo Jiménez", role: "Músico Independiente", img: "men/85.jpg", profit: "Sold Out", text: "Vendí todas las
+  entradas de mi gira usando una landing de FastPage. ¡A mis fans les encantó!", stars: 5 },
+  { name: "Sara Klein", role: "Traductora", img: "women/54.jpg", profit: "Clientes Globales", text: "Ahora tengo
+  clientes de Europa y USA. La web multilenguaje me abrió las puertas al mundo.", stars: 5 },
+  { name: "Diego Vargas", role: "Startup Tech", img: "men/64.jpg", profit: "Crowdfunding", text: "Recaudamos 120% de
+  nuestra meta en Kickstarter gracias a la landing de pre-lanzamiento.", stars: 5 },
+  { name: "Valentina B.", role: "Marca de Ropa", img: "women/86.jpg", profit: "Brand Awareness", text: "Logré posicionar
+  mi marca personal. La estética de las plantillas es de otro nivel.", stars: 5 },
+  { name: "Hugo Castro", role: "Arquitecto", img: "men/36.jpg", profit: "Licitaciones", text: "Presento mis proyectos en
+  landings privadas. He ganado 3 licitaciones grandes así.", stars: 5 },
+  { name: "Natalia Mora", role: "Nutricionista", img: "women/42.jpg", profit: "Telemedicina", text: "Mis pacientes
+  reservan y pagan online. He automatizado el 80% de mi gestión administrativa.", stars: 5 },
+  { name: "Andrés Pinto", role: "Streamer", img: "men/18.jpg", profit: "Sponsors", text: "Conseguí 2 patrocinadores
+  grandes porque mi media kit web se veía súper profesional.", stars: 5 },
+  { name: "Gabriela Torres", role: "Artesana", img: "women/65.jpg", profit: "Ventas Etsy", text: "Redirijo tráfico de mi
+  web a Etsy. He aumentado mis ventas un 40% este trimestre.", stars: 5 }
+  ];
+
+  function renderStars(count) { return "★".repeat(count) + "☆".repeat(5 - count); }
+
+  function injectTestimonialSection() {
+  if (document.getElementById('success-stories-section')) return;
+
+  // 1. Create HTML Structure
+  const section = document.createElement('section');
+  section.id = 'success-stories-section';
+  section.className = 'success-section';
+
+  let html = `
+  <div class="success-header">
+    <h2 class="section-title">Emprendedores ganando con FastPage 🚀</h2>
+    <p class="section-subtitle">Personas reales. Resultados reales. Únete a los más de 1,000 creadores.</p>
+  </div>
+  <div class="carousel-wrapper">
+    <button class="nav-btn prev-btn" aria-label="Anterior">
+      <svg viewBox="0 0 24 24" fill="none" class="arrow-icon">
+        <path d="M15 19l-7-7 7-7" stroke="url(#gold1)" stroke-width="3" stroke-linecap="round"
+          stroke-linejoin="round" />
+        <defs>
+          <linearGradient id="gold1" x1="0" y1="0" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#FFD700" />
+            <stop offset="100%" stop-color="#CA8A04" />
+          </linearGradient>
+        </defs>
+      </svg>
+    </button>
+    <div class="success-grid" id="track">
+      `;
+
+      successStories.forEach((story) => {
+      html += `
+      <div class="success-card">
+        <div class="card-header">
+          <img src="https://randomuser.me/api/portraits/${story.img}" alt="${story.name}" loading="lazy"
+            class="card-avatar">
+          <div class="card-info">
+            <h4 class="card-name">${story.name}</h4>
+            <span class="card-role">${story.role}</span>
           </div>
-          <div class="carousel-wrapper">
-             <button class="nav-btn prev-btn" aria-label="Anterior">
-               <svg viewBox="0 0 24 24" fill="none" class="arrow-icon">
-                 <path d="M15 19l-7-7 7-7" stroke="url(#gold1)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                   <defs><linearGradient id="gold1" x1="0" y1="0" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFD700"/><stop offset="100%" stop-color="#CA8A04"/></linearGradient></defs>
-               </svg>
-             </button>
-             <div class="success-grid" id="track">
-        `;
+          <div class="card-profit">${story.profit}</div>
+        </div>
+        <div class="card-rating">${renderStars(story.stars)}</div>
+        <p class="card-text">"${story.text}"</p>
+      </div>
+      `;
+      });
 
-        successStories.forEach((story) => {
-          html += `
-            <div class="success-card">
-              <div class="card-header">
-                <img src="https://randomuser.me/api/portraits/${story.img}" alt="${story.name}" loading="lazy" class="card-avatar">
-                <div class="card-info">
-                  <h4 class="card-name">${story.name}</h4>
-                  <span class="card-role">${story.role}</span>
-                </div>
-                <div class="card-profit">${story.profit}</div>
-              </div>
-              <div class="card-rating">${renderStars(story.stars)}</div>
-              <p class="card-text">"${story.text}"</p>
-            </div>
-          `;
-        });
+      html += `
+    </div>
+    <button class="nav-btn next-btn" aria-label="Siguiente">
+      <svg viewBox="0 0 24 24" fill="none" class="arrow-icon">
+        <path d="M9 5l7 7-7 7" stroke="url(#gold2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+        <defs>
+          <linearGradient id="gold2" x1="0" y1="0" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#FFD700" />
+            <stop offset="100%" stop-color="#CA8A04" />
+          </linearGradient>
+        </defs>
+      </svg>
+    </button>
+  </div>
+  `;
+  section.innerHTML = html;
 
-        html += `   </div>
-             <button class="nav-btn next-btn" aria-label="Siguiente">
-               <svg viewBox="0 0 24 24" fill="none" class="arrow-icon">
-                 <path d="M9 5l7 7-7 7" stroke="url(#gold2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                   <defs><linearGradient id="gold2" x1="0" y1="0" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFD700"/><stop offset="100%" stop-color="#CA8A04"/></linearGradient></defs>
-               </svg>
-             </button>
-          </div>
-        `;
-        section.innerHTML = html;
+  // 2. Mobile First CSS
+  const style = document.createElement('style');
+  style.id = 'success-v5-css';
+  style.textContent = `
+  .success-section {
+  padding: 4rem 1.5rem;
+  background: transparent; /* Eliminado fondo morado */
+  width: 100%;
+  /* Quitamos max-width del contenedor padre para evitar cortes visuales si tuviera fondo,
+  pero al ser transparente no importa tanto, aun asi es buena practica */
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative; z-index: 10; opacity: 0; animation: fadeInSuccess 0.8s ease forwards;
+  }
+  @keyframes fadeInSuccess { to { opacity: 1; } }
 
-        // 2. Mobile First CSS
-        const style = document.createElement('style');
-        style.id = 'success-v5-css';
-        style.textContent = `
-          .success-section {
-            padding: 4rem 1.5rem;
-            background: transparent; /* Eliminado fondo morado */
-            width: 100%; 
-            /* Quitamos max-width del contenedor padre para evitar cortes visuales si tuviera fondo, 
-               pero al ser transparente no importa tanto, aun asi es buena practica */
-            max-width: 1200px; 
-            margin: 0 auto;
-            position: relative; z-index: 10; opacity: 0; animation: fadeInSuccess 0.8s ease forwards;
-          }
-          @keyframes fadeInSuccess { to { opacity: 1; } }
-          
-          .success-header { text-align: center; margin-bottom: 3rem; }
-          .section-title { 
-             font-size: 1.8rem; /* Mobile friendly size */
-             font-weight: 800; 
-             background: linear-gradient(135deg, #7c3aed 0%, #db2777 100%); 
-             -webkit-background-clip: text; 
-             -webkit-text-fill-color: transparent; 
-             margin-bottom: 0.5rem;
-             line-height: 1.2;
-          }
-          .section-subtitle { color: #6b7280; font-size: 1rem; padding: 0 1rem; }
+  .success-header { text-align: center; margin-bottom: 3rem; }
+  .section-title {
+  font-size: 1.8rem; /* Mobile friendly size */
+  font-weight: 800;
+  background: linear-gradient(135deg, #7c3aed 0%, #db2777 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+  }
+  .section-subtitle { color: #6b7280; font-size: 1rem; padding: 0 1rem; }
 
-          .carousel-wrapper { position: relative; display: flex; align-items: center; justify-content: center; }
-          
-          /* Navigation Buttons - Visible on Mobile too per request */
-          .nav-btn {
-            background: white; border: 1px solid #FCD34D; width: 40px; height: 40px; border-radius: 50%;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 6px -1px rgba(255, 215, 0, 0.3); z-index: 20; transition: transform 0.2s;
-            position: absolute; top: 50%; transform: translateY(-50%);
-          }
-          .nav-btn:hover { transform: translateY(-50%) scale(1.1); background: #FFFBEB; }
-          .prev-btn { left: -5px; }
-          .next-btn { right: -5px; }
-          .nav-btn svg { width: 20px; height: 20px; }
-          
-          :root.dark .nav-btn { background: #1f2937; border-color: #B45309; }
+  .carousel-wrapper { position: relative; display: flex; align-items: center; justify-content: center; }
 
-          /* CAROUSEL BASE STYLE (MOBILE) */
-          .success-grid {
-            display: flex;
-            gap: 1rem; 
-            overflow-x: auto; 
-            scroll-behavior: smooth;
-            padding: 1rem 0.5rem; 
-            scrollbar-width: none;
-            width: 100%; 
-            scroll-snap-type: x mandatory;
-            flex-wrap: nowrap !important;
-          }
-          .success-grid::-webkit-scrollbar { display: none; }
+  /* Navigation Buttons - Visible on Mobile too per request */
+  .nav-btn {
+  background: white; border: 1px solid #FCD34D; width: 40px; height: 40px; border-radius: 50%;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 6px -1px rgba(255, 215, 0, 0.3); z-index: 20; transition: transform 0.2s;
+  position: absolute; top: 50%; transform: translateY(-50%);
+  }
+  .nav-btn:hover { transform: translateY(-50%) scale(1.1); background: #FFFBEB; }
+  .prev-btn { left: -5px; }
+  .next-btn { right: -5px; }
+  .nav-btn svg { width: 20px; height: 20px; }
 
-          .success-card {
-            background: white; border: 1px solid #e5e7eb; border-radius: 16px; padding: 1.5rem;
-            /* Mobile: 85% width to see previous/next hints */
-            min-width: 85vw; max-width: 85vw; 
-            scroll-snap-align: center; flex-shrink: 0;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); 
-            display: flex; flex-direction: column; justify-content: space-between;
-          }
-          :root.dark .success-card { background: #1f2937; border-color: #374151; }
-          
-          .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 1rem; }
-          .card-avatar { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid #FCD34D; }
-          .card-name { font-weight: 700; color: #111827; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 120px; }
-          :root.dark .card-name { color: white; }
-          .card-role { font-size: 0.75rem; color: #6b7280; display: block; }
-          .card-profit { background: #FFFBEB; color: #B45309; font-weight: 800; font-size: 0.7rem; padding: 4px 8px; border-radius: 12px; margin-left: auto; }
-          :root.dark .card-profit { background: #451a03; color: #fbbf24; }
-          .card-rating { color: #F59E0B; margin-bottom: 0.75rem; font-size: 1.1rem; }
-          .card-text { font-size: 0.9rem; line-height: 1.5; color: #374151; font-style: italic; }
-          :root.dark .card-text { color: #d1d5db; }
+  :root.dark .nav-btn { background: #1f2937; border-color: #B45309; }
 
-          /* DESKTOP ENHANCEMENTS */
-          @media (min-width: 768px) {
-             .success-card {
-                min-width: 280px; max-width: 280px; 
-             }
-             .prev-btn { left: -20px; }
-             .next-btn { right: -20px; }
-          }
+  /* CAROUSEL BASE STYLE (MOBILE) */
+  .success-grid {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 1rem 0.5rem;
+  scrollbar-width: none;
+  width: 100%;
+  scroll-snap-type: x mandatory;
+  flex-wrap: nowrap !important;
+  }
+  .success-grid::-webkit-scrollbar { display: none; }
 
-          @media (min-width: 1024px) {
-             .section-title { font-size: 2.5rem; }
-             .success-grid {
-               justify-content: flex-start;
-               overflow-x: hidden; 
-               gap: 1.5rem;
-             }
-             .success-card {
-                flex: 0 0 calc((100% - 4.5rem) / 4);
-                min-width: calc((100% - 4.5rem) / 4);
-                max-width: calc((100% - 4.5rem) / 4);
-             }
-             .prev-btn { left: -70px; width: 64px; height: 64px; }
-             .next-btn { right: -70px; width: 64px; height: 64px; }
-             .nav-btn svg { width: 32px; height: 32px; }
-          }
-        `;
-        document.head.appendChild(style);
+  .success-card {
+  background: white; border: 1px solid #e5e7eb; border-radius: 16px; padding: 1.5rem;
+  /* Mobile: 85% width to see previous/next hints */
+  min-width: 85vw; max-width: 85vw;
+  scroll-snap-align: center; flex-shrink: 0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  display: flex; flex-direction: column; justify-content: space-between;
+  }
+  :root.dark .success-card { background: #1f2937; border-color: #374151; }
 
-        // Logic
-        function initCarousel() {
-          const track = document.getElementById('track');
-          const btnPrev = section.querySelector('.prev-btn');
-          const btnNext = section.querySelector('.next-btn');
+  .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 1rem; }
+  .card-avatar { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid #FCD34D; }
+  .card-name { font-weight: 700; color: #111827; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+  max-width: 120px; }
+  :root.dark .card-name { color: white; }
+  .card-role { font-size: 0.75rem; color: #6b7280; display: block; }
+  .card-profit { background: #FFFBEB; color: #B45309; font-weight: 800; font-size: 0.7rem; padding: 4px 8px;
+  border-radius: 12px; margin-left: auto; }
+  :root.dark .card-profit { background: #451a03; color: #fbbf24; }
+  .card-rating { color: #F59E0B; margin-bottom: 0.75rem; font-size: 1.1rem; }
+  .card-text { font-size: 0.9rem; line-height: 1.5; color: #374151; font-style: italic; }
+  :root.dark .card-text { color: #d1d5db; }
 
-          if (btnPrev && btnNext && track) {
-            btnPrev.addEventListener('click', () => {
-              const w = track.clientWidth;
-              track.scrollBy({ left: -w, behavior: 'smooth' });
-            });
-            btnNext.addEventListener('click', () => {
-              const w = track.clientWidth;
-              track.scrollBy({ left: w, behavior: 'smooth' });
-            });
-          }
-        }
+  /* DESKTOP ENHANCEMENTS */
+  @media (min-width: 768px) {
+  .success-card {
+  min-width: 280px; max-width: 280px;
+  }
+  .prev-btn { left: -20px; }
+  .next-btn { right: -20px; }
+  }
 
-        const findTarget = () => {
-          // Context Aware: Find "Features" section
-          const walkers = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-          let node;
-          while (node = walkers.nextNode()) {
-            const t = node.nodeValue || '';
-            if (t.includes('Diseño Premium') || t.includes('Todo lo que necesitas')) {
-              let p = node.parentElement;
-              if (p.closest('aside') || p.closest('nav') || p.closest('.sidebar')) continue;
+  @media (min-width: 1024px) {
+  .section-title { font-size: 2.5rem; }
+  .success-grid {
+  justify-content: flex-start;
+  overflow-x: hidden;
+  gap: 1.5rem;
+  }
+  .success-card {
+  flex: 0 0 calc((100% - 4.5rem) / 4);
+  min-width: calc((100% - 4.5rem) / 4);
+  max-width: calc((100% - 4.5rem) / 4);
+  }
+  .prev-btn { left: -70px; width: 64px; height: 64px; }
+  .next-btn { right: -70px; width: 64px; height: 64px; }
+  .nav-btn svg { width: 32px; height: 32px; }
+  }
+  `;
+  document.head.appendChild(style);
 
-              // Climb up
-              for (let i = 0; i < 6; i++) {
-                if (!p) break;
-                if (p.tagName === 'SECTION' || (p.parentElement && p.parentElement.id === 'root')) return p;
-                p = p.parentElement;
-              }
-              return node.parentElement.parentElement.parentElement;
-            }
-          }
-          return null;
-        };
+  // Logic
+  function initCarousel() {
+  const track = document.getElementById('track');
+  const btnPrev = section.querySelector('.prev-btn');
+  const btnNext = section.querySelector('.next-btn');
 
-        const tryInsert = () => {
-          const target = findTarget();
-          if (target && target.parentNode) {
-            target.parentNode.insertBefore(section, target.nextSibling);
-            setTimeout(initCarousel, 100);
-            return true;
-          }
-          // NOTE: Removed fallback to root.appendChild.
-          // If we don't find the features section, we are likely not on the landing page (Dashboard).
-          // Or the landing page hasn't loaded. 
-          // We rely on MutationObserver to wait for it.
-          return false;
-        };
+  if (btnPrev && btnNext && track) {
+  btnPrev.addEventListener('click', () => {
+  const w = track.clientWidth;
+  track.scrollBy({ left: -w, behavior: 'smooth' });
+  });
+  btnNext.addEventListener('click', () => {
+  const w = track.clientWidth;
+  track.scrollBy({ left: w, behavior: 'smooth' });
+  });
+  }
+  }
 
-        // Observer Strategy: Check for target availability extensively
-        const observer = new MutationObserver((mutations) => {
-          if (tryInsert()) {
-            observer.disconnect();
-            console.log('FastPage V5: Injected into Landing Page');
-          }
-        });
+  const findTarget = () => {
+  // Context Aware: Find "Features" section
+  const walkers = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  let node;
+  while (node = walkers.nextNode()) {
+  const t = node.nodeValue || '';
+  if (t.includes('Diseño Premium') || t.includes('Todo lo que necesitas')) {
+  let p = node.parentElement;
+  if (p.closest('aside') || p.closest('nav') || p.closest('.sidebar')) continue;
 
-        observer.observe(document.body, { childList: true, subtree: true });
+  // Climb up
+  for (let i = 0; i < 6; i++) { if (!p) break; if (p.tagName==='SECTION' || (p.parentElement &&
+    p.parentElement.id==='root' )) return p; p=p.parentElement; } return node.parentElement.parentElement.parentElement;
+    } } return null; }; const tryInsert=()=> {
+    const target = findTarget();
+    if (target && target.parentNode) {
+    target.parentNode.insertBefore(section, target.nextSibling);
+    setTimeout(initCarousel, 100);
+    return true;
+    }
+    // NOTE: Removed fallback to root.appendChild.
+    // If we don't find the features section, we are likely not on the landing page (Dashboard).
+    // Or the landing page hasn't loaded.
+    // We rely on MutationObserver to wait for it.
+    return false;
+    };
 
-        // Initial try
-        tryInsert();
+    // Observer Strategy: Check for target availability extensively
+    const observer = new MutationObserver((mutations) => {
+    if (tryInsert()) {
+    observer.disconnect();
+    console.log('FastPage V5: Injected into Landing Page');
+    }
+    });
 
-        // Failsafe timeout to stop observing after 15 seconds (save performance)
-        setTimeout(() => { observer.disconnect(); }, 15000);
-      }
+    observer.observe(document.body, { childList: true, subtree: true });
 
-      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', injectTestimonialSection);
-      else injectTestimonialSection();
+    // Initial try
+    tryInsert();
+
+    // Failsafe timeout to stop observing after 15 seconds (save performance)
+    setTimeout(() => { observer.disconnect(); }, 15000);
+    }
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', injectTestimonialSection);
+    else injectTestimonialSection();
     })();
-  </script>
-  <!-- === SESSION MANAGER & AUTH REDIRECTOR === -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
+    </script>
+    <!-- === SESSION MANAGER & AUTH REDIRECTOR === -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+      import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBwG1SGZvp97zau4AGOIQxnIlNt9ig8dbs",
-      authDomain: "fast-page-726db.firebaseapp.com",
-      projectId: "fast-page-726db",
-      storageBucket: "fast-page-726db.firebasestorage.app",
-      messagingSenderId: "850638079580",
-      appId: "1:850638079580:web:0a70125759adced1d30899",
-      measurementId: "G-F22PMSZ703"
-    };
+      const firebaseConfig = {
+        apiKey: "AIzaSyBwG1SGZvp97zau4AGOIQxnIlNt9ig8dbs",
+        authDomain: "fast-page-726db.firebaseapp.com",
+        projectId: "fast-page-726db",
+        storageBucket: "fast-page-726db.firebasestorage.app",
+        messagingSenderId: "850638079580",
+        appId: "1:850638079580:web:0a70125759adced1d30899",
+        measurementId: "G-F22PMSZ703"
+      };
 
-    // Init Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    let currentUser = null;
+      // Init Firebase
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      let currentUser = null;
 
-    // --- LOGOUT LOGIC ---
-    const handleLogout = async (e) => {
-      if (e) e.preventDefault();
-      try {
-        await signOut(auth);
-        window.location.href = '/'; // Redirect to Landing Page
-      } catch (error) {
-        console.error("Logout error", error);
-        alert("Error al cerrar sesión");
-      }
-    };
-
-
-    // --- LANDING PAGE UI HELPER ---
-    const goToAuth = (mode, e) => {
-      if (e) { e.preventDefault(); e.stopPropagation(); }
-      window.location.href = 'auth.html' + (mode === 'register' ? '#register' : '#login');
-    };
-
-    const updateLandingUI = (user) => {
-      // Only run this if we are NOT in dashboard mode
-      if (window.location.pathname === '/dashboard') return;
-
-      console.log('🔄 Updating Landing UI for:', user ? user.email : 'Guest');
-
-      const targets = document.querySelectorAll('a, button, div[role="button"]');
-      let loginButtonFound = false;
-      let registerButtonFound = false;
-
-      targets.forEach(el => {
-        if (el.dataset.sessionAction === 'logout' || el.closest('#new-chat-widget') || el.closest('.dash-nav')) return;
-        const text = el.innerText ? el.innerText.toLowerCase().trim() : '';
-
-        // Save original text if not saved yet
-        if (!el.dataset.originalText && text) {
-          el.dataset.originalText = el.innerText;
+      // --- LOGOUT LOGIC ---
+      const handleLogout = async (e) => {
+        if (e) e.preventDefault();
+        try {
+          await signOut(auth);
+          window.location.href = '/'; // Redirect to Landing Page
+        } catch (error) {
+          console.error("Logout error", error);
+          alert("Error al cerrar sesión");
         }
+      };
 
-        // Detectar botones de Login
-        const isLoginButton = ['login', 'iniciar sesión', 'entrar'].includes(text);
 
-        // Detectar botones de Registro/CTA
-        const isRegisterButton = ['registrarse', 'crear cuenta', 'sign up', 'empieza gratis',
-          'comenzar ahora', 'empezar gratis', 'ir al dashboard'].includes(text);
+      // --- LANDING PAGE UI HELPER ---
+      const goToAuth = (mode, e) => {
+        if (e) { e.preventDefault(); e.stopPropagation(); }
+        window.location.href = 'auth.html' + (mode === 'register' ? '#register' : '#login');
+      };
 
-        if (isLoginButton || isRegisterButton) {
-          if (user) {
-            // USER LOGGED IN ON LANDING PAGE
-            if (isLoginButton) {
-              el.style.display = 'none';
-              loginButtonFound = true;
+      const updateLandingUI = (user) => {
+        // Only run this if we are NOT in dashboard mode
+        if (window.location.pathname === '/dashboard') return;
+
+        console.log('🔄 Updating Landing UI for:', user ? user.email : 'Guest');
+
+        const targets = document.querySelectorAll('a, button, div[role="button"]');
+        let loginButtonFound = false;
+        let registerButtonFound = false;
+
+        targets.forEach(el => {
+          if (el.dataset.sessionAction === 'logout' || el.closest('#new-chat-widget') || el.closest('.dash-nav')) return;
+          const text = el.innerText ? el.innerText.toLowerCase().trim() : '';
+
+          // Save original text if not saved yet
+          if (!el.dataset.originalText && text) {
+            el.dataset.originalText = el.innerText;
+          }
+
+          // Detectar botones de Login
+          const isLoginButton = ['login', 'iniciar sesión', 'entrar'].includes(text);
+
+          // Detectar botones de Registro/CTA
+          const isRegisterButton = ['registrarse', 'crear cuenta', 'sign up', 'empieza gratis',
+            'comenzar ahora', 'empezar gratis', 'ir al dashboard'].includes(text);
+
+          if (isLoginButton || isRegisterButton) {
+            if (user) {
+              // USER LOGGED IN ON LANDING PAGE
+              if (isLoginButton) {
+                el.style.display = 'none';
+                loginButtonFound = true;
+              } else {
+                // Change to "Ir al Dashboard"
+                if (el.innerText !== "Ir al Dashboard") {
+                  el.innerText = "Ir al Dashboard";
+                }
+                el.onclick = (e) => { e.preventDefault(); window.location.href = '/dashboard'; };
+                if (el.tagName === 'A') el.setAttribute('href', '/dashboard');
+                registerButtonFound = true;
+              }
             } else {
-              // Change to "Ir al Dashboard"
-              if (el.innerText !== "Ir al Dashboard") {
-                el.innerText = "Ir al Dashboard";
-              }
-              el.onclick = (e) => { e.preventDefault(); window.location.href = '/dashboard'; };
-              if (el.tagName === 'A') el.setAttribute('href', '/dashboard');
-              registerButtonFound = true;
-            }
-          } else {
-            // GUEST - restore original behavior
-            el.style.display = '';
+              // GUEST - restore original behavior
+              el.style.display = '';
 
-            if (isLoginButton) {
-              // Restore original text if it was changed
-              if (el.dataset.originalText && el.innerText !== el.dataset.originalText) {
-                el.innerText = el.dataset.originalText;
+              if (isLoginButton) {
+                // Restore original text if it was changed
+                if (el.dataset.originalText && el.innerText !== el.dataset.originalText) {
+                  el.innerText = el.dataset.originalText;
+                }
+                el.onclick = (e) => goToAuth('login', e);
+                if (el.tagName === 'A') el.setAttribute('href', 'auth.html#login');
+                loginButtonFound = true;
+              } else {
+                // Restore original register button text
+                if (el.innerText === "Ir al Dashboard" && el.dataset.originalText) {
+                  el.innerText = el.dataset.originalText;
+                }
+                el.onclick = (e) => goToAuth('register', e);
+                if (el.tagName === 'A') el.setAttribute('href', 'auth.html#register');
+                registerButtonFound = true;
               }
-              el.onclick = (e) => goToAuth('login', e);
-              if (el.tagName === 'A') el.setAttribute('href', 'auth.html#login');
-              loginButtonFound = true;
-            } else {
-              // Restore original register button text
-              if (el.innerText === "Ir al Dashboard" && el.dataset.originalText) {
-                el.innerText = el.dataset.originalText;
-              }
-              el.onclick = (e) => goToAuth('register', e);
-              if (el.tagName === 'A') el.setAttribute('href', 'auth.html#register');
-              registerButtonFound = true;
             }
+          }
+        });
+
+        console.log('✅ Buttons found - Login:', loginButtonFound, 'Register:', registerButtonFound);
+      };
+
+      // --- MAIN AUTH OBSERVER ---
+      // Note: Dashboard routing is handled by head script
+      onAuthStateChanged(auth, (user) => {
+        currentUser = user;
+        console.log("Firebase Auth State:", user ? user.email : "Guest");
+
+        // Only update landing page UI
+        const path = window.location.pathname;
+        if (path === '/' || path === '/index.html') {
+          updateLandingUI(user);
+
+          // Observe DOM updates
+          if (!window.landingObserver) {
+            window.landingObserver = new MutationObserver(() => updateLandingUI(user));
+            window.landingObserver.observe(document.body, { childList: true, subtree: true });
           }
         }
       });
-
-      console.log('✅ Buttons found - Login:', loginButtonFound, 'Register:', registerButtonFound);
-    };
-
-    // --- MAIN AUTH OBSERVER ---
-    // Note: Dashboard routing is handled by head script
-    onAuthStateChanged(auth, (user) => {
-      currentUser = user;
-      console.log("Firebase Auth State:", user ? user.email : "Guest");
-
-      // Only update landing page UI
-      const path = window.location.pathname;
-      if (path === '/' || path === '/index.html') {
-        updateLandingUI(user);
-
-        // Observe DOM updates
-        if (!window.landingObserver) {
-          window.landingObserver = new MutationObserver(() => updateLandingUI(user));
-          window.landingObserver.observe(document.body, { childList: true, subtree: true });
-        }
-      }
-    });
-  </script>
+    </script>
 </body>
 
 </html>
