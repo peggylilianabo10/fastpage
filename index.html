@@ -2101,6 +2101,9 @@
           }
         ];
 
+        // Ensure highlighted plans appear first (PRO above Starter)
+        pricingPlans.sort((a, b) => (b.highlight ? 1 : 0) - (a.highlight ? 1 : 0));
+
         pricingPlans.forEach(plan => {
           const isPro = plan.highlight;
           html += `
@@ -2699,6 +2702,38 @@
         }
       });
     });
+
+    // Mover el FAQ al final del documento después de que la página y los scripts se hayan cargado
+    function moveFaqToEnd() {
+      const faq = document.getElementById('faq');
+      if (!faq) return;
+
+      // Try to move after a short delay to let dynamic content inject (footer, etc.)
+      setTimeout(() => {
+        try {
+          document.body.appendChild(faq);
+          console.log('FAQ movido al final del body');
+        } catch (e) {
+          console.warn('No se pudo mover el FAQ al final:', e);
+        }
+      }, 500);
+
+      // Also observe for late-injected footers and ensure FAQ remains last
+      const observer = new MutationObserver(() => {
+        const last = document.body.lastElementChild;
+        if (last && last.id !== 'faq') {
+          document.body.appendChild(faq);
+        }
+      });
+      observer.observe(document.body, { childList: true, subtree: false });
+
+      // Stop observing after 10s
+      setTimeout(() => observer.disconnect(), 10000);
+    }
+
+    if (document.readyState === 'complete') moveFaqToEnd();
+    else window.addEventListener('load', moveFaqToEnd);
+
   </script>
 
 </body>
