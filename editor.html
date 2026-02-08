@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Editor - FastPage</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>"/>
+  <style>
+    :root{--primary:#7c3aed;--muted:#64748b;--surface:#fff}
+    *{box-sizing:border-box;font-family:Inter,system-ui,sans-serif}
+    body{margin:0;background:#f8f6ff;color:#0f172a}
+    .topbar{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;background:linear-gradient(90deg,#fff,#f8f6ff);border-bottom:1px solid rgba(0,0,0,0.04)}
+    .brand{display:flex;gap:0.75rem;align-items:center;font-weight:800;color:var(--primary)}
+    .controls{display:flex;gap:0.5rem;align-items:center}
+    .btn{padding:8px 12px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);cursor:pointer;background:white}
+    .btn.primary{background:linear-gradient(90deg,var(--primary),#8b5cf6);color:#fff;border:none}
+    .layout{display:grid;grid-template-columns:300px 1fr 340px;gap:1rem;padding:1rem}
+    .panel{background:var(--surface);border-radius:12px;padding:1rem;border:1px solid rgba(0,0,0,0.04)}
+    .canvas{min-height:600px;border:2px dashed rgba(0,0,0,0.06);border-radius:12px;padding:1rem;background:#fff}
+    .block{padding:12px;border-radius:8px;background:linear-gradient(180deg,#fff,#f7f7ff);margin-bottom:8px;border:1px solid rgba(0,0,0,0.03);cursor:grab}
+    .block[draggable="true"]{user-select:none}
+    .placeholder{min-height:80px;border:2px dashed rgba(124,58,237,0.08);border-radius:8px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;color:var(--muted)}
+    .templates{display:grid;grid-template-columns:1fr;gap:0.5rem}
+    .small{font-size:0.85rem;color:var(--muted)}
+    @media(max-width:900px){.layout{grid-template-columns:1fr;}.panel.right{order:3}}
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="brand">⚡ FastPage Editor <span class="small">— Construir landing pages</span></div>
+    <div class="controls">
+      <button class="btn" id="previewBtn">Vista previa</button>
+      <button class="btn" id="publishBtn">Publicar</button>
+      <button class="btn primary" id="saveBtn">Guardar</button>
+    </div>
+  </div>
+
+  <div class="layout">
+    <aside class="panel left">
+      <h4>Bloques</h4>
+      <div draggable="true" class="block" data-type="hero">Hero (Título + CTA)</div>
+      <div draggable="true" class="block" data-type="features">Características (3 columnas)</div>
+      <div draggable="true" class="block" data-type="testimonials">Testimonios</div>
+      <div draggable="true" class="block" data-type="pricing">Planes y Precios</div>
+      <div draggable="true" class="block" data-type="faq">FAQ Acordeón</div>
+      <hr/>
+      <h4>Plantillas</h4>
+      <div class="templates">
+        <button class="btn" onclick="useTemplate('startup')">Startup (moderno)</button>
+        <button class="btn" onclick="useTemplate('product')">Product (landing)</button>
+      </div>
+    </aside>
+
+    <main class="panel canvas" id="canvas">
+      <div class="placeholder">Arrastra bloques aquí para construir tu landing</div>
+    </main>
+
+    <aside class="panel right">
+      <h4>Inspector</h4>
+      <div id="inspectorEmpty" class="small">Selecciona un bloque para editar sus propiedades.</div>
+      <div id="inspector"></div>
+    </aside>
+  </div>
+
+  <script>
+    // Simple drag & drop block builder (minimal, client-side only)
+    const blocks = document.querySelectorAll('.block[draggable]');
+    const canvas = document.getElementById('canvas');
+    const inspector = document.getElementById('inspector');
+    const inspectorEmpty = document.getElementById('inspectorEmpty');
+
+    let dragData = null;
+
+    blocks.forEach(b=>{
+      b.addEventListener('dragstart', (e)=>{
+        dragData = {type: b.dataset.type, label: b.textContent.trim()};
+        e.dataTransfer.setData('text/plain', JSON.stringify(dragData));
+      });
+    });
+
+    canvas.addEventListener('dragover', e=>{ e.preventDefault(); });
+    canvas.addEventListener('drop', e=>{
+      e.preventDefault();
+      let data = null;
+      try{ data = JSON.parse(e.dataTransfer.getData('text/plain')); }catch(err){ data = dragData; }
+      if(!data) return;
+      const el = document.createElement('div');
+      el.className = 'block';
+      el.textContent = data.label;
+      el.setAttribute('data-type', data.type);
+      el.setAttribute('draggable','true');
+      el.addEventListener('click', ()=> selectBlock(el));
+      canvas.appendChild(el);
+      selectBlock(el);
+    });
+
+    function selectBlock(el){
+      document.querySelectorAll('#canvas .block').forEach(x=>x.style.outline='');
+      el.style.outline = '2px solid rgba(124,58,237,0.2)';
+      inspectorEmpty.style.display='none';
+      inspector.innerHTML = `
+        <div style="margin-bottom:8px;font-weight:700">${el.textContent}</div>
+        <label class="small">Texto</label>
+        <textarea id="propText" style="width:100%;height:80px">${el.textContent}</textarea>
+        <div style="margin-top:8px;display:flex;gap:8px"><button class="btn" onclick="applyProps()">Aplicar</button><button class="btn" onclick="removeBlock()">Eliminar</button></div>
+      `;
+      window._selected = el;
+    }
+
+    function applyProps(){
+      const v = document.getElementById('propText').value;
+      if(window._selected) window._selected.textContent = v;
+    }
+    function removeBlock(){ if(window._selected){ window._selected.remove(); inspector.innerHTML=''; inspectorEmpty.style.display='block'; }}
+
+    // Templates
+    function useTemplate(name){
+      canvas.innerHTML = '';
+      if(name==='startup'){
+        const hero=document.createElement('div'); hero.className='block'; hero.textContent='Hero - Crea tu web en segundos'; canvas.appendChild(hero);
+        const feat=document.createElement('div'); feat.className='block'; feat.textContent='Características - Velocidad, Diseño, Analítica'; canvas.appendChild(feat);
+        const pricing=document.createElement('div'); pricing.className='block'; pricing.textContent='Planes para Ganadores'; canvas.appendChild(pricing);
+      } else {
+        const hero=document.createElement('div'); hero.className='block'; hero.textContent='Hero - Producto Estrella'; canvas.appendChild(hero);
+        const test=document.createElement('div'); test.className='block'; test.textContent='Testimonios'; canvas.appendChild(test);
+      }
+    }
+
+    // Actions
+    document.getElementById('saveBtn').addEventListener('click', ()=>{
+      // Minimal save emulation
+      const content = Array.from(document.querySelectorAll('#canvas .block')).map(b=>({type:b.dataset.type || 'block', text:b.textContent}));
+      localStorage.setItem('editor_draft', JSON.stringify(content));
+      alert('✓ Borrador guardado localmente');
+    });
+
+    document.getElementById('previewBtn').addEventListener('click', ()=>{
+      // Create preview window with basic HTML
+      const content = Array.from(document.querySelectorAll('#canvas .block')).map(b=>`<section style="padding:40px;border-bottom:1px solid #eee">${b.textContent}</section>`).join('');
+      const preview = window.open('about:blank','preview');
+      preview.document.write(`<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Preview</title><style>body{font-family:Inter,system-ui,Arial;padding:20px}</style></head><body>${content}</body></html>`);
+      preview.document.close();
+    });
+
+    document.getElementById('publishBtn').addEventListener('click', ()=>{
+      // Emulate publish
+      if(!confirm('¿Publicar Landing Page ahora?')) return;
+      // Normally would call backend/publish API - here we simulate
+      alert('✓ Tu landing ha sido publicada (simulación)');
+    });
+
+    // Load draft if exists
+    (function(){
+      const draft = localStorage.getItem('editor_draft');
+      if(draft){
+        const arr = JSON.parse(draft);
+        canvas.innerHTML = '';
+        arr.forEach(item=>{
+          const el=document.createElement('div');el.className='block';el.textContent=item.text;canvas.appendChild(el);
+        });
+      }
+    })();
+
+    // Redirect if not authenticated (check pattern with parent auth cookie/localStorage)
+    // We expose a basic check — in production use Firebase Auth like other pages
+    (async ()=>{
+      // If app uses Firebase auth, we could check here. For now, keep accessible.
+    })();
+  </script>
+</body>
+</html>
