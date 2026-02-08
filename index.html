@@ -84,66 +84,21 @@
     (function () {
       'use strict';
 
-      // STEP 1: Detect if we're accessing dashboard
+      // STEP 1: Detect if we're accessing dashboard AND REDIRECT TO HUB
       const isDashboardRoute = window.location.pathname.startsWith('/dashboard');
 
       if (isDashboardRoute) {
-        console.log('🔒 [DASHBOARD LOCK] Activated - Blocking all navigation for 3 seconds');
+        console.log('🔄 [LEGACY DASHBOARD] Detected - Redirecting to /hub.html');
+        window.location.replace('/hub.html');
+      }
 
-        // STEP 2: Create a LOCK that prevents ANY navigation away from dashboard
-        window.__DASHBOARD_LOCK__ = true;
+      // Auto-redirect if just logged in
+      const urlParams = new URLSearchParams(window.location.search);
+      const justLoggedIn = urlParams.get('logged') === 'true';
 
-        // STEP 3: Override ALL navigation methods
-        const originalPushState = window.history.pushState;
-        const originalReplaceState = window.history.replaceState;
-        const originalAssign = Object.getOwnPropertyDescriptor(window.location, 'href').set;
-
-        // Block pushState
-        window.history.pushState = function (state, title, url) {
-          if (window.__DASHBOARD_LOCK__ && !url.includes('/dashboard')) {
-            console.log('🚫 [BLOCKED] pushState to:', url, '→ Keeping /dashboard');
-            return originalPushState.call(this, state, title, '/dashboard');
-          }
-          return originalPushState.call(this, state, title, url);
-        };
-
-        // Block replaceState
-        window.history.replaceState = function (state, title, url) {
-          if (window.__DASHBOARD_LOCK__ && !url.includes('/dashboard')) {
-            console.log('🚫 [BLOCKED] replaceState to:', url, '→ Keeping /dashboard');
-            return originalReplaceState.call(this, state, title, '/dashboard');
-          }
-          return originalReplaceState.call(this, state, title, url);
-        };
-
-        // Block location.href changes
-        Object.defineProperty(window.location, 'href', {
-          set: function (url) {
-            if (window.__DASHBOARD_LOCK__ && !url.includes('/dashboard')) {
-              console.log('🚫 [BLOCKED] location.href to:', url, '→ Staying on /dashboard');
-              return;
-            }
-            originalAssign.call(this, url);
-          },
-          get: function () {
-            return window.location.toString();
-          }
-        });
-
-        // STEP 4: Release lock after 3 seconds (enough time for React to initialize)
-        setTimeout(() => {
-          console.log('🔓 [DASHBOARD LOCK] Released - Navigation enabled');
-          window.__DASHBOARD_LOCK__ = false;
-        }, 3000);
-      } else {
-        // Not dashboard - check if we just came from login
-        const urlParams = new URLSearchParams(window.location.search);
-        const justLoggedIn = urlParams.get('logged') === 'true';
-
-        if (justLoggedIn) {
-          console.log('🔄 [AUTO-REDIRECT] Just logged in, redirecting to dashboard...');
-          window.location.replace('/dashboard');
-        }
+      if (justLoggedIn) {
+        console.log('🔄 [AUTO-REDIRECT] Just logged in, redirecting to hub...');
+        window.location.replace('/hub.html');
       }
     })();
   </script>

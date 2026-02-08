@@ -62,6 +62,24 @@
             gap: 1rem;
         }
 
+        .logout-btn {
+            background: transparent;
+            border: 1px solid var(--text-light);
+            color: var(--text-light);
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .logout-btn:hover {
+            color: #ef4444;
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.05);
+        }
+
         .user-avatar {
             width: 40px;
             height: 40px;
@@ -254,7 +272,8 @@
         <a href="#" class="logo">⚡ FastPage <span
                 style="font-size:0.7em; background:#f1f5f9; padding:2px 8px; border-radius:12px; color:#64748b;">HUB</span></a>
         <div class="user-menu">
-            <div class="user-avatar">JP</div>
+            <button class="logout-btn" id="logout-btn" title="Cerrar Sesión">Salir</button>
+            <div class="user-avatar" title="Perfil de usuario">JP</div>
         </div>
     </nav>
 
@@ -305,7 +324,7 @@
     <!-- Auth Check Script -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBwG1SGZvp97zau4AGOIQxnIlNt9ig8dbs",
@@ -329,6 +348,20 @@
                 const name = user.displayName || user.email;
                 const initials = name.substring(0, 2).toUpperCase();
                 document.querySelector('.user-avatar').textContent = initials;
+            }
+        });
+
+        // Logout Logic
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            const confirmLogout = confirm("¿Estás seguro de que quieres cerrar sesión?");
+            if (confirmLogout) {
+                signOut(auth).then(() => {
+                    // Sign-out successful.
+                    window.location.href = '/auth.html';
+                }).catch((error) => {
+                    console.error("Error signing out: ", error);
+                    alert("Hubo un error al cerrar sesión.");
+                });
             }
         });
     </script>
