@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastPage Analytics Pro - Estadísticas en Tiempo Real</title>
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #7c3aed;
+            --primary-light: #8b5cf6;
+            --secondary: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        body {
+            background: #f5f3ff;
+            min-height: 100vh;
+            color: var(--text);
+        }
+
+        /* Navbar */
+        .navbar {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .navbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .back-btn {
+            background: transparent;
+            border: 1px solid var(--text-light);
+            color: var(--text-light);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background: rgba(0, 0, 0, 0.05);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 1px solid var(--text-light);
+            color: var(--text-light);
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .logout-btn:hover {
+            color: #ef4444;
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--text) 0%, var(--primary) 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .page-subtitle {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        /* Date Range Filter */
+        .filter-section {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .filter-group input {
+            padding: 0.5rem 1rem;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .filter-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .export-btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            margin-left: auto;
+        }
+
+        .export-btn:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--primary);
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(124, 58, 237, 0.1);
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-change {
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .stat-change.positive {
+            color: var(--secondary);
+        }
+
+        .stat-change.negative {
+            color: var(--danger);
+        }
+
+        .stat-card.visits { border-left-color: #2563eb; }
+        .stat-card.users { border-left-color: var(--secondary); }
+        .stat-card.conversions { border-left-color: var(--primary); }
+        .stat-card.revenue { border-left-color: var(--warning); }
+
+        /* Charts Grid */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .chart-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
+        /* Table */
+        .table-card {
+            background: var(--surface);
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .table-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            background: rgba(124, 58, 237, 0.02);
+        }
+
+        .table-header h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: rgba(124, 58, 237, 0.02);
+        }
+
+        th {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        td {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        tbody tr:hover {
+            background: rgba(124, 58, 237, 0.02);
+        }
+
+        .page-link {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .page-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+            }
+
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-section {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .export-btn {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-container {
+                height: 250px;
+            }
+
+            table {
+                font-size: 0.85rem;
+            }
+
+            th, td {
+                padding: 0.75rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <a href="hub.html" class="logo">⚡ FastPage <span
+                style="font-size:0.7em; background:#f1f5f9; padding:2px 8px; border-radius:12px; color:#64748b;">HUB</span></a>
+        <div class="navbar-actions">
+            <a href="hub.html" class="back-btn">← Volver al Hub</a>
+            <button class="logout-btn" id="logout-btn" title="Cerrar Sesión">Salir</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">📊 Analytics Pro</h1>
+            <p class="page-subtitle">Estadísticas detalladas de visitas, usuarios y conversiones en tiempo real.</p>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <div class="filter-group">
+                <label for="date-from">Desde:</label>
+                <input type="date" id="date-from" />
+            </div>
+            <div class="filter-group">
+                <label for="date-to">Hasta:</label>
+                <input type="date" id="date-to" />
+            </div>
+            <button class="filter-btn" onclick="applyFilter()">Filtrar</button>
+            <button class="export-btn" onclick="exportData()">📥 Descargar CSV</button>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card visits">
+                <div class="stat-label">Total Visitas</div>
+                <div class="stat-value" id="total-visits">12,543</div>
+                <div class="stat-change positive">↑ 12.5% vs semana anterior</div>
+            </div>
+
+            <div class="stat-card users">
+                <div class="stat-label">Usuarios Únicos</div>
+                <div class="stat-value" id="unique-users">3,287</div>
+                <div class="stat-change positive">↑ 8.3% vs semana anterior</div>
+            </div>
+
+            <div class="stat-card conversions">
+                <div class="stat-label">Conversiones</div>
+                <div class="stat-value" id="conversions">287</div>
+                <div class="stat-change positive">↑ 15.7% vs semana anterior</div>
+            </div>
+
+            <div class="stat-card revenue">
+                <div class="stat-label">Ingresos Estimados</div>
+                <div class="stat-value" id="revenue">$4,290</div>
+                <div class="stat-change positive">↑ 22.1% vs semana anterior</div>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="charts-grid">
+            <div class="chart-card">
+                <div class="chart-title">Visitas por Día</div>
+                <div class="chart-container">
+                    <canvas id="visitsChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-title">Fuentes de Tráfico</div>
+                <div class="chart-container">
+                    <canvas id="trafficChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-title">Conversiones por Día</div>
+                <div class="chart-container">
+                    <canvas id="conversionChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-title">Dispositivos Utilizados</div>
+                <div class="chart-container">
+                    <canvas id="deviceChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Pages Table -->
+        <div class="table-card">
+            <div class="table-header">
+                <h3>Páginas Más Visitadas</h3>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Página</th>
+                        <th>Visitas</th>
+                        <th>Usuarios</th>
+                        <th>Tiempo Promedio</th>
+                        <th>Tasa Rebote</th>
+                        <th>Conversiones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="#" class="page-link">/ (Inicio)</a></td>
+                        <td>5,234</td>
+                        <td>1,987</td>
+                        <td>2m 34s</td>
+                        <td>24.5%</td>
+                        <td>142</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" class="page-link">/servicios</a></td>
+                        <td>3,456</td>
+                        <td>1,234</td>
+                        <td>1m 45s</td>
+                        <td>18.2%</td>
+                        <td>98</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" class="page-link">/contacto</a></td>
+                        <td>2,123</td>
+                        <td>987</td>
+                        <td>1m 12s</td>
+                        <td>35.7%</td>
+                        <td>47</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" class="page-link">/precios</a></td>
+                        <td>1,730</td>
+                        <td>654</td>
+                        <td>3m 21s</td>
+                        <td>12.1%</td>
+                        <td>78</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" class="page-link">/blog</a></td>
+                        <td>1,345</td>
+                        <td>542</td>
+                        <td>4m 15s</td>
+                        <td>8.9%</td>
+                        <td>22</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Referrers Table -->
+        <div class="table-card">
+            <div class="table-header">
+                <h3>Principales Referentes</h3>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Referente</th>
+                        <th>Visitas</th>
+                        <th>Usuarios</th>
+                        <th>Tasa Conversión</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="#" class="page-link">Google Organic</a></td>
+                        <td>6,234</td>
+                        <td>2,456</td>
+                        <td>4.2%</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" class="page-link">Direct</a></td>
+                        <td>3,456</td>
+                        <td>1,234</td>
+                        <td>5.1%</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" class="page-link">Facebook</a></td>
+                        <td>1,987</td>
+                        <td>789</td>
+                        <td>2.8%</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" class="page-link">LinkedIn</a></td>
+                        <td>1,234</td>
+                        <td>456</td>
+                        <td>6.5%</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" class="page-link">Instagram</a></td>
+                        <td>876</td>
+                        <td>345</td>
+                        <td>3.2%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBwG1SGZvp97zau4AGOIQxnIlNt9ig8dbs",
+            authDomain: "fast-page-726db.firebaseapp.com",
+            projectId: "fast-page-726db",
+            storageBucket: "fast-page-726db.firebasestorage.app",
+            messagingSenderId: "850638079580",
+            appId: "1:850638079580:web:0a70125759adced1d30899",
+            measurementId: "G-F22PMSZ703"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Auth Check
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = '/auth.html';
+            }
+        });
+
+        // Logout
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            const confirmLogout = confirm("¿Estás seguro de que quieres cerrar sesión?");
+            if (confirmLogout) {
+                signOut(auth).then(() => {
+                    window.location.href = '/auth.html';
+                }).catch((error) => {
+                    console.error("Error signing out: ", error);
+                    alert("Hubo un error al cerrar sesión.");
+                });
+            }
+        });
+
+        // Expose functions globally
+        window.applyFilter = function() {
+            alert('Filtro aplicado. Los gráficos se actualizarán con los datos del período seleccionado.');
+        };
+
+        window.exportData = function() {
+            alert('📥 Descargando datos en formato CSV...\nArchivo: analytics_data_' + new Date().toISOString().split('T')[0] + '.csv');
+        };
+
+        // Initialize Charts
+        const ctx1 = document.getElementById('visitsChart').getContext('2d');
+        new Chart(ctx1, {
+            type: 'line',
+            data: {
+                labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
+                datasets: [{
+                    label: 'Visitas',
+                    data: [1200, 1900, 1500, 2100, 2400, 2100, 1800],
+                    borderColor: '#2563eb',
+                    backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            drawBorder: false,
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            drawBorder: false,
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        const ctx2 = document.getElementById('trafficChart').getContext('2d');
+        new Chart(ctx2, {
+            type: 'doughnut',
+            data: {
+                labels: ['Google', 'Direct', 'Social', 'Referentes'],
+                datasets: [{
+                    data: [45, 25, 20, 10],
+                    backgroundColor: [
+                        '#2563eb',
+                        '#10b981',
+                        '#f59e0b',
+                        '#8b5cf6'
+                    ],
+                    borderColor: '#ffffff',
+                    borderWidth: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        const ctx3 = document.getElementById('conversionChart').getContext('2d');
+        new Chart(ctx3, {
+            type: 'bar',
+            data: {
+                labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
+                datasets: [{
+                    label: 'Conversiones',
+                    data: [32, 45, 38, 52, 48, 41, 35],
+                    backgroundColor: '#7c3aed',
+                    borderRadius: 8,
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            drawBorder: false,
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        const ctx4 = document.getElementById('deviceChart').getContext('2d');
+        new Chart(ctx4, {
+            type: 'pie',
+            data: {
+                labels: ['Mobile', 'Desktop', 'Tablet'],
+                datasets: [{
+                    data: [52, 38, 10],
+                    backgroundColor: [
+                        '#f59e0b',
+                        '#2563eb',
+                        '#10b981'
+                    ],
+                    borderColor: '#ffffff',
+                    borderWidth: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    </script>
+
+</body>
+
+</html>

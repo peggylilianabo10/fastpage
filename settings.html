@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastPage Configuración - Gestión de Cuenta</title>
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
+    <style>
+        :root {
+            --primary: #7c3aed;
+            --primary-light: #8b5cf6;
+            --secondary: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        body {
+            background: #f5f3ff;
+            min-height: 100vh;
+            color: var(--text);
+        }
+
+        /* Navbar */
+        .navbar {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .navbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .back-btn {
+            background: transparent;
+            border: 1px solid var(--text-light);
+            color: var(--text-light);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background: rgba(0, 0, 0, 0.05);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 1px solid var(--text-light);
+            color: var(--text-light);
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .logout-btn:hover {
+            color: #ef4444;
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        /* Main Layout */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        /* Sidebar */
+        .settings-sidebar {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 1.5rem 0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            height: fit-content;
+            position: sticky;
+            top: 80px;
+        }
+
+        .settings-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .settings-nav-item {
+            padding: 0.75rem 1.5rem;
+            color: var(--text);
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+            font-size: 0.95rem;
+            border-left: 3px solid transparent;
+        }
+
+        .settings-nav-item:hover {
+            background: rgba(124, 58, 237, 0.05);
+            color: var(--primary);
+        }
+
+        .settings-nav-item.active {
+            background: rgba(124, 58, 237, 0.1);
+            color: var(--primary);
+            border-left-color: var(--primary);
+        }
+
+        /* Content */
+        .settings-content {
+            background: var(--surface);
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+        }
+
+        .settings-section {
+            display: none;
+        }
+
+        .settings-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .section-subtitle {
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-helper {
+            color: var(--text-light);
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(0, 0, 0, 0.05);
+            color: var(--text);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 0, 0, 0.08);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        /* Cards */
+        .info-card {
+            background: rgba(124, 58, 237, 0.05);
+            border: 1px solid rgba(124, 58, 237, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-card-title {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .info-card-content {
+            color: var(--text);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .profile-avatar-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+            font-weight: 800;
+        }
+
+        .avatar-upload-label {
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .avatar-upload-label:hover {
+            background: var(--primary-light);
+        }
+
+        .avatar-upload-input {
+            display: none;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-info-item {
+            margin-bottom: 1rem;
+        }
+
+        .profile-info-label {
+            color: var(--text-light);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .profile-info-value {
+            color: var(--text);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 0.25rem;
+        }
+
+        /* Domain List */
+        .domain-item {
+            background: rgba(124, 58, 237, 0.05);
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .domain-info h4 {
+            color: var(--text);
+            margin-bottom: 0.25rem;
+        }
+
+        .domain-info p {
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+
+        .domain-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .domain-actions button {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .domain-actions .edit-btn {
+            background: var(--primary);
+            color: white;
+        }
+
+        .domain-actions .delete-btn {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                padding: 0 1rem;
+            }
+
+            .settings-sidebar {
+                position: relative;
+                top: auto;
+            }
+
+            .settings-nav {
+                flex-direction: row;
+                overflow-x: auto;
+            }
+
+            .settings-nav-item {
+                white-space: nowrap;
+                flex: 0 0 auto;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <a href="hub.html" class="logo">⚡ FastPage <span
+                style="font-size:0.7em; background:#f1f5f9; padding:2px 8px; border-radius:12px; color:#64748b;">HUB</span></a>
+        <div class="navbar-actions">
+            <a href="hub.html" class="back-btn">← Volver al Hub</a>
+            <button class="logout-btn" id="logout-btn" title="Cerrar Sesión">Salir</button>
+        </div>
+    </nav>
+
+    <div class="main-layout">
+        <!-- Sidebar -->
+        <aside class="settings-sidebar">
+            <nav class="settings-nav">
+                <a class="settings-nav-item active" onclick="switchSection('perfil', this)">👤 Perfil</a>
+                <a class="settings-nav-item" onclick="switchSection('dominios', this)">🌐 Dominios</a>
+                <a class="settings-nav-item" onclick="switchSection('licencias', this)">⭐ Licencias</a>
+                <a class="settings-nav-item" onclick="switchSection('preferencias', this)">⚙️ Preferencias</a>
+                <a class="settings-nav-item" onclick="switchSection('seguridad', this)">🔒 Seguridad</a>
+                <a class="settings-nav-item" onclick="switchSection('privacidad', this)">📋 Privacidad</a>
+            </nav>
+        </aside>
+
+        <!-- Content -->
+        <main class="settings-content">
+
+            <!-- Sección Perfil -->
+            <section class="settings-section active" id="perfil-section">
+                <h2 class="section-title">👤 Mi Perfil</h2>
+                <p class="section-subtitle">Gestiona tu información personal y configuración de cuenta.</p>
+
+                <div class="profile-header">
+                    <div class="profile-avatar-wrapper">
+                        <div class="profile-avatar" id="profile-avatar">JP</div>
+                        <label class="avatar-upload-label">
+                            Cambiar Avatar
+                            <input type="file" class="avatar-upload-input" accept="image/*" onchange="updateAvatar(event)">
+                        </label>
+                    </div>
+                    <div class="profile-info">
+                        <div class="profile-info-item">
+                            <div class="profile-info-label">Email</div>
+                            <div class="profile-info-value" id="profile-email">usuario@email.com</div>
+                        </div>
+                        <div class="profile-info-item">
+                            <div class="profile-info-label">Nombre Completo</div>
+                            <div class="profile-info-value" id="profile-name">Juan Pérez</div>
+                        </div>
+                        <div class="profile-info-item">
+                            <div class="profile-info-label">Plan Actual</div>
+                            <div class="profile-info-value">PRO Business • $50/mes</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 style="margin-bottom: 1rem; color: var(--text);">Editar Información</h3>
+                    <div class="form-group">
+                        <label>Nombre Completo</label>
+                        <input type="text" id="edit-name" value="Juan Pérez" />
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="edit-email" value="usuario@email.com" />
+                        <div class="form-helper">Tu email es tu identificador único en FastPage</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Teléfono (Opcional)</label>
+                        <input type="tel" id="edit-phone" placeholder="+1 (555) 123-4567" />
+                    </div>
+                    <div class="form-group">
+                        <label>Empresa (Opcional)</label>
+                        <input type="text" id="edit-company" placeholder="Mi Empresa" />
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="saveProfile()">💾 Guardar Cambios</button>
+                        <button class="btn btn-secondary" onclick="resetProfile()">↶ Cancelar</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección Dominios -->
+            <section class="settings-section" id="dominios-section">
+                <h2 class="section-title">🌐 Mis Dominios</h2>
+                <p class="section-subtitle">Conecta dominios personalizados a tus sitios FastPage.</p>
+
+                <div class="info-card">
+                    <div class="info-card-title">✨ Dominios Activos</div>
+                    <div class="info-card-content">Tienes 2 dominios personalizados vinculados. Cada sitio puede tener un dominio único.</div>
+                </div>
+
+                <div id="domains-list">
+                    <div class="domain-item">
+                        <div class="domain-info">
+                            <h4>miempresa.com</h4>
+                            <p>Vinculado a: Sitio Principal • Activo ✓</p>
+                        </div>
+                        <div class="domain-actions">
+                            <button class="edit-btn" onclick="editDomain('miempresa.com')">Editar</button>
+                            <button class="delete-btn" onclick="deleteDomain('miempresa.com')">Eliminar</button>
+                        </div>
+                    </div>
+                    <div class="domain-item">
+                        <div class="domain-info">
+                            <h4>blog.miempresa.com</h4>
+                            <p>Vinculado a: Blog • Activo ✓</p>
+                        </div>
+                        <div class="domain-actions">
+                            <button class="edit-btn" onclick="editDomain('blog.miempresa.com')">Editar</button>
+                            <button class="delete-btn" onclick="deleteDomain('blog.miempresa.com')">Eliminar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <h3 style="margin-bottom: 1rem; color: var(--text);">Agregar Nuevo Dominio</h3>
+                    <div class="form-group">
+                        <label>Nombre de Dominio</label>
+                        <input type="text" id="new-domain" placeholder="ejemplo.com" />
+                        <div class="form-helper">Usa dominios registrados en registros como Namecheap, GoDaddy, etc.</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Seleccionar Sitio</label>
+                        <select id="domain-site">
+                            <option>-- Selecciona un sitio --</option>
+                            <option>Sitio Principal</option>
+                            <option>Blog</option>
+                            <option>Tienda Online</option>
+                        </select>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="addDomain()">➕ Conectar Dominio</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección Licencias -->
+            <section class="settings-section" id="licencias-section">
+                <h2 class="section-title">⭐ Licencia y Plan</h2>
+                <p class="section-subtitle">Gestiona tu suscripción y actualiza tu plan.</p>
+
+                <div class="info-card">
+                    <div class="info-card-title">Plan PRO Business (Activo)</div>
+                    <div class="info-card-content">
+                        Tu próximo pago es el 8 de Marzo, 2026. Puedes cambiar de plan o cancelar en cualquier momento.
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem; color: var(--text);">Plan Actual: PRO Business</h3>
+                    <p style="color: var(--text-light); margin-bottom: 1rem;">$50/mes • Renovación automática el 8 de Marzo, 2026</p>
+                    <div style="background: rgba(124, 58, 237, 0.05); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                        <p style="color: var(--text); font-weight: 600; margin-bottom: 0.5rem;">✓ Características Incluidas:</p>
+                        <ul style="list-style: none; color: var(--text-light); font-size: 0.9rem; line-height: 1.8;">
+                            <li>✓ Sitios ilimitados</li>
+                            <li>✓ Dominios personalizados</li>
+                            <li>✓ Analytics profesional en tiempo real</li>
+                            <li>✓ Soporte prioritario 24/7</li>
+                            <li>✓ Integraciones avanzadas</li>
+                            <li>✓ A/B Testing</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <h3 style="margin-bottom: 1rem; color: var(--text);">Otros Planes Disponibles</h3>
+                    <div style="display: grid; gap: 1rem;">
+                        <div style="border: 1px solid rgba(0,0,0,0.1); border-radius: 12px; padding: 1.5rem; cursor: pointer;" onclick="upgradePlan('enterprise')">
+                            <h4 style="color: var(--text); margin-bottom: 0.5rem;">Enterprise 🚀</h4>
+                            <p style="color: var(--primary); font-weight: 700; margin-bottom: 0.5rem;">Contactar para precios</p>
+                            <p style="color: var(--text-light); font-size: 0.9rem;">Solución completamente personalizada para grandes empresas.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-group" style="margin-top: 2rem;">
+                    <button class="btn btn-secondary" onclick="manageBilling()">💳 Gestionar Facturación</button>
+                    <button class="btn btn-danger" onclick="cancelPlan()">🔌 Cancelar Plan</button>
+                </div>
+            </section>
+
+            <!-- Sección Preferencias -->
+            <section class="settings-section" id="preferencias-section">
+                <h2 class="section-title">⚙️ Preferencias</h2>
+                <p class="section-subtitle">Personaliza tu experiencia en FastPage.</p>
+
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; font-weight: 600;">
+                        <input type="checkbox" id="pref-notifications" checked style="width: 20px; height: 20px; cursor: pointer;">
+                        <span>Notificaciones por correo</span>
+                    </label>
+                    <div class="form-helper">Recibe actualizaciones sobre tus sitios y estadísticas</div>
+                </div>
+
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; font-weight: 600;">
+                        <input type="checkbox" id="pref-newsletter" checked style="width: 20px; height: 20px; cursor: pointer;">
+                        <span>Newsletter semanal</span>
+                    </label>
+                    <div class="form-helper">Tips, mejores prácticas y nuevas funcionalidades cada semana</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Idioma Preferido</label>
+                    <select id="pref-language">
+                        <option selected>Español (Latinoamérica)</option>
+                        <option>Español (España)</option>
+                        <option>English</option>
+                        <option>Português</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Zona Horaria</label>
+                    <select id="pref-timezone">
+                        <option selected>(GMT-5) Hora de América Central</option>
+                        <option>(GMT-6) Hora de la Montaña</option>
+                        <option>(GMT-8) Hora del Pacífico</option>
+                        <option>(UTC) Meridiano de Greenwich</option>
+                    </select>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="savePreferences()">💾 Guardar Preferencias</button>
+                </div>
+            </section>
+
+            <!-- Sección Seguridad -->
+            <section class="settings-section" id="seguridad-section">
+                <h2 class="section-title">🔒 Seguridad</h2>
+                <p class="section-subtitle">Protege tu cuenta FastPage.</p>
+
+                <div class="info-card">
+                    <div class="info-card-title">🛡️ Estado de tu Cuenta</div>
+                    <div class="info-card-content">Tu cuenta está protegida. Usa contraseñas fuertes y activa la autenticación de dos factores.</div>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem; color: var(--text);">Contraseña</h3>
+                    <p style="color: var(--text-light); margin-bottom: 1rem;">Última actualización: 15 de Enero, 2026</p>
+                    <button class="btn btn-primary" onclick="changePassword()">🔑 Cambiar Contraseña</button>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem; color: var(--text);">Autenticación de Dos Factores (2FA)</h3>
+                    <p style="color: var(--text-light); margin-bottom: 1rem;">Estado: <span style="color: var(--secondary); font-weight: 700;">Desactivado</span></p>
+                    <button class="btn btn-primary" onclick="enable2FA()">🔐 Activar 2FA</button>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem; color: var(--text);">Sesiones Activas</h3>
+                    <div style="background: rgba(124, 58, 237, 0.05); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                        <p style="color: var(--text); font-weight: 600; margin-bottom: 0.5rem;">Navegador: Chrome • Windows 10</p>
+                        <p style="color: var(--text-light); font-size: 0.85rem;">Actual • Hace 5 minutos</p>
+                    </div>
+                    <button class="btn btn-secondary" onclick="closeSessions()">Cerrar Todas las Sesiones</button>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem; color: var(--text);">Conectar Aplicaciones Externas</h3>
+                    <p style="color: var(--text-light); margin-bottom: 1rem;">Ninguna aplicación conectada</p>
+                    <button class="btn btn-secondary" onclick="manageApps()">⚙️ Gestionar Aplicaciones</button>
+                </div>
+            </section>
+
+            <!-- Sección Privacidad -->
+            <section class="settings-section" id="privacidad-section">
+                <h2 class="section-title">📋 Privacidad y Datos</h2>
+                <p class="section-subtitle">Controla cómo se usan y almacenan tus datos.</p>
+
+                <div class="info-card">
+                    <div class="info-card-title">📊 Datos Personales</div>
+                    <div class="info-card-content">Tienes derecho a acceder, modificar y eliminar tus datos personales en cualquier momento.</div>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem; color: var(--text);">Datos que Almacenamos</h3>
+                    <ul style="list-style: none; color: var(--text); font-size: 0.95rem; line-height: 2;">
+                        <li>✓ Información de perfil (nombre, email)</li>
+                        <li>✓ Contenido de tus sitios web</li>
+                        <li>✓ Historial de cambios y actualizaciones</li>
+                        <li>✓ Datos de analítica y visitantes</li>
+                        <li>✓ Registros de pagos y facturación</li>
+                    </ul>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem; color: var(--text);">Controles de Privacidad</h3>
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; font-weight: 600;">
+                            <input type="checkbox" id="privacy-analytics" checked style="width: 20px; height: 20px; cursor: pointer;">
+                            <span>Permitir mejorar FastPage analizando mi uso (anónimo)</span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer; font-weight: 600;">
+                            <input type="checkbox" id="privacy-marketing" style="width: 20px; height: 20px; cursor: pointer;">
+                            <span>Permitir estudios de mercado y encuestas</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem; color: var(--text);">Solicitudes GDPR</h3>
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="downloadData()">📥 Descargar Mis Datos</button>
+                        <button class="btn btn-secondary" onclick="requestDeletion()">🗑️ Solicitar Eliminación</button>
+                    </div>
+                </div>
+
+                <div style="border: 2px solid var(--danger); border-radius: 12px; padding: 1.5rem; background: rgba(239, 68, 68, 0.05);">
+                    <h3 style="color: var(--danger); margin-bottom: 0.5rem;">⚠️ Zona de Peligro</h3>
+                    <p style="color: var(--text-light); margin-bottom: 1.5rem; font-size: 0.95rem;">Eliminar tu cuenta, todas tus configuraciones y datos no se pueden recuperar.</p>
+                    <button class="btn btn-danger" onclick="deleteAccount()">🔥 Eliminar Permanentemente Mi Cuenta</button>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBwG1SGZvp97zau4AGOIQxnIlNt9ig8dbs",
+            authDomain: "fast-page-726db.firebaseapp.com",
+            projectId: "fast-page-726db",
+            storageBucket: "fast-page-726db.firebasestorage.app",
+            messagingSenderId: "850638079580",
+            appId: "1:850638079580:web:0a70125759adced1d30899",
+            measurementId: "G-F22PMSZ703"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Auth Check
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = '/auth.html';
+            } else {
+                // Update profile info
+                const name = user.displayName || user.email.split('@')[0];
+                const initials = name.substring(0, 2).toUpperCase();
+                document.getElementById('profile-avatar').textContent = initials;
+                document.getElementById('profile-email').textContent = user.email;
+                document.getElementById('profile-name').textContent = name;
+                document.getElementById('edit-name').value = name;
+                document.getElementById('edit-email').value = user.email;
+            }
+        });
+
+        // Logout
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            const confirmLogout = confirm("¿Estás seguro de que quieres cerrar sesión?");
+            if (confirmLogout) {
+                signOut(auth).then(() => {
+                    window.location.href = '/auth.html';
+                }).catch((error) => {
+                    console.error("Error signing out: ", error);
+                    alert("Hubo un error al cerrar sesión.");
+                });
+            }
+        });
+
+        // Expose functions globally
+        window.switchSection = function(section, element) {
+            // Hide all sections
+            document.querySelectorAll('.settings-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.settings-nav-item').forEach(item => item.classList.remove('active'));
+
+            // Show selected section
+            document.getElementById(section + '-section').classList.add('active');
+            element.classList.add('active');
+        };
+
+        window.updateAvatar = function(event) {
+            alert('✓ Avatar actualizado correctamente');
+        };
+
+        window.saveProfile = function() {
+            alert('✓ Perfil actualizado correctamente');
+        };
+
+        window.resetProfile = function() {
+            alert('Cambios cancelados');
+        };
+
+        window.editDomain = function(domain) {
+            alert(`Editando: ${domain}`);
+        };
+
+        window.deleteDomain = function(domain) {
+            if (confirm(`¿Estás seguro de que quieres desconectar ${domain}?`)) {
+                alert(`✓ ${domain} ha sido desconectado`);
+            }
+        };
+
+        window.addDomain = function() {
+            alert('Abriendo asistente de conexión de dominio...');
+        };
+
+        window.manageBilling = function() {
+            alert('Redirigiendo al portal de facturación...');
+        };
+
+        window.cancelPlan = function() {
+            if (confirm('¿Estás seguro de que quieres cancelar tu plan?')) {
+                alert('Tu plan será cancelado al final del ciclo de facturación actual');
+            }
+        };
+
+        window.upgradePlan = function(plan) {
+            alert(`Contactando sobre el plan ${plan}...`);
+        };
+
+        window.savePreferences = function() {
+            alert('✓ Preferencias guardadas correctamente');
+        };
+
+        window.changePassword = function() {
+            alert('Enviando enlace para cambiar contraseña a tu correo...');
+        };
+
+        window.enable2FA = function() {
+            alert('Abriendo asistente de autenticación de dos factores...');
+        };
+
+        window.closeSessions = function() {
+            alert('Todas las sesiones activas han sido cerradas');
+        };
+
+        window.manageApps = function() {
+            alert('Abriendo gestor de aplicaciones conectadas...');
+        };
+
+        window.downloadData = function() {
+            alert('Preparando descarga de tus datos...');
+        };
+
+        window.requestDeletion = function() {
+            alert('Solicitud GDPR enviada. Recibirás un correo de confirmación');
+        };
+
+        window.deleteAccount = function() {
+            const confirm1 = confirm('⚠️ Esta acción no se puede deshacer. ¿Estás completamente seguro?');
+            if (confirm1) {
+                const confirm2 = confirm('Se eliminarán TODOS tus sitios, datos y configuraciones. Escribe "ELIMINAR" para confirmar');
+                if (confirm2) {
+                    alert('Tu cuenta y todos los datos asociados han sido marcados para eliminación. El proceso se completará en 30 días');
+                }
+            }
+        };
+    </script>
+
+</body>
+
+</html>
