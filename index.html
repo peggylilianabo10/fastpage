@@ -2029,6 +2029,8 @@
         }
       ];
 
+
+
       function renderCheck(isPro) {
         return `<svg class="w-5 h-5 ${isPro ? 'text-green-400' : 'text-green-500'} mr-2 flex-shrink-0" fill="none"
     stroke="currentColor" viewBox="0 0 24 24">
@@ -2050,6 +2052,54 @@
           </div>
           <div class="pricing-grid">
         `;
+
+        const pricingPlans = [
+          {
+            name: "Starter",
+            price: "S/0",
+            period: "/mes",
+            desc: "Perfecto para validar tu idea sin riesgo.",
+            features: [
+              "1 Sitio Web Publicado",
+              "Dominio fastpage.app",
+              "Hosting Incluido",
+              "Editor Visual Básico",
+              "Soporte Comunitario"
+            ],
+            cta: "Empezar Gratis",
+            highlight: false
+          },
+          {
+            name: "PRO Business",
+            price: "S/50",
+            period: "/mes",
+            desc: "La caja de herramientas definitiva para vender.",
+            features: [
+              "Sitios Ilimitados",
+              "Dominio Personalizado",
+              "Botón WhatsApp Flotante",
+              "Eliminar Marca de Agua",
+              "Hosting CDN Ultra Rápido ⚡",
+              "Certificado SSL Seguro 🔒",
+              "Google Analytics Integration 📊",
+              "Facebook Pixel (Meta Ads) 🎯",
+              "Inyección de Código (JS/CSS) 👨‍💻",
+              "SEO Técnico Automático 🔍",
+              "Banner de Cookies (GDPR) 🍪",
+              "Modo Mantenimiento 🚧",
+              "Soporte Prioritario 24/7 💬",
+              "Plantillas Premium 'High Tech' 💎",
+              "Efectos y Animaciones Pro ✨",
+              "Métricas de Conversión 📈",
+              "Acceso 'God Mode' Editor 🛠️",
+              "Exportación de Leads 📥",
+              "Copias de Seguridad Diarias 💾",
+              "Actualizaciones Beta 🚀"
+            ],
+            cta: "¡QUIERO SER PRO! 🚀",
+            highlight: true
+          }
+        ];
 
         pricingPlans.forEach(plan => {
           const isPro = plan.highlight;
