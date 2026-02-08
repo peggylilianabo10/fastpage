@@ -2753,8 +2753,8 @@
               if (el.innerText !== "Ir al Dashboard") {
                 el.innerText = "Ir al Dashboard";
               }
-              el.onclick = (e) => { e.preventDefault(); window.location.href = '/dashboard'; };
-              if (el.tagName === 'A') el.setAttribute('href', '/dashboard');
+              el.onclick = (e) => { e.preventDefault(); window.location.href = '/hub.html'; };
+              if (el.tagName === 'A') el.setAttribute('href', '/hub.html');
               registerButtonFound = true;
 
               // CREATE LOGOUT BUTTON NEXT TO IT
@@ -2838,6 +2838,11 @@
 
       console.log('✅ Buttons found - Login:', loginButtonFound, 'Register:', registerButtonFound, 'Logout:', logoutButtonFound);
     };
+
+    // --- EXPOSE FUNCTIONS GLOBALLY FOR BUTTON HANDLERS ---
+    window.handleLogout = handleLogout;
+    window.goToAuth = goToAuth;
+    window.updateLandingUI = updateLandingUI;
 
     // --- MAIN AUTH OBSERVER ---
     // Note: Dashboard routing is handled by head script
