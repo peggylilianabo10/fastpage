@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>FastPage - Preview Pública</title>
+  <style>body{font-family:Inter,system-ui,Arial;padding:20px;background:#fff}</style>
+</head>
+<body>
+  <div id="root">Cargando...</div>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBwG1SGZvp97zau4AGOIQxnIlNt9ig8dbs",
+      authDomain: "fast-page-726db.firebaseapp.com",
+      projectId: "fast-page-726db",
+      storageBucket: "fast-page-726db.firebasestorage.app",
+      messagingSenderId: "850638079580",
+      appId: "1:850638079580:web:0a70125759adced1d30899",
+      measurementId: "G-F22PMSZ703"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    if(!id){ document.getElementById('root').textContent = 'ID de proyecto faltante'; }
+    else {
+      (async ()=>{
+        const dref = doc(db, 'projects', id);
+        const snap = await getDoc(dref);
+        if(!snap.exists()){ document.getElementById('root').textContent = 'Proyecto no encontrado'; return; }
+        const data = snap.data();
+        if(!data.published){ document.getElementById('root').textContent = 'Proyecto no publicado'; return; }
+        // Render the stored HTML
+        document.getElementById('root').innerHTML = data.html || (data.content ? data.content.map(b=>`<section style="padding:40px;border-bottom:1px solid #eee">${b.text}</section>`).join('') : 'Sin contenido');
+      })();
+    }
+  </script>
+</body>
+</html>

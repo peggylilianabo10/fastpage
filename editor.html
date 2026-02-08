@@ -62,7 +62,30 @@
     </aside>
   </div>
 
-  <script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBwG1SGZvp97zau4AGOIQxnIlNt9ig8dbs",
+      authDomain: "fast-page-726db.firebaseapp.com",
+      projectId: "fast-page-726db",
+      storageBucket: "fast-page-726db.firebasestorage.app",
+      messagingSenderId: "850638079580",
+      appId: "1:850638079580:web:0a70125759adced1d30899",
+      measurementId: "G-F22PMSZ703"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let currentUser = null;
+    onAuthStateChanged(auth, (user) => {
+      currentUser = user;
+    });
+
     // Simple drag & drop block builder (minimal, client-side only)
     const blocks = document.querySelectorAll('.block[draggable]');
     const canvas = document.getElementById('canvas');
@@ -113,29 +136,95 @@
     }
     function removeBlock(){ if(window._selected){ window._selected.remove(); inspector.innerHTML=''; inspectorEmpty.style.display='block'; }}
 
-    // Templates
+    // Rich templates
     function useTemplate(name){
       canvas.innerHTML = '';
       if(name==='startup'){
-        const hero=document.createElement('div'); hero.className='block'; hero.textContent='Hero - Crea tu web en segundos'; canvas.appendChild(hero);
-        const feat=document.createElement('div'); feat.className='block'; feat.textContent='Características - Velocidad, Diseño, Analítica'; canvas.appendChild(feat);
-        const pricing=document.createElement('div'); pricing.className='block'; pricing.textContent='Planes para Ganadores'; canvas.appendChild(pricing);
-      } else {
+        const hero=document.createElement('div'); hero.className='block'; hero.textContent='Hero - Crea tu web en segundos\nSubtítulo: Arrastra y publica tu landing'; canvas.appendChild(hero);
+        const feat=document.createElement('div'); feat.className='block'; feat.textContent='Características - Velocidad, Diseño Premium, Analítica Pro'; canvas.appendChild(feat);
+        const pricing=document.createElement('div'); pricing.className='block'; pricing.textContent='Planes para Ganadores\nStarter • PRO Business'; canvas.appendChild(pricing);
+        const faq=document.createElement('div'); faq.className='block'; faq.textContent='FAQ - ¿Qué es FastPage?\n¿Es gratis?\n¿Soporte?'; canvas.appendChild(faq);
+      } else if(name==='product'){
         const hero=document.createElement('div'); hero.className='block'; hero.textContent='Hero - Producto Estrella'; canvas.appendChild(hero);
         const test=document.createElement('div'); test.className='block'; test.textContent='Testimonios'; canvas.appendChild(test);
+        const faq=document.createElement('div'); faq.className='block'; faq.textContent='FAQ - Preguntas comunes'; canvas.appendChild(faq);
       }
     }
 
-    // Actions
+    // Remote save & publish
+    async function saveRemote() {
+      if(!currentUser){
+        if(confirm('Necesitas iniciar sesión para guardar en la nube. Ir a iniciar sesión ahora?')){
+          window.location.href = '/auth.html';
+        }
+        return;
+      }
+
+      const content = Array.from(document.querySelectorAll('#canvas .block')).map(b=>({type:b.dataset.type || 'block', text:b.textContent}));
+      const title = (content[0] && content[0].text.split('\n')[0]) || ('Proyecto ' + new Date().toISOString());
+
+      try{
+        const docRef = await addDoc(collection(db, 'projects'), {
+          uid: currentUser.uid,
+          title,
+          content,
+          published: false,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp()
+        });
+        localStorage.setItem('last_project_id', docRef.id);
+        alert('✓ Guardado en la nube (ID: ' + docRef.id + ')');
+      } catch(err){
+        console.error('Save error', err);
+        alert('Error guardando en la nube');
+      }
+    }
+
+    async function publishRemote(){
+      if(!currentUser){
+        if(confirm('Necesitas iniciar sesión para publicar. Ir a iniciar sesión ahora?')){
+          window.location.href = '/auth.html';
+        }
+        return;
+      }
+
+      const content = Array.from(document.querySelectorAll('#canvas .block')).map(b=>({type:b.dataset.type || 'block', text:b.textContent}));
+      const html = content.map(b=>`<section style="padding:40px;border-bottom:1px solid #eee">${b.text}</section>`).join('');
+      const projectId = localStorage.getItem('last_project_id');
+
+      try{
+        let ref;
+        if(projectId){
+          ref = doc(db, 'projects', projectId);
+          await setDoc(ref, {
+            content, html, published: true, updatedAt: serverTimestamp(), uid: currentUser.uid
+          }, { merge: true });
+        } else {
+          ref = await addDoc(collection(db, 'projects'), {
+            uid: currentUser.uid, title: (content[0] ? content[0].text.split('\n')[0] : 'Published'), content, html, published: true, createdAt: serverTimestamp(), updatedAt: serverTimestamp()
+          });
+        }
+
+        localStorage.setItem('last_project_id', ref.id || projectId);
+        const id = ref.id || projectId;
+        alert('✓ Publicado. Vista pública: /preview.html?id=' + id);
+        window.open('/preview.html?id=' + id, '_blank');
+      } catch(err){
+        console.error('Publish error', err);
+        alert('Error publicando en la nube');
+      }
+    }
+
+    // Attach actions
     document.getElementById('saveBtn').addEventListener('click', ()=>{
-      // Minimal save emulation
+      // Save locally and remotely
       const content = Array.from(document.querySelectorAll('#canvas .block')).map(b=>({type:b.dataset.type || 'block', text:b.textContent}));
       localStorage.setItem('editor_draft', JSON.stringify(content));
-      alert('✓ Borrador guardado localmente');
+      // Try remote save too
+      saveRemote();
     });
 
     document.getElementById('previewBtn').addEventListener('click', ()=>{
-      // Create preview window with basic HTML
       const content = Array.from(document.querySelectorAll('#canvas .block')).map(b=>`<section style="padding:40px;border-bottom:1px solid #eee">${b.textContent}</section>`).join('');
       const preview = window.open('about:blank','preview');
       preview.document.write(`<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Preview</title><style>body{font-family:Inter,system-ui,Arial;padding:20px}</style></head><body>${content}</body></html>`);
@@ -143,10 +232,8 @@
     });
 
     document.getElementById('publishBtn').addEventListener('click', ()=>{
-      // Emulate publish
       if(!confirm('¿Publicar Landing Page ahora?')) return;
-      // Normally would call backend/publish API - here we simulate
-      alert('✓ Tu landing ha sido publicada (simulación)');
+      publishRemote();
     });
 
     // Load draft if exists
@@ -161,11 +248,6 @@
       }
     })();
 
-    // Redirect if not authenticated (check pattern with parent auth cookie/localStorage)
-    // We expose a basic check — in production use Firebase Auth like other pages
-    (async ()=>{
-      // If app uses Firebase auth, we could check here. For now, keep accessible.
-    })();
   </script>
 </body>
 </html>
