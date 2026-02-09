@@ -155,7 +155,8 @@
       const el = createBlockElement(data.type, data.label);
       canvas.appendChild(el);
       selectBlock(el);
-    }
+    });
+
     function getDragAfterElement(container, y){
       const draggableElements = [...container.querySelectorAll('.block:not(.dragging)')];
       return draggableElements.reduce((closest, child)=>{
@@ -178,7 +179,7 @@
       } else {
         canvas.insertBefore(dragging, afterElement);
       }
-    }););
+    });
 
     function getTemplateHtml(type, label){
       const title = label || 'Tu landing que convierte';
