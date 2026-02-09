@@ -14,11 +14,18 @@
     .controls{display:flex;gap:0.5rem;align-items:center}
     .btn{padding:8px 12px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);cursor:pointer;background:white}
     .btn.primary{background:linear-gradient(90deg,var(--primary),#8b5cf6);color:#fff;border:none}
+    
+    .btn.icon{padding:6px 8px;font-size:12px;line-height:1;border-radius:6px}
+    .btn.icon.secondary{background:#f1f5f9;border:1px solid rgba(0,0,0,0.06)}
+    .btn.icon.secondary:hover{background:#e2e8f0}
+    .block-controls{display:flex;gap:6px;align-items:center}
+    .block-controls .btn{min-width:28px}
     .layout{display:grid;grid-template-columns:300px 1fr 340px;gap:1rem;padding:1rem}
     .panel{background:var(--surface);border-radius:12px;padding:1rem;border:1px solid rgba(0,0,0,0.04)}
     .canvas{min-height:600px;border:2px dashed rgba(0,0,0,0.06);border-radius:12px;padding:1rem;background:#fff}
     .block{padding:12px;border-radius:8px;background:linear-gradient(180deg,#fff,#f7f7ff);margin-bottom:8px;border:1px solid rgba(0,0,0,0.03);cursor:grab}
     .block[draggable="true"]{user-select:none}
+    .block.dragging{opacity:0.6}
     .block .block-content{width:100%}
     .block .block-content [contenteditable="true"]{outline:none;border-bottom:1px dashed transparent;transition:all 0.2s ease}
     .block .block-content [contenteditable="true"]:focus{border-color:rgba(124,58,237,0.45);background:rgba(124,58,237,0.04)}
@@ -148,7 +155,30 @@
       const el = createBlockElement(data.type, data.label);
       canvas.appendChild(el);
       selectBlock(el);
-    });
+    }
+    function getDragAfterElement(container, y){
+      const draggableElements = [...container.querySelectorAll('.block:not(.dragging)')];
+      return draggableElements.reduce((closest, child)=>{
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+        if(offset < 0 && offset > closest.offset){
+          return { offset, element: child };
+        }
+        return closest;
+      }, { offset: Number.NEGATIVE_INFINITY, element: null }).element;
+    }
+
+    canvas.addEventListener('dragover', (e)=>{
+      e.preventDefault();
+      const dragging = document.querySelector('.block.dragging');
+      if(!dragging) return;
+      const afterElement = getDragAfterElement(canvas, e.clientY);
+      if(afterElement == null){
+        canvas.appendChild(dragging);
+      } else {
+        canvas.insertBefore(dragging, afterElement);
+      }
+    }););
 
     function getTemplateHtml(type, label){
       const title = label || 'Tu landing que convierte';
@@ -387,7 +417,8 @@
       setBlockContent(el, getTemplateHtml(type, label));
 
       el.addEventListener('click', ()=> selectBlock(el));
-      el.addEventListener('dragstart', (e)=> e.dataTransfer.setData('text/plain', JSON.stringify({type: el.dataset.type, label: el.textContent})) );
+      el.addEventListener('dragstart', (e)=>{ el.classList.add('dragging'); e.dataTransfer.setData('text/plain', JSON.stringify({type: el.dataset.type, label: el.textContent})); });
+      el.addEventListener('dragend', ()=>{ el.classList.remove('dragging'); });
       return el;
     }
 
@@ -430,8 +461,16 @@
         inspector.appendChild(txt);
       }
 
-      // Actions
+            // Actions
       const actions = document.createElement('div'); actions.style.display='flex'; actions.style.gap='8px'; actions.style.marginTop='8px';
+      const moveUp = document.createElement('button'); moveUp.className='btn icon secondary'; moveUp.textContent='^'; moveUp.title='Subir'; moveUp.onclick=()=>{
+        const prev = el.previousElementSibling;
+        if(prev) el.parentNode.insertBefore(el, prev);
+      };
+      const moveDown = document.createElement('button'); moveDown.className='btn icon secondary'; moveDown.textContent='v'; moveDown.title='Bajar'; moveDown.onclick=()=>{
+        const next = el.nextElementSibling;
+        if(next) el.parentNode.insertBefore(next, el);
+      };
       const apply = document.createElement('button'); apply.className='btn primary'; apply.textContent='Aplicar'; apply.onclick=()=>{
         const newProps = { bg: bgInput.value, color: colorInput.value, fontSize: Number(sizeInput.value), padding: Number(padInput.value), radius: Number(radInput.value) };
         el.dataset.props = JSON.stringify(newProps);
@@ -442,7 +481,9 @@
         renderBlock(el);
       };
       const del = document.createElement('button'); del.className='btn'; del.textContent='Eliminar'; del.onclick=()=>{ el.remove(); inspector.innerHTML=''; inspectorEmpty.style.display='block'; };
-      actions.appendChild(apply); actions.appendChild(del); inspector.appendChild(actions);
+      const controls = document.createElement('div'); controls.className='block-controls';
+      controls.appendChild(moveUp); controls.appendChild(moveDown); controls.appendChild(del);
+      actions.appendChild(controls); actions.appendChild(apply); inspector.appendChild(actions);
 
       window._selected = el;
     }
@@ -484,7 +525,8 @@
     async function saveRemote() {
       if(!currentUser){ if(confirm('Necesitas iniciar sesión para guardar en la nube. Ir a iniciar sesión ahora?')) window.location.href = '/auth.html'; return; }
       const content = Array.from(document.querySelectorAll('#canvas .block')).map(b=>({type:b.dataset.type || 'block', html: getBlockInnerHtml(b), props: b.dataset.props ? JSON.parse(b.dataset.props) : {}}));
-      const title = (content[0] && ((content[0].html || '').replace(/<[^>]*>/g,'').trim().split('\\n')[0] || content[0].type)) || ('Proyecto ' + new Date().toISOString());
+      const title = (content[0] && ((content[0].html || '').replace(/<[^>]*>/g,'').trim().split('\
+')[0] || content[0].type)) || ('Proyecto ' + new Date().toISOString());
       try{
         const docRef = await addDoc(collection(db, 'projects'), { uid: currentUser.uid, title, content, published: false, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
         localStorage.setItem('last_project_id', docRef.id);
@@ -505,7 +547,8 @@
       try{
         let ref;
         if(projectId){ ref = doc(db, 'projects', projectId); await setDoc(ref, { content, html, published: true, updatedAt: serverTimestamp(), uid: currentUser.uid }, { merge: true }); }
-        else { ref = await addDoc(collection(db, 'projects'), { uid: currentUser.uid, title: (content[0] ? (content[0].html || '').replace(/<[^>]*>/g,'').trim().split('\\n')[0] : 'Published'), content, html, published: true, createdAt: serverTimestamp(), updatedAt: serverTimestamp() }); }
+        else { ref = await addDoc(collection(db, 'projects'), { uid: currentUser.uid, title: (content[0] ? (content[0].html || '').replace(/<[^>]*>/g,'').trim().split('\
+')[0] : 'Published'), content, html, published: true, createdAt: serverTimestamp(), updatedAt: serverTimestamp() }); }
         localStorage.setItem('last_project_id', ref.id || projectId);
         const id = ref.id || projectId;
         alert('✓ Publicado. Vista pública: /preview.html?id=' + id);
