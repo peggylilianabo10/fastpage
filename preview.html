@@ -25,6 +25,35 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
+    function sanitizeHtml(html) {
+      if (!html) return '';
+      const template = document.createElement('template');
+      template.innerHTML = html;
+
+      const blockedTags = ['script', 'iframe', 'object', 'embed', 'link', 'style', 'meta'];
+      blockedTags.forEach((tag) => {
+        template.content.querySelectorAll(tag).forEach((el) => el.remove());
+      });
+
+      const walker = document.createTreeWalker(template.content, NodeFilter.SHOW_ELEMENT);
+      while (walker.nextNode()) {
+        const el = walker.currentNode;
+        [...el.attributes].forEach((attr) => {
+          const name = attr.name.toLowerCase();
+          const value = attr.value || '';
+          if (name.startsWith('on')) {
+            el.removeAttribute(attr.name);
+            return;
+          }
+          if ((name === 'href' || name === 'src') && /^javascript:/i.test(value)) {
+            el.removeAttribute(attr.name);
+          }
+        });
+      }
+
+      return template.innerHTML;
+    }
+
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id');
     if(!id){ document.getElementById('root').textContent = 'ID de proyecto faltante'; }
@@ -35,8 +64,12 @@
         if(!snap.exists()){ document.getElementById('root').textContent = 'Proyecto no encontrado'; return; }
         const data = snap.data();
         if(!data.published){ document.getElementById('root').textContent = 'Proyecto no publicado'; return; }
-        // Render the stored HTML
-        document.getElementById('root').innerHTML = data.html || (data.content ? data.content.map(b=>`<section style="padding:40px;border-bottom:1px solid #eee">${b.text}</section>`).join('') : 'Sin contenido');
+        // Render the stored HTML (sanitized)
+        const fallback = data.content
+          ? data.content.map(b=>`<section style="padding:40px;border-bottom:1px solid #eee">${b.text}</section>`).join('')
+          : 'Sin contenido';
+        const raw = data.html || fallback;
+        document.getElementById('root').innerHTML = sanitizeHtml(raw);
       })();
     }
   </script>

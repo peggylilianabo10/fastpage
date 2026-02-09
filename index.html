@@ -583,13 +583,24 @@
 
       const avatar = sender === 'agent' ? '👨‍💼' : '👤';
 
-      row.innerHTML = `
-        <div class="msg-avatar">${avatar}</div>
-        <div class="msg-content">
-          <p>${text}</p>
-          <span class="msg-time">Ahora</span>
-        </div>
-      `;
+      const avatarEl = document.createElement('div');
+      avatarEl.className = 'msg-avatar';
+      avatarEl.textContent = avatar;
+
+      const contentEl = document.createElement('div');
+      contentEl.className = 'msg-content';
+
+      const messageEl = document.createElement('p');
+      messageEl.textContent = text;
+
+      const timeEl = document.createElement('span');
+      timeEl.className = 'msg-time';
+      timeEl.textContent = 'Ahora';
+
+      contentEl.appendChild(messageEl);
+      contentEl.appendChild(timeEl);
+      row.appendChild(avatarEl);
+      row.appendChild(contentEl);
 
       log.appendChild(row);
 
