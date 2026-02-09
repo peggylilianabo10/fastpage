@@ -52,6 +52,40 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
+        .preview-left,
+        .preview-center,
+        .preview-right {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .preview-center {
+            flex: 1;
+            justify-content: center;
+        }
+
+        .bg-options {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .bg-option {
+            background: #2a2a2a;
+            color: #fff;
+            border: 1px solid #444;
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+
+        .bg-option.active {
+            background: #7c3aed;
+            border-color: #a78bfa;
+        }
+
         .preview-btn {
             background: #7c3aed;
             color: white;
@@ -66,6 +100,20 @@
         .preview-btn:hover {
             background: #6d28d9;
             transform: translateY(-1px);
+        }
+
+        @media (max-width: 900px) {
+            .preview-bar {
+                height: auto;
+                padding: 0.75rem 1rem;
+                flex-wrap: wrap;
+                gap: 0.75rem;
+            }
+
+            .preview-center {
+                width: 100%;
+                justify-content: flex-start;
+            }
         }
 
         /* --- TEMPLATE STYLES --- */
@@ -146,7 +194,7 @@
             border-top: 1px solid #f1f5f9;
             border-bottom: 1px solid #f1f5f9;
             text-align: center;
-            background: #fff;
+            background: var(--surface);
         }
 
         .trust-logos {
@@ -184,7 +232,7 @@
         }
 
         .feature-card {
-            background: white;
+            background: var(--surface);
             padding: 2.5rem;
             border-radius: 20px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
@@ -211,11 +259,11 @@
 
         /* Testimonials */
         .testimonials {
-            background: #f8fafc;
+            background: var(--bg);
         }
 
         .testimonial-card {
-            background: white;
+            background: var(--surface);
             padding: 2rem;
             border-radius: 16px;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
@@ -229,7 +277,7 @@
 
         /* FAQ */
         .faq-item {
-            background: white;
+            background: var(--surface);
             border-radius: 12px;
             margin-bottom: 1rem;
             overflow: hidden;
@@ -291,11 +339,16 @@
 
     <!-- Preview Bar -->
     <div class="preview-bar">
-        <span>👁️ Vista Previa: <strong id="template-name">Cargando...</strong></span>
-        <div>
-            <a href="/cloning.html" style="color:#a78bfa; text-decoration:none; margin-right:20px; font-size:0.9rem;">←
-                Cancelar</a>
-            <button class="preview-btn" onclick="startCloning()">⚡ Clonar Esta Plantilla</button>
+        <div class="preview-left">
+            <span>Vista Previa: <strong id="template-name">Cargando...</strong></span>
+        </div>
+        <div class="preview-center">
+            <span>Fondo:</span>
+            <div id="bg-options" class="bg-options"></div>
+        </div>
+        <div class="preview-right">
+            <a href="/cloning.html" style="color:#a78bfa; text-decoration:none; margin-right:20px; font-size:0.9rem;">? Cancelar</a>
+            <button class="preview-btn" onclick="startCloning()">Clonar Esta Plantilla</button>
         </div>
     </div>
 
@@ -324,7 +377,7 @@
             </div>
         </div>
 
-        <section class="section" style="background: white;">
+        <section class="section" style="background: var(--surface);">
             <div class="section-title">
                 <h2>¿Por qué elegirnos?</h2>
                 <p style="color:var(--secondary)">Todo lo que necesitas para triunfar</p>
@@ -358,90 +411,566 @@
     </div>
 
     <script>
-        // --- DATA ---
+                // --- DATA ---
+        const svgPattern = (svg) => `url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}")`;
+
+        const patterns = {
+            pizza: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><circle cx='30' cy='30' r='16' fill='#fbbf24'/><circle cx='30' cy='30' r='4' fill='#ef4444'/><path d='M70 20 L110 35 L80 65 Z' fill='#f59e0b'/><circle cx='86' cy='35' r='3' fill='#ef4444'/><circle cx='90' cy='45' r='3' fill='#ef4444'/></svg>`),
+            dumbbell: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><rect x='25' y='54' width='70' height='12' rx='6' fill='#9ca3af'/><circle cx='22' cy='60' r='12' fill='#6b7280'/><circle cx='98' cy='60' r='12' fill='#6b7280'/></svg>`),
+            heart: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><path d='M60 90 L20 50 A20 20 0 0 1 60 30 A20 20 0 0 1 100 50 Z' fill='#ef4444'/></svg>`),
+            medical: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><rect x='50' y='30' width='20' height='60' fill='#16a34a'/><rect x='30' y='50' width='60' height='20' fill='#16a34a'/></svg>`),
+            house: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><polygon points='30,55 60,30 90,55' fill='#64748b'/><rect x='30' y='55' width='60' height='40' fill='#94a3b8'/></svg>`),
+            scales: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><line x1='60' y1='20' x2='60' y2='80' stroke='#f59e0b' stroke-width='6'/><line x1='30' y1='35' x2='90' y2='35' stroke='#f59e0b' stroke-width='6'/><circle cx='30' cy='65' r='12' fill='#fbbf24'/><circle cx='90' cy='65' r='12' fill='#fbbf24'/></svg>`),
+            bag: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><rect x='30' y='45' width='60' height='50' rx='8' fill='#60a5fa'/><path d='M40 45 Q60 25 80 45' fill='none' stroke='#1d4ed8' stroke-width='6'/></svg>`),
+            scissors: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><circle cx='42' cy='70' r='10' fill='#ef4444'/><circle cx='62' cy='70' r='10' fill='#ef4444'/><line x1='52' y1='60' x2='90' y2='30' stroke='#ef4444' stroke-width='6'/></svg>`),
+            lipstick: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><rect x='50' y='30' width='20' height='30' fill='#be123c'/><rect x='46' y='60' width='28' height='40' fill='#fecdd3'/></svg>`),
+            plane: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><polygon points='20,60 100,50 70,60 100,70' fill='#0ea5e9'/><rect x='55' y='55' width='20' height='10' fill='#38bdf8'/></svg>`),
+            key: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><circle cx='40' cy='60' r='14' fill='#f59e0b'/><rect x='50' y='56' width='50' height='8' fill='#f59e0b'/><rect x='80' y='52' width='8' height='16' fill='#f59e0b'/></svg>`),
+            book: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><rect x='25' y='35' width='30' height='50' fill='#60a5fa'/><rect x='65' y='35' width='30' height='50' fill='#3b82f6'/></svg>`),
+            coin: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><circle cx='60' cy='60' r='22' fill='#fbbf24'/><circle cx='60' cy='60' r='14' fill='none' stroke='#f59e0b' stroke-width='4'/></svg>`),
+            tooth: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><path d='M40 35 Q60 20 80 35 Q90 60 75 85 Q60 70 45 85 Q30 60 40 35' fill='#e2e8f0' stroke='#94a3b8' stroke-width='2'/></svg>`),
+            paw: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><circle cx='60' cy='70' r='14' fill='#fb923c'/><circle cx='40' cy='45' r='6' fill='#fb923c'/><circle cx='60' cy='40' r='6' fill='#fb923c'/><circle cx='80' cy='45' r='6' fill='#fb923c'/></svg>`),
+            car: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><rect x='25' y='55' width='70' height='25' rx='8' fill='#22c55e'/><rect x='40' y='45' width='40' height='15' fill='#16a34a'/><circle cx='40' cy='82' r='8' fill='#14532d'/><circle cx='80' cy='82' r='8' fill='#14532d'/></svg>`),
+            helmet: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><path d='M25 70 Q60 30 95 70 Z' fill='#f97316'/><rect x='25' y='70' width='70' height='12' fill='#ea580c'/></svg>`),
+            camera: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><rect x='25' y='45' width='70' height='45' rx='8' fill='#0f172a'/><circle cx='60' cy='67' r='12' fill='#94a3b8'/><rect x='35' y='38' width='20' height='10' fill='#334155'/></svg>`),
+            confetti: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><rect x='20' y='30' width='10' height='10' fill='#f43f5e'/><rect x='50' y='40' width='10' height='10' fill='#22c55e'/><rect x='80' y='30' width='10' height='10' fill='#3b82f6'/><polygon points='30,90 40,70 50,90' fill='#f59e0b'/></svg>`)
+        };
+
         const data = {
             restaurant: {
-                name: "Restaurante Gourmet",
-                color: "#ea580c", // Orange
+                name: "Restaurante / Delivery",
+                color: "#ea580c",
                 bg: "linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%)",
-                badge: "🍔 El Mejor Sabor de la Ciudad",
-                title: "Disfruta de la Alta Cocina en Casa",
-                desc: "Pide tus platos favoritos con delivery rápido y seguro. Ingredientes frescos, chefs expertos y sabor inigualable.",
-                cta: "Ver Menú y Pedir",
+                badge: "Top sabor en tu ciudad",
+                title: "Pedidos con sabor premium y entrega rapida",
+                desc: "Menu digital, combos, reservas y delivery integrado.",
+                cta: "Ver menu y pedir",
+                backgrounds: [
+                    { label: "Pizza", page: "#fff7ed", hero: `linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%), ${patterns.pizza}`, surface: "#ffffff", text: "#0f172a", secondary: "#6b7280", heroSize: "160px 160px", heroRepeat: "repeat" },
+                    { label: "Rojo", page: "linear-gradient(135deg, #fee2e2 0%, #fecaca 100%)", hero: "linear-gradient(135deg, #fee2e2 0%, #fecaca 100%)", surface: "#ffffff", text: "#0f172a", secondary: "#6b7280" },
+                    { label: "Noche", page: "linear-gradient(135deg, #1f2937 0%, #111827 100%)", hero: `linear-gradient(135deg, #1f2937 0%, #111827 100%), ${patterns.pizza}`, surface: "#111827", text: "#f8fafc", secondary: "#cbd5f5", heroSize: "160px 160px", heroRepeat: "repeat" }
+                ],
                 features: [
-                    { icon: "⚡", title: "Entrega Rápida", desc: "Llegamos caliente a tu puerta en menos de 30 minutos." },
-                    { icon: "🥗", title: "Ingredientes Frescos", desc: "Seleccionamos lo mejor del mercado cada mañana." },
-                    { icon: "💳", title: "Pago Seguro", desc: "Aceptamos todas las tarjetas y pagos digitales." }
+                    { icon: "*", title: "Entrega rapida", desc: "Rutas optimizadas y tracking en tiempo real." },
+                    { icon: "*", title: "Menu digital", desc: "Platos, combos y extras actualizables." },
+                    { icon: "*", title: "Pago online", desc: "Tarjetas, billeteras y QR integrados." }
                 ],
                 testimonials: [
-                    { name: "María G.", text: "¡La comida llegó increíblemente caliente y deliciosa! Definitivamente pediré de nuevo." },
-                    { name: "Carlos R.", text: "La mejor hamburguesa que he probado en años. El servicio es impecable." },
-                    { name: "Lucía M.", text: "Me encanta la variedad del menú vegano. Muy recomendado." }
+                    { name: "Maria G.", text: "La comida llega caliente y la experiencia es muy rapida." },
+                    { name: "Carlos R.", text: "El menu esta claro y los combos valen la pena." }
                 ],
                 faqs: [
-                    { q: "¿Hacen envíos a toda la ciudad?", a: "Sí, cubrimos toda el área metropolitana con nuestra propia flota." },
-                    { q: "¿Tienen opciones sin gluten?", a: "Por supuesto, tenemos una sección dedicada en el menú." }
+                    { q: "Cual es el radio de entrega?", a: "Cubrimos toda la zona urbana principal." },
+                    { q: "Aceptan pagos digitales?", a: "Si, tarjetas, QR y billeteras." }
                 ]
             },
             realestate: {
-                name: "Inmobiliaria Premium",
-                color: "#2563eb", // Blue
+                name: "Inmobiliaria / Agente",
+                color: "#2563eb",
                 bg: "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)",
-                badge: "🏠 Encuentra tu Hogar Ideal",
-                title: "Propiedades Exclusivas al Mejor Precio",
-                desc: "Compra, vende o alquila con la inmobiliaria líder del mercado. Asesoría legal y financiera incluida.",
-                cta: "Ver Propiedades",
+                badge: "Propiedades premium",
+                title: "Encuentra tu hogar ideal hoy",
+                desc: "Compra, venta y alquiler con asesoria completa.",
+                cta: "Ver propiedades",
+                backgrounds: [
+                    { label: "Urbano", page: "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)", hero: `linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%), ${patterns.house}`, surface: "#ffffff", text: "#0f172a", secondary: "#64748b", heroSize: "180px 180px", heroRepeat: "repeat" },
+                    { label: "Gris", page: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)", hero: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)", surface: "#ffffff", text: "#0f172a", secondary: "#64748b" },
+                    { label: "Nocturno", page: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)", hero: `linear-gradient(135deg, #0f172a 0%, #1e293b 100%), ${patterns.house}`, surface: "#111827", text: "#f8fafc", secondary: "#cbd5f5", heroSize: "180px 180px", heroRepeat: "repeat" }
+                ],
                 features: [
-                    { icon: "📍", title: "Ubicaciones Prime", desc: "Las mejores zonas de la ciudad para vivir o invertir." },
-                    { icon: "💰", title: "Financiamiento", desc: "Te ayudamos a conseguir la mejor hipoteca del mercado." },
-                    { icon: "📝", title: "Trámites Fáciles", desc: "Nos encargamos de todo el papeleo legal por ti." }
+                    { icon: "*", title: "Zonas prime", desc: "Ubicaciones con alta valorizacion." },
+                    { icon: "*", title: "Financiamiento", desc: "Hipotecas con tasas competitivas." },
+                    { icon: "*", title: "Asesoria legal", desc: "Tramites y contratos sin fricciones." }
                 ],
                 testimonials: [
-                    { name: "Roberto F.", text: "Vendieron mi casa en menos de 2 semanas. Un servicio muy profesional." },
-                    { name: "Ana P.", text: "Gracias a ellos encontré el departamento de mis sueños. ¡Mil gracias!" },
-                    { name: "Jorge L.", text: "La mejor asesoría para invertir en bienes raíces. Muy transparentes." }
+                    { name: "Roberto F.", text: "Vendi en semanas con un equipo muy pro." },
+                    { name: "Ana P.", text: "Conseguimos el depa perfecto en poco tiempo." }
                 ],
                 faqs: [
-                    { q: "¿Cuáles son los requisitos para alquilar?", a: "DNI, recibos de ingresos y un garante (opcional)." },
-                    { q: "¿Cobran comisión al comprador?", a: "No, nuestros honorarios los cubre el vendedor." }
+                    { q: "Puedo publicar mi propiedad?", a: "Si, manejamos paquetes de venta y alquiler." },
+                    { q: "Atienden inversionistas?", a: "Si, tenemos portafolios especiales." }
                 ]
             },
             lawyer: {
-                name: "Estudio Jurídico",
-                color: "#1e293b", // Slate
+                name: "Servicios legales",
+                color: "#1e293b",
                 bg: "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)",
-                badge: "⚖️ Defensa Legal Experta",
-                title: "Protegemos tus Derechos con Experiencia",
-                desc: "Abogados especialistas en derecho civil, penal y corporativo. Tu tranquilidad es nuestra prioridad.",
-                cta: "Consulta Gratuita",
+                badge: "Defensa legal experta",
+                title: "Proteccion juridica con resultados",
+                desc: "Especialistas en derecho civil, laboral y corporativo.",
+                cta: "Consulta gratuita",
+                backgrounds: [
+                    { label: "Justicia", page: "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)", hero: `linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%), ${patterns.scales}`, surface: "#ffffff", text: "#0f172a", secondary: "#64748b", heroSize: "180px 180px", heroRepeat: "repeat" },
+                    { label: "Lino", page: "linear-gradient(135deg, #fefce8 0%, #fef3c7 100%)", hero: "linear-gradient(135deg, #fefce8 0%, #fef3c7 100%)", surface: "#ffffff", text: "#0f172a", secondary: "#6b7280" },
+                    { label: "Oscuro", page: "linear-gradient(135deg, #0f172a 0%, #111827 100%)", hero: `linear-gradient(135deg, #0f172a 0%, #111827 100%), ${patterns.scales}`, surface: "#111827", text: "#f8fafc", secondary: "#cbd5f5", heroSize: "180px 180px", heroRepeat: "repeat" }
+                ],
                 features: [
-                    { icon: "tm", title: "Confidencialidad", desc: "Tus casos tratados con la máxima discreción absoluta." },
-                    { icon: "🎓", title: "Expertos", desc: "Equipo con más de 20 años de experiencia en litigios." },
-                    { icon: "🤝", title: "Trato Humano", desc: "Entendemos tu situación y te acompañamos en todo el proceso." }
+                    { icon: "*", title: "Confidencialidad", desc: "Proceso seguro y discreto." },
+                    { icon: "*", title: "Expertos", desc: "Equipo con experiencia comprobada." },
+                    { icon: "*", title: "Estrategia", desc: "Planes legales personalizados." }
                 ],
                 testimonials: [
-                    { name: "Empresa XYZ", text: "Nos han asesorado en fusiones complejas con un resultado impecable." },
-                    { name: "Pedro S.", text: "Recuperaron mi indemnización en tiempo récord. Muy agradecido." }
+                    { name: "Empresa XYZ", text: "Nos asesoraron con claridad y rapidez." },
+                    { name: "Pedro S.", text: "Resolvi mi caso en tiempo record." }
                 ],
                 faqs: [
-                    { q: "¿La primera consulta tiene costo?", a: "No, la evaluación inicial de tu caso es 100% gratuita." },
-                    { q: "¿En qué áreas se especializan?", a: "Derecho Corporativo, Laboral y Civil." }
+                    { q: "La primera consulta tiene costo?", a: "No, la evaluacion inicial es gratuita." },
+                    { q: "Que areas cubren?", a: "Civil, laboral y corporativo." }
+                ]
+            },
+            health: {
+                name: "Clinica / Salud",
+                color: "#059669",
+                bg: "linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)",
+                badge: "Cuidamos tu bienestar",
+                title: "Atencion medica confiable y rapida",
+                desc: "Agenda citas, especialistas y telemedicina integrada.",
+                cta: "Agendar cita",
+                backgrounds: [
+                    { label: "Salud", page: "linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)", hero: `linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%), ${patterns.heart}`, surface: "#ffffff", text: "#0f172a", secondary: "#6b7280", heroSize: "170px 170px", heroRepeat: "repeat" },
+                    { label: "Clinico", page: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)", hero: `linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%), ${patterns.medical}`, surface: "#ffffff", text: "#0f172a", secondary: "#6b7280", heroSize: "170px 170px", heroRepeat: "repeat" },
+                    { label: "Oscuro", page: "linear-gradient(135deg, #0f172a 0%, #111827 100%)", hero: `linear-gradient(135deg, #0f172a 0%, #111827 100%), ${patterns.medical}`, surface: "#111827", text: "#f8fafc", secondary: "#cbd5f5", heroSize: "170px 170px", heroRepeat: "repeat" }
+                ],
+                features: [
+                    { icon: "*", title: "Especialistas", desc: "Equipo medico multidisciplinario." },
+                    { icon: "*", title: "Agenda online", desc: "Reserva y recordatorios automaticos." },
+                    { icon: "*", title: "Resultados", desc: "Laboratorio con reportes digitales." }
+                ],
+                testimonials: [
+                    { name: "Paula M.", text: "Atencion rapida y muy humana." },
+                    { name: "Luis C.", text: "Excelentes doctores y procesos claros." }
+                ],
+                faqs: [
+                    { q: "Atienden emergencias?", a: "Si, 24/7 con staff especializado." },
+                    { q: "Tienen seguros?", a: "Trabajamos con principales aseguradoras." }
+                ]
+            },
+            gym: {
+                name: "Gimnasio / Fitness",
+                color: "#111827",
+                bg: "linear-gradient(135deg, #0b0b0b 0%, #111827 100%)",
+                badge: "Activa tu mejor version",
+                title: "Entrena fuerte con planes inteligentes",
+                desc: "Rutinas, coaches y planes de nutricion.",
+                cta: "Ver membresias",
+                backgrounds: [
+                    { label: "Pesas", page: "linear-gradient(135deg, #0b0b0b 0%, #111827 100%)", hero: `linear-gradient(135deg, #0b0b0b 0%, #111827 100%), ${patterns.dumbbell}`, surface: "#111827", text: "#f8fafc", secondary: "#cbd5f5", heroSize: "180px 180px", heroRepeat: "repeat" },
+                    { label: "Gris", page: "linear-gradient(135deg, #111827 0%, #1f2937 100%)", hero: "linear-gradient(135deg, #111827 0%, #1f2937 100%)", surface: "#111827", text: "#f8fafc", secondary: "#cbd5f5" },
+                    { label: "Luz", page: "linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)", hero: `linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%), ${patterns.dumbbell}`, surface: "#ffffff", text: "#111827", secondary: "#6b7280", heroSize: "180px 180px", heroRepeat: "repeat" }
+                ],
+                features: [
+                    { icon: "*", title: "Rutinas guiadas", desc: "Programas para fuerza y resistencia." },
+                    { icon: "*", title: "Coaches", desc: "Entrenadores certificados." },
+                    { icon: "*", title: "Resultados", desc: "Seguimiento y progreso real." }
+                ],
+                testimonials: [
+                    { name: "Sofia R.", text: "Subi rendimiento en semanas." },
+                    { name: "Diego T.", text: "Las clases son intensas y efectivas." }
+                ],
+                faqs: [
+                    { q: "Ofrecen planes mensuales?", a: "Si, planes flexibles y corporativos." },
+                    { q: "Hay clases grupales?", a: "Si, HIIT, funcional y spinning." }
+                ]
+            },
+            ecommerce: {
+                name: "E-commerce / Tienda",
+                color: "#7c3aed",
+                bg: "linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%)",
+                badge: "Convierte visitas en ventas",
+                title: "Tienda optimizada para vender mas",
+                desc: "Catalogo, carrito y pagos integrados.",
+                cta: "Ver productos",
+                backgrounds: [
+                    { label: "Shop", page: "linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%)", hero: `linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%), ${patterns.bag}`, surface: "#ffffff", text: "#0f172a", secondary: "#6b7280", heroSize: "170px 170px", heroRepeat: "repeat" },
+                    { label: "Claro", page: "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)", hero: "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)", surface: "#ffffff", text: "#0f172a", secondary: "#6b7280" },
+                    { label: "Premium", page: "linear-gradient(135deg, #111827 0%, #1f2937 100%)", hero: `linear-gradient(135deg, #111827 0%, #1f2937 100%), ${patterns.bag}`, surface: "#111827", text: "#f8fafc", secondary: "#cbd5f5", heroSize: "170px 170px", heroRepeat: "repeat" }
+                ],
+                features: [
+                    { icon: "*", title: "Checkout rapido", desc: "Compra en pocos pasos." },
+                    { icon: "*", title: "Automatizacion", desc: "Carritos y emails listos." },
+                    { icon: "*", title: "Pagos", desc: "Tarjetas y billeteras." }
+                ],
+                testimonials: [
+                    { name: "Tienda Nova", text: "Las ventas subieron 30%." },
+                    { name: "Ana V.", text: "Interfaz clara y facil de usar." }
+                ],
+                faqs: [
+                    { q: "Soporta cupones?", a: "Si, cupones y descuentos." },
+                    { q: "Puedo cargar catalogo?", a: "Si, importacion masiva." }
+                ]
+            },
+            barber: {
+                name: "Barberia",
+                color: "#dc2626",
+                bg: "linear-gradient(135deg, #fff1f2 0%, #fecdd3 100%)",
+                badge: "Cortes y estilo",
+                title: "Reserva tu cita en minutos",
+                desc: "Servicios, precios y agenda en linea.",
+                cta: "Reservar ahora",
+                backgrounds: [
+                    { label: "Tijeras", page: "linear-gradient(135deg, #fff1f2 0%, #fecdd3 100%)", hero: `linear-gradient(135deg, #fff1f2 0%, #fecdd3 100%), ${patterns.scissors}`, surface: "#ffffff", text: "#0f172a", secondary: "#6b7280", heroSize: "180px 180px", heroRepeat: "repeat" },
+                    { label: "Carbon", page: "linear-gradient(135deg, #111827 0%, #0f172a 100%)", hero: "linear-gradient(135deg, #111827 0%, #0f172a 100%)", surface: "#111827", text: "#f8fafc", secondary: "#cbd5f5" },
+                    { label: "Lino", page: "linear-gradient(135deg, #fefce8 0%, #fef3c7 100%)", hero: `linear-gradient(135deg, #fefce8 0%, #fef3c7 100%), ${patterns.scissors}`, surface: "#ffffff", text: "#0f172a", secondary: "#6b7280", heroSize: "180px 180px", heroRepeat: "repeat" }
+                ],
+                features: [
+                    { icon: "*", title: "Agenda online", desc: "Citas rapidas y recordatorios." },
+                    { icon: "*", title: "Servicios", desc: "Corte, barba y estilo." },
+                    { icon: "*", title: "Resenas", desc: "Social proof para nuevos clientes." }
+                ],
+                testimonials: [
+                    { name: "Marco L.", text: "Reserva facil y gran atencion." },
+                    { name: "Ivan P.", text: "El mejor fade de mi vida." }
+                ],
+                faqs: [
+                    { q: "Puedo pagar online?", a: "Si, pagos digitales disponibles." },
+                    { q: "Atienden sin cita?", a: "Si, segun disponibilidad." }
+                ]
+            },
+            beauty: {
+                name: "Belleza / Spa",
+                color: "#db2777",
+                bg: "linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%)",
+                badge: "Tu mejor version",
+                title: "Spa y belleza con resultados",
+                desc: "Tratamientos, paquetes y reservas.",
+                cta: "Ver tratamientos",
+                backgrounds: [
+                    { label: "Rosa", page: "linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%)", hero: `linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%), ${patterns.lipstick}`, surface: "#ffffff", text: "#0f172a", secondary: "#6b7280", heroSize: "170px 170px", heroRepeat: "repeat" },
+                    { label: "Perla", page: "linear-gradient(135deg, #fff7ed 0%, #fde68a 100%)", hero: "linear-gradient(135deg, #fff7ed 0%, #fde68a 100%)", surface: "#ffffff", text: "#0f172a", secondary: "#6b7280" },
+                    { label: "Noche", page: "linear-gradient(135deg, #111827 0%, #1f2937 100%)", hero: `linear-gradient(135deg, #111827 0%, #1f2937 100%), ${patterns.lipstick}`, surface: "#111827", text: "#f8fafc", secondary: "#cbd5f5", heroSize: "170px 170px", heroRepeat: "repeat" }
+                ],
+                features: [
+                    { icon: "*", title: "Tratamientos", desc: "Faciales, corporales y mas." },
+                    { icon: "*", title: "Reservas", desc: "Agenda y pagos en linea." },
+                    { icon: "*", title: "Fidelizacion", desc: "Paquetes y membresias." }
+                ],
+                testimonials: [
+                    { name: "Luisa D.", text: "La piel me quedo perfecta." },
+                    { name: "Carla V.", text: "Ambiente premium y buen servicio." }
+                ],
+                faqs: [
+                    { q: "Hay paquetes mensuales?", a: "Si, planes personalizados." },
+                    { q: "Puedo regalar sesiones?", a: "Si, gift cards disponibles." }
+                ]
+            },
+            travel: {
+                name: "Agencia de viajes",
+                color: "#0ea5e9",
+                bg: "linear-gradient(135deg, #ecfeff 0%, #cffafe 100%)",
+                badge: "Viaja facil y seguro",
+                title: "Paquetes y destinos a tu medida",
+                desc: "Hoteles, vuelos y experiencias.",
+                cta: "Ver destinos",
+                backgrounds: [
+                    { label: "Avion", page: "linear-gradient(135deg, #ecfeff 0%, #cffafe 100%)", hero: `linear-gradient(135deg, #ecfeff 0%, #cffafe 100%), ${patterns.plane}`, surface: "#ffffff", text: "#0f172a", secondary: "#6b7280", heroSize: "180px 180px", heroRepeat: "repeat" },
+                    { label: "Mar", page: "linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%)", hero: "linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%)", surface: "#ffffff", text: "#0f172a", secondary: "#6b7280" },
+                    { label: "Noche", page: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)", hero: `linear-gradient(135deg, #0f172a 0%, #1e293b 100%), ${patterns.plane}`, surface: "#111827", text: "#f8fafc", secondary: "#cbd5f5", heroSize: "180px 180px", heroRepeat: "repeat" }
+                ],
+                features: [
+                    { icon: "*", title: "Paquetes", desc: "All inclusive y personalizados." },
+                    { icon: "*", title: "Asistencia", desc: "Soporte antes y durante el viaje." },
+                    { icon: "*", title: "Promos", desc: "Descuentos por temporada." }
+                ],
+                testimonials: [
+                    { name: "Felipe G.", text: "Todo organizado y sin problemas." },
+                    { name: "Daniela P.", text: "Gran servicio y buenos precios." }
+                ],
+                faqs: [
+                    { q: "Puedo cambiar fechas?", a: "Si, segun politica del proveedor." },
+                    { q: "Incluye seguro?", a: "Opcional en cada paquete." }
+                ]
+            },
+            hotel: {
+                name: "Hotel / Hospedaje",
+                color: "#0f766e",
+                bg: "linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%)",
+                badge: "Reserva con confianza",
+                title: "Habitaciones premium y servicios",
+                desc: "Booking, promociones y experiencias.",
+                cta: "Ver habitaciones",
+                backgrounds: [
+                    { label: "Llave", page: "linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%)", hero: `linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%), ${patterns.key}`, surface: "#ffffff", text: "#0f172a", secondary: "#6b7280", heroSize: "180px 180px", heroRepeat: "repeat" },
+                    { label: "Lino", page: "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)", hero: "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)", surface: "#ffffff", text: "#0f172a", secondary: "#6b7280" },
+                    { label: "Noche", page: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)", hero: `linear-gradient(135deg, #0f172a 0%, #1e293b 100%), ${patterns.key}`, surface: "#111827", text: "#f8fafc", secondary: "#cbd5f5", heroSize: "180px 180px", heroRepeat: "repeat" }
+                ],
+                features: [
+                    { icon: "*", title: "Reservas", desc: "Disponibilidad en tiempo real." },
+                    { icon: "*", title: "Servicios", desc: "Desayuno, spa y mas." },
+                    { icon: "*", title: "Promociones", desc: "Tarifas corporativas." }
+                ],
+                testimonials: [
+                    { name: "Hotel One", text: "Aumento la ocupacion notablemente." },
+                    { name: "Elena R.", text: "Experiencia de reserva impecable." }
+                ],
+                faqs: [
+                    { q: "Aceptan cancelacion?", a: "Segun tipo de tarifa." },
+                    { q: "Incluye desayuno?", a: "Opcional por plan." }
+                ]
+            },
+            academy: {
+                name: "Academia / Cursos",
+                color: "#2563eb",
+                bg: "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)",
+                badge: "Aprende con expertos",
+                title: "Cursos online y presenciales",
+                desc: "Plataforma, pagos y certificados.",
+                cta: "Ver cursos",
+                backgrounds: [
+                    { label: "Libro", page: "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)", hero: `linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%), ${patterns.book}`, surface: "#ffffff", text: "#0f172a", secondary: "#6b7280", heroSize: "170px 170px", heroRepeat: "repeat" },
+                    { label: "Lima", page: "linear-gradient(135deg, #fef9c3 0%, #fde68a 100%)", hero: "linear-gradient(135deg, #fef9c3 0%, #fde68a 100%)", surface: "#ffffff", text: "#0f172a", secondary: "#6b7280" },
+                    { label: "Noche", page: "linear-gradient(135deg, #0f172a 0%, #111827 100%)", hero: `linear-gradient(135deg, #0f172a 0%, #111827 100%), ${patterns.book}`, surface: "#111827", text: "#f8fafc", secondary: "#cbd5f5", heroSize: "170px 170px", heroRepeat: "repeat" }
+                ],
+                features: [
+                    { icon: "*", title: "Aula virtual", desc: "Clases en vivo y grabadas." },
+                    { icon: "*", title: "Certificados", desc: "Diplomas digitales." },
+                    { icon: "*", title: "Comunidad", desc: "Soporte y networking." }
+                ],
+                testimonials: [
+                    { name: "Curso Pro", text: "Tasa de conversion excelente." },
+                    { name: "Ines A.", text: "La plataforma es simple y clara." }
+                ],
+                faqs: [
+                    { q: "Hay acceso vitalicio?", a: "Depende del curso." },
+                    { q: "Emiten certificado?", a: "Si, al finalizar." }
+                ]
+            },
+            crypto: {
+                name: "Crypto / Fintech",
+                color: "#f59e0b",
+                bg: "linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)",
+                badge: "Finanzas inteligentes",
+                title: "Invierte y gestiona tus activos",
+                desc: "Wallet, exchange y reportes.",
+                cta: "Crear cuenta",
+                backgrounds: [
+                    { label: "Coin", page: "linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)", hero: `linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%), ${patterns.coin}`, surface: "#ffffff", text: "#0f172a", secondary: "#6b7280", heroSize: "170px 170px", heroRepeat: "repeat" },
+                    { label: "Negro", page: "linear-gradient(135deg, #0b0b0b 0%, #111827 100%)", hero: `linear-gradient(135deg, #0b0b0b 0%, #111827 100%), ${patterns.coin}`, surface: "#111827", text: "#f8fafc", secondary: "#cbd5f5", heroSize: "170px 170px", heroRepeat: "repeat" },
+                    { label: "Azul", page: "linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%)", hero: "linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%)", surface: "#ffffff", text: "#0f172a", secondary: "#6b7280" }
+                ],
+                features: [
+                    { icon: "*", title: "Seguridad", desc: "Capas de proteccion avanzadas." },
+                    { icon: "*", title: "Wallet", desc: "Control total de activos." },
+                    { icon: "*", title: "Reportes", desc: "Analitica y alertas." }
+                ],
+                testimonials: [
+                    { name: "Alpha Fund", text: "Plataforma estable y confiable." },
+                    { name: "Julio B.", text: "Interfaz clara para invertir." }
+                ],
+                faqs: [
+                    { q: "Hay verificacion KYC?", a: "Si, para mayor seguridad." },
+                    { q: "Soporta retiros?", a: "Si, a bancos y wallets." }
+                ]
+            },
+            dental: {
+                name: "Clinica dental",
+                color: "#0f766e",
+                bg: "linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%)",
+                badge: "Sonrisas saludables",
+                title: "Citas dentales simples y rapidas",
+                desc: "Tratamientos, promociones y agenda.",
+                cta: "Agendar ahora",
+                backgrounds: [
+                    { label: "Diente", page: "linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%)", hero: `linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%), ${patterns.tooth}`, surface: "#ffffff", text: "#0f172a", secondary: "#6b7280", heroSize: "170px 170px", heroRepeat: "repeat" },
+                    { label: "Blanco", page: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)", hero: "linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)", surface: "#ffffff", text: "#0f172a", secondary: "#6b7280" },
+                    { label: "Noche", page: "linear-gradient(135deg, #0f172a 0%, #111827 100%)", hero: `linear-gradient(135deg, #0f172a 0%, #111827 100%), ${patterns.tooth}`, surface: "#111827", text: "#f8fafc", secondary: "#cbd5f5", heroSize: "170px 170px", heroRepeat: "repeat" }
+                ],
+                features: [
+                    { icon: "*", title: "Tratamientos", desc: "Implantes, ortodoncia y mas." },
+                    { icon: "*", title: "Agenda", desc: "Citas en linea." },
+                    { icon: "*", title: "Resenas", desc: "Pacientes satisfechos." }
+                ],
+                testimonials: [
+                    { name: "Clara V.", text: "Servicio impecable y rapido." },
+                    { name: "Hugo M.", text: "Excelente equipo y resultados." }
+                ],
+                faqs: [
+                    { q: "Atienden seguros?", a: "Si, consulta cobertura." },
+                    { q: "Hay promociones?", a: "Si, descuentos por paquete." }
+                ]
+            },
+            vet: {
+                name: "Veterinaria",
+                color: "#16a34a",
+                bg: "linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)",
+                badge: "Cuidamos a tus mascotas",
+                title: "Atencion veterinaria completa",
+                desc: "Citas, vacunas y emergencias.",
+                cta: "Agendar visita",
+                backgrounds: [
+                    { label: "Huellas", page: "linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)", hero: `linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%), ${patterns.paw}`, surface: "#ffffff", text: "#0f172a", secondary: "#6b7280", heroSize: "170px 170px", heroRepeat: "repeat" },
+                    { label: "Crema", page: "linear-gradient(135deg, #fef9c3 0%, #fde68a 100%)", hero: "linear-gradient(135deg, #fef9c3 0%, #fde68a 100%)", surface: "#ffffff", text: "#0f172a", secondary: "#6b7280" },
+                    { label: "Oscuro", page: "linear-gradient(135deg, #111827 0%, #1f2937 100%)", hero: `linear-gradient(135deg, #111827 0%, #1f2937 100%), ${patterns.paw}`, surface: "#111827", text: "#f8fafc", secondary: "#cbd5f5", heroSize: "170px 170px", heroRepeat: "repeat" }
+                ],
+                features: [
+                    { icon: "*", title: "Emergencias", desc: "Atencion 24/7." },
+                    { icon: "*", title: "Vacunas", desc: "Calendario y recordatorios." },
+                    { icon: "*", title: "Tienda", desc: "Productos y accesorios." }
+                ],
+                testimonials: [
+                    { name: "Sonia L.", text: "Trato super humano." },
+                    { name: "Cesar G.", text: "Mi mascota salio feliz." }
+                ],
+                faqs: [
+                    { q: "Atienden a domicilio?", a: "Si, segun zona." },
+                    { q: "Ofrecen grooming?", a: "Si, estetica completa." }
+                ]
+            },
+            auto: {
+                name: "Automotriz",
+                color: "#16a34a",
+                bg: "linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)",
+                badge: "Servicio y repuestos",
+                title: "Taller y mantenimiento confiable",
+                desc: "Citas, diagnostico y garantia.",
+                cta: "Reservar taller",
+                backgrounds: [
+                    { label: "Auto", page: "linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)", hero: `linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%), ${patterns.car}`, surface: "#ffffff", text: "#0f172a", secondary: "#6b7280", heroSize: "180px 180px", heroRepeat: "repeat" },
+                    { label: "Gris", page: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)", hero: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)", surface: "#ffffff", text: "#0f172a", secondary: "#6b7280" },
+                    { label: "Noche", page: "linear-gradient(135deg, #0f172a 0%, #111827 100%)", hero: `linear-gradient(135deg, #0f172a 0%, #111827 100%), ${patterns.car}`, surface: "#111827", text: "#f8fafc", secondary: "#cbd5f5", heroSize: "180px 180px", heroRepeat: "repeat" }
+                ],
+                features: [
+                    { icon: "*", title: "Diagnostico", desc: "Equipo especializado." },
+                    { icon: "*", title: "Garantia", desc: "Servicios con respaldo." },
+                    { icon: "*", title: "Repuestos", desc: "Stock permanente." }
+                ],
+                testimonials: [
+                    { name: "Jose V.", text: "Atencion rapida y seria." },
+                    { name: "Lina H.", text: "Solucionaron mi problema al dia." }
+                ],
+                faqs: [
+                    { q: "Atienden sin cita?", a: "Si, segun disponibilidad." },
+                    { q: "Ofrecen recojo?", a: "Si, servicio opcional." }
+                ]
+            },
+            construction: {
+                name: "Construccion",
+                color: "#ea580c",
+                bg: "linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%)",
+                badge: "Proyectos a tiempo",
+                title: "Arquitectura y obra completa",
+                desc: "Cotizaciones, portafolio y contacto rapido.",
+                cta: "Solicitar propuesta",
+                backgrounds: [
+                    { label: "Casco", page: "linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%)", hero: `linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%), ${patterns.helmet}`, surface: "#ffffff", text: "#0f172a", secondary: "#6b7280", heroSize: "180px 180px", heroRepeat: "repeat" },
+                    { label: "Arena", page: "linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)", hero: "linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)", surface: "#ffffff", text: "#0f172a", secondary: "#6b7280" },
+                    { label: "Oscuro", page: "linear-gradient(135deg, #0f172a 0%, #111827 100%)", hero: `linear-gradient(135deg, #0f172a 0%, #111827 100%), ${patterns.helmet}`, surface: "#111827", text: "#f8fafc", secondary: "#cbd5f5", heroSize: "180px 180px", heroRepeat: "repeat" }
+                ],
+                features: [
+                    { icon: "*", title: "Planificacion", desc: "Cronogramas y control de obra." },
+                    { icon: "*", title: "Portafolio", desc: "Proyectos ejecutados." },
+                    { icon: "*", title: "Cotizaciones", desc: "Respuestas en 24h." }
+                ],
+                testimonials: [
+                    { name: "Obras SA", text: "Entrega puntual y calidad." },
+                    { name: "Marta Q.", text: "Equipo profesional y ordenado." }
+                ],
+                faqs: [
+                    { q: "Trabajan llave en mano?", a: "Si, proyecto completo." },
+                    { q: "Ofrecen garantia?", a: "Si, segun contrato." }
+                ]
+            },
+            photo: {
+                name: "Fotografia",
+                color: "#1e293b",
+                bg: "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)",
+                badge: "Momentos que importan",
+                title: "Sesiones y eventos con estilo",
+                desc: "Portafolio, paquetes y reservas.",
+                cta: "Ver portafolio",
+                backgrounds: [
+                    { label: "Camara", page: "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)", hero: `linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%), ${patterns.camera}`, surface: "#ffffff", text: "#0f172a", secondary: "#6b7280", heroSize: "180px 180px", heroRepeat: "repeat" },
+                    { label: "Negro", page: "linear-gradient(135deg, #0b0b0b 0%, #111827 100%)", hero: `linear-gradient(135deg, #0b0b0b 0%, #111827 100%), ${patterns.camera}`, surface: "#111827", text: "#f8fafc", secondary: "#cbd5f5", heroSize: "180px 180px", heroRepeat: "repeat" },
+                    { label: "Lino", page: "linear-gradient(135deg, #fefce8 0%, #fef3c7 100%)", hero: "linear-gradient(135deg, #fefce8 0%, #fef3c7 100%)", surface: "#ffffff", text: "#0f172a", secondary: "#6b7280" }
+                ],
+                features: [
+                    { icon: "*", title: "Portafolio", desc: "Galerias por categoria." },
+                    { icon: "*", title: "Paquetes", desc: "Precios claros y personalizables." },
+                    { icon: "*", title: "Reservas", desc: "Agenda online." }
+                ],
+                testimonials: [
+                    { name: "Lima Studio", text: "Aumento de leads inmediato." },
+                    { name: "Rosa J.", text: "Fotos y experiencia de primera." }
+                ],
+                faqs: [
+                    { q: "Incluye edicion?", a: "Si, segun paquete." },
+                    { q: "Hacen eventos?", a: "Si, bodas y corporativo." }
+                ]
+            },
+            events: {
+                name: "Eventos",
+                color: "#7c3aed",
+                bg: "linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%)",
+                badge: "Eventos memorables",
+                title: "Produccion y organizacion total",
+                desc: "Catering, musica y coordinacion.",
+                cta: "Solicitar cotizacion",
+                backgrounds: [
+                    { label: "Confetti", page: "linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%)", hero: `linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%), ${patterns.confetti}`, surface: "#ffffff", text: "#0f172a", secondary: "#6b7280", heroSize: "170px 170px", heroRepeat: "repeat" },
+                    { label: "Fiesta", page: "linear-gradient(135deg, #ffe4e6 0%, #fecdd3 100%)", hero: "linear-gradient(135deg, #ffe4e6 0%, #fecdd3 100%)", surface: "#ffffff", text: "#0f172a", secondary: "#6b7280" },
+                    { label: "Noche", page: "linear-gradient(135deg, #0f172a 0%, #111827 100%)", hero: `linear-gradient(135deg, #0f172a 0%, #111827 100%), ${patterns.confetti}`, surface: "#111827", text: "#f8fafc", secondary: "#cbd5f5", heroSize: "170px 170px", heroRepeat: "repeat" }
+                ],
+                features: [
+                    { icon: "*", title: "Produccion", desc: "Eventos corporativos y sociales." },
+                    { icon: "*", title: "Logistica", desc: "Sonido, luces y staff." },
+                    { icon: "*", title: "Experiencia", desc: "Detalles que elevan el evento." }
+                ],
+                testimonials: [
+                    { name: "Eventos Lima", text: "Todo salio perfecto y a tiempo." },
+                    { name: "Patricia A.", text: "La coordinacion fue excelente." }
+                ],
+                faqs: [
+                    { q: "Incluye catering?", a: "Opcional segun paquete." },
+                    { q: "Atienden bodas?", a: "Si, bodas y sociales." }
                 ]
             }
-            // Add more as needed (gym, health, etc map to defaults if missing)
         };
 
-        const defaultData = data.realestate;
+        const defaultData = data.restaurant;
 
-        // --- RENDER LOGIC ---
+// --- RENDER LOGIC ---
         const params = new URLSearchParams(window.location.search);
-        const type = params.get('type') || 'realestate';
+        const type = params.get('type') || 'restaurant';
         const content = data[type] || defaultData; // Fallback
 
         // Update Theme
         document.documentElement.style.setProperty('--primary', content.color);
         document.getElementById('template-name').textContent = content.name;
-        document.getElementById('hero-bg').style.background = content.bg;
+        renderBackgroundOptions(content.backgrounds || [], content);
+
+        function applyBackground(bg) {
+            const root = document.documentElement;
+            root.style.setProperty('--bg', bg.page || content.bg);
+            root.style.setProperty('--surface', bg.surface || '#ffffff');
+            root.style.setProperty('--text', bg.text || '#0f172a');
+            root.style.setProperty('--secondary', bg.secondary || '#64748b');
+            const hero = document.getElementById('hero-bg');
+            hero.style.background = bg.hero || content.bg;
+            hero.style.backgroundSize = bg.heroSize || 'cover';
+            hero.style.backgroundRepeat = bg.heroRepeat || 'no-repeat';
+            hero.style.backgroundPosition = 'center';
+        }
+
+        function renderBackgroundOptions(list) {
+            const container = document.getElementById('bg-options');
+            if (!container) return;
+            container.innerHTML = '';
+            if (!list || list.length === 0) {
+                applyBackground({ page: content.bg, hero: content.bg });
+                return;
+            }
+            list.forEach((bg, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'bg-option' + (index === 0 ? ' active' : '');
+                btn.textContent = bg.label || `Fondo ${index + 1}`;
+                btn.addEventListener('click', () => {
+                    container.querySelectorAll('.bg-option').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    applyBackground(bg);
+                });
+                container.appendChild(btn);
+            });
+            applyBackground(list[0]);
+        }
 
         // Update Texts
         document.getElementById('hero-badge').textContent = content.badge;
@@ -508,3 +1037,4 @@
 </body>
 
 </html>
+

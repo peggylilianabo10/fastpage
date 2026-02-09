@@ -126,31 +126,25 @@
             background: linear-gradient(0deg, rgba(0, 0, 0, 0.05) 0%, transparent 100%);
         }
 
-        /* Specific Gradients for Types */
-        .preview-restaurant {
-            background: linear-gradient(135deg, #fef3c7 0%, #fcd34d 100%);
-        }
-
-        .preview-realestate {
-            background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%);
-        }
-
-        .preview-legal {
-            background: linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 100%);
-        }
-
-        .preview-health {
-            background: linear-gradient(135deg, #d1fae5 0%, #6ee7b7 100%);
-        }
-
-        .preview-gym {
-            background: linear-gradient(135deg, #ffe4e6 0%, #fda4af 100%);
-        }
-
-        .preview-shop {
-            background: linear-gradient(135deg, #ede9fe 0%, #c4b5fd 100%);
-        }
-
+                /* Specific Gradients for Types */
+        .preview-restaurant { background: linear-gradient(135deg, #fee2e2 0%, #fca5a5 100%); }
+        .preview-realestate { background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%); }
+        .preview-legal { background: linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 100%); }
+        .preview-health { background: linear-gradient(135deg, #ecfeff 0%, #a5f3fc 100%); }
+        .preview-gym { background: linear-gradient(135deg, #111827 0%, #1f2937 100%); color: #fff; }
+        .preview-shop { background: linear-gradient(135deg, #ede9fe 0%, #c4b5fd 100%); }
+        .preview-barber { background: linear-gradient(135deg, #fef3c7 0%, #fcd34d 100%); }
+        .preview-beauty { background: linear-gradient(135deg, #fce7f3 0%, #f9a8d4 100%); }
+        .preview-travel { background: linear-gradient(135deg, #cffafe 0%, #67e8f9 100%); }
+        .preview-hotel { background: linear-gradient(135deg, #e0e7ff 0%, #a5b4fc 100%); }
+        .preview-academy { background: linear-gradient(135deg, #dcfce7 0%, #86efac 100%); }
+        .preview-crypto { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color:#fff; }
+        .preview-dental { background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%); }
+        .preview-vet { background: linear-gradient(135deg, #f0fdf4 0%, #bbf7d0 100%); }
+        .preview-auto { background: linear-gradient(135deg, #e2e8f0 0%, #94a3b8 100%); }
+        .preview-construction { background: linear-gradient(135deg, #fef3c7 0%, #f59e0b 100%); }
+        .preview-photo { background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); }
+        .preview-events { background: linear-gradient(135deg, #fae8ff 0%, #c084fc 100%); }
         .card-body {
             padding: 1.5rem;
             flex-grow: 1;
@@ -248,55 +242,25 @@
     </div>
 
     <script>
-        const templates = [
-            {
-                id: 'restaurant',
-                title: 'Restaurante / Delivery',
-                icon: '🍔',
-                styleClass: 'preview-restaurant',
-                features: ['Menú Digital', 'Reservas', 'Galería'],
-                desc: 'Ideal para restaurantes, dark kitchens y cafeterías.'
-            },
-            {
-                id: 'realestate',
-                title: 'Inmobiliaria / Agente',
-                icon: '🏠',
-                styleClass: 'preview-realestate',
-                features: ['Propiedades', 'Formulario Lead', 'Mapa'],
-                desc: 'Captura leads interesados en comprar o alquilar.'
-            },
-            {
-                id: 'lawyer',
-                title: 'Servicios Legales',
-                icon: '⚖️',
-                styleClass: 'preview-legal',
-                features: ['Citas', 'Áreas Práctica', 'Blog'],
-                desc: 'Genera confianza y profesionalismo para tu firma.'
-            },
-            {
-                id: 'health',
-                title: 'Clínica / Salud',
-                icon: '🦷',
-                styleClass: 'preview-health',
-                features: ['Urgencias', 'Staff Médico', 'Reseñas'],
-                desc: 'Para odontólogos, médicos y centros de bienestar.'
-            },
-            {
-                id: 'gym',
-                title: 'Gimnasio / Fitness',
-                icon: '💪',
-                styleClass: 'preview-gym',
-                features: ['Clases', 'Membresías', 'Entrenadores'],
-                desc: 'Vende suscripciones y clases de prueba.'
-            },
-            {
-                id: 'shop',
-                title: 'E-commerce Niche',
-                icon: '🛍️',
-                styleClass: 'preview-shop',
-                features: ['Catálogo', 'Carrito', 'Ofertas'],
-                desc: 'Tienda optimizada para productos de alto valor.'
-            }
+                const templates = [
+            { id: 'restaurant', title: 'Restaurante / Delivery', icon: '??', styleClass: 'preview-restaurant', features: ['Menu', 'Reservas', 'Delivery'], desc: 'Ideal para restaurantes, dark kitchens y cafeterias.' },
+            { id: 'realestate', title: 'Inmobiliaria / Agente', icon: '??', styleClass: 'preview-realestate', features: ['Propiedades', 'Leads', 'Mapa'], desc: 'Captura interesados en compra o alquiler.' },
+            { id: 'lawyer', title: 'Servicios Legales', icon: '??', styleClass: 'preview-legal', features: ['Citas', 'Areas', 'Blog'], desc: 'Genera confianza y profesionalismo.' },
+            { id: 'health', title: 'Clinica / Salud', icon: '??', styleClass: 'preview-health', features: ['Urgencias', 'Staff', 'Rese�as'], desc: 'Para medicos, clinicas y bienestar.' },
+            { id: 'gym', title: 'Gimnasio / Fitness', icon: '???', styleClass: 'preview-gym', features: ['Clases', 'Planes', 'Entrenadores'], desc: 'Convierte visitas en membresias.' },
+            { id: 'shop', title: 'E-commerce', icon: '???', styleClass: 'preview-shop', features: ['Catalogo', 'Carrito', 'Ofertas'], desc: 'Tienda optimizada para vender.' },
+            { id: 'barber', title: 'Barberia', icon: '??', styleClass: 'preview-barber', features: ['Citas', 'Servicios', 'Rese�as'], desc: 'Agenda y fideliza clientes.' },
+            { id: 'beauty', title: 'Salon de Belleza', icon: '??', styleClass: 'preview-beauty', features: ['Tratamientos', 'Citas', 'Galeria'], desc: 'Promociona servicios y reservas.' },
+            { id: 'travel', title: 'Agencia de Viajes', icon: '??', styleClass: 'preview-travel', features: ['Paquetes', 'Cotiza', 'Soporte'], desc: 'Vende experiencias y tours.' },
+            { id: 'hotel', title: 'Hotel / Hospedaje', icon: '??', styleClass: 'preview-hotel', features: ['Habitaciones', 'Booking', 'Servicios'], desc: 'Aumenta reservas directas.' },
+            { id: 'academy', title: 'Academia / Cursos', icon: '??', styleClass: 'preview-academy', features: ['Cursos', 'Inscripcion', 'Certificados'], desc: 'Convierte interesados en alumnos.' },
+            { id: 'crypto', title: 'Fintech / Crypto', icon: '??', styleClass: 'preview-crypto', features: ['Wallet', 'Seguridad', 'Soporte'], desc: 'Landing moderna para fintech.' },
+            { id: 'dental', title: 'Clinica Dental', icon: '??', styleClass: 'preview-dental', features: ['Citas', 'Tratamientos', 'Rese�as'], desc: 'Confianza y agenda inmediata.' },
+            { id: 'vet', title: 'Veterinaria', icon: '??', styleClass: 'preview-vet', features: ['Emergencias', 'Servicios', 'Citas'], desc: 'Cuidado profesional para mascotas.' },
+            { id: 'auto', title: 'Taller Automotriz', icon: '??', styleClass: 'preview-auto', features: ['Diagnostico', 'Servicios', 'Garantia'], desc: 'Capta clientes locales.' },
+            { id: 'construction', title: 'Construccion / Obras', icon: '???', styleClass: 'preview-construction', features: ['Proyectos', 'Cotiza', 'Equipo'], desc: 'Portafolio y captacion de proyectos.' },
+            { id: 'photo', title: 'Fotografia / Video', icon: '??', styleClass: 'preview-photo', features: ['Portafolio', 'Paquetes', 'Booking'], desc: 'Muestra tu trabajo y reserva.' },
+            { id: 'events', title: 'Eventos / Bodas', icon: '??', styleClass: 'preview-events', features: ['Fechas', 'Paquetes', 'Agenda'], desc: 'Convierte visitas en reservas.' }
         ];
 
         const grid = document.getElementById('grid');
