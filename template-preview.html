@@ -142,6 +142,8 @@
             z-index: 1;
             max-width: 800px;
             margin: 0 auto;
+            display: grid;
+            gap: 1.5rem;
         }
 
         .badge {
@@ -188,6 +190,45 @@
             box-shadow: 0 15px 35px -5px rgba(37, 99, 235, 0.5);
         }
 
+        .media-upload {
+            background: rgba(15, 23, 42, 0.03);
+            border: 1px dashed rgba(15, 23, 42, 0.2);
+            border-radius: 16px;
+            padding: 1rem;
+            display: grid;
+            gap: 0.75rem;
+            text-align: left;
+        }
+
+        .media-upload label {
+            font-weight: 600;
+        }
+
+        .media-upload input[type="file"] {
+            width: 100%;
+        }
+
+        .media-preview {
+            width: 100%;
+            border-radius: 14px;
+            overflow: hidden;
+            background: rgba(148, 163, 184, 0.2);
+            min-height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        .media-preview img,
+        .media-preview video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
         /* Trust Bar */
         .trust-bar {
             padding: 2rem;
@@ -206,6 +247,28 @@
             font-weight: 700;
             font-size: 1.2rem;
             color: #94a3b8;
+        }
+
+        .payments {
+            padding: 2.5rem 1rem;
+            background: var(--surface);
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .payment-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            justify-content: center;
+        }
+
+        .payment-chip {
+            padding: 0.6rem 1rem;
+            border-radius: 999px;
+            color: white;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 0.02em;
         }
 
         /* Features */
@@ -262,12 +325,35 @@
             background: var(--bg);
         }
 
+        .testimonials-carousel {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            padding-bottom: 1rem;
+        }
+
         .testimonial-card {
             background: var(--surface);
-            padding: 2rem;
+            padding: 1.5rem;
             border-radius: 16px;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
-            margin-bottom: 1rem;
+            scroll-snap-align: start;
+            min-width: 260px;
+            flex: 0 0 80%;
+        }
+
+        @media (min-width: 900px) {
+            .testimonial-card {
+                flex: 1 1 calc(33.33% - 1rem);
+                min-width: 0;
+            }
+
+            .testimonials-carousel {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                overflow: visible;
+            }
         }
 
         .stars {
@@ -361,6 +447,12 @@
                 <h1 id="hero-title">Tu Negocio, Al Siguiente Nivel</h1>
                 <p class="subtitle" id="hero-desc">La solución integral para gestionar, crecer y automatizar tu negocio
                     con total confianza.</p>
+                <div class="media-upload">
+                    <label for="media-input">Agrega imagen o video de tu negocio</label>
+                    <input id="media-input" type="file" accept="image/*,video/*" />
+                    <div class="media-preview" id="media-preview">Vista previa del rubro</div>
+                </div>
+
                 <a href="#" class="cta-btn" id="hero-cta">Comenzar Ahora →</a>
             </div>
         </section>
@@ -377,6 +469,14 @@
             </div>
         </div>
 
+        <section class="payments">
+            <div class="section-title">
+                <h2>Metodos de Pago en Peru</h2>
+                <p style="color:var(--secondary)">Acepta billeteras y bancos locales</p>
+            </div>
+            <div class="payment-grid" id="payment-grid"></div>
+        </section>
+
         <section class="section" style="background: var(--surface);">
             <div class="section-title">
                 <h2>¿Por qué elegirnos?</h2>
@@ -392,7 +492,7 @@
                 <h2>Lo que dicen nuestros clientes</h2>
                 <p>Miles de usuarios satisfechos</p>
             </div>
-            <div class="features-grid" id="testimonials-container">
+            <div class="testimonials-carousel" id="testimonials-container">
                 <!-- JS Injected -->
             </div>
         </section>
@@ -414,29 +514,36 @@
                 // --- DATA ---
         const svgPattern = (svg) => `url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}")`;
 
-        const patterns = {
-            pizza: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><circle cx='30' cy='30' r='16' fill='#fbbf24'/><circle cx='30' cy='30' r='4' fill='#ef4444'/><path d='M70 20 L110 35 L80 65 Z' fill='#f59e0b'/><circle cx='86' cy='35' r='3' fill='#ef4444'/><circle cx='90' cy='45' r='3' fill='#ef4444'/></svg>`),
-            dumbbell: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><rect x='25' y='54' width='70' height='12' rx='6' fill='#9ca3af'/><circle cx='22' cy='60' r='12' fill='#6b7280'/><circle cx='98' cy='60' r='12' fill='#6b7280'/></svg>`),
-            heart: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><path d='M60 90 L20 50 A20 20 0 0 1 60 30 A20 20 0 0 1 100 50 Z' fill='#ef4444'/></svg>`),
-            medical: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><rect x='50' y='30' width='20' height='60' fill='#16a34a'/><rect x='30' y='50' width='60' height='20' fill='#16a34a'/></svg>`),
-            house: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><polygon points='30,55 60,30 90,55' fill='#64748b'/><rect x='30' y='55' width='60' height='40' fill='#94a3b8'/></svg>`),
-            scales: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><line x1='60' y1='20' x2='60' y2='80' stroke='#f59e0b' stroke-width='6'/><line x1='30' y1='35' x2='90' y2='35' stroke='#f59e0b' stroke-width='6'/><circle cx='30' cy='65' r='12' fill='#fbbf24'/><circle cx='90' cy='65' r='12' fill='#fbbf24'/></svg>`),
-            bag: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><rect x='30' y='45' width='60' height='50' rx='8' fill='#60a5fa'/><path d='M40 45 Q60 25 80 45' fill='none' stroke='#1d4ed8' stroke-width='6'/></svg>`),
-            scissors: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><circle cx='42' cy='70' r='10' fill='#ef4444'/><circle cx='62' cy='70' r='10' fill='#ef4444'/><line x1='52' y1='60' x2='90' y2='30' stroke='#ef4444' stroke-width='6'/></svg>`),
-            lipstick: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><rect x='50' y='30' width='20' height='30' fill='#be123c'/><rect x='46' y='60' width='28' height='40' fill='#fecdd3'/></svg>`),
-            plane: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><polygon points='20,60 100,50 70,60 100,70' fill='#0ea5e9'/><rect x='55' y='55' width='20' height='10' fill='#38bdf8'/></svg>`),
-            key: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><circle cx='40' cy='60' r='14' fill='#f59e0b'/><rect x='50' y='56' width='50' height='8' fill='#f59e0b'/><rect x='80' y='52' width='8' height='16' fill='#f59e0b'/></svg>`),
-            book: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><rect x='25' y='35' width='30' height='50' fill='#60a5fa'/><rect x='65' y='35' width='30' height='50' fill='#3b82f6'/></svg>`),
-            coin: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><circle cx='60' cy='60' r='22' fill='#fbbf24'/><circle cx='60' cy='60' r='14' fill='none' stroke='#f59e0b' stroke-width='4'/></svg>`),
-            tooth: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><path d='M40 35 Q60 20 80 35 Q90 60 75 85 Q60 70 45 85 Q30 60 40 35' fill='#e2e8f0' stroke='#94a3b8' stroke-width='2'/></svg>`),
-            paw: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><circle cx='60' cy='70' r='14' fill='#fb923c'/><circle cx='40' cy='45' r='6' fill='#fb923c'/><circle cx='60' cy='40' r='6' fill='#fb923c'/><circle cx='80' cy='45' r='6' fill='#fb923c'/></svg>`),
-            car: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><rect x='25' y='55' width='70' height='25' rx='8' fill='#22c55e'/><rect x='40' y='45' width='40' height='15' fill='#16a34a'/><circle cx='40' cy='82' r='8' fill='#14532d'/><circle cx='80' cy='82' r='8' fill='#14532d'/></svg>`),
-            helmet: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><path d='M25 70 Q60 30 95 70 Z' fill='#f97316'/><rect x='25' y='70' width='70' height='12' fill='#ea580c'/></svg>`),
-            camera: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><rect x='25' y='45' width='70' height='45' rx='8' fill='#0f172a'/><circle cx='60' cy='67' r='12' fill='#94a3b8'/><rect x='35' y='38' width='20' height='10' fill='#334155'/></svg>`),
-            confetti: svgPattern(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' fill='none'/><rect x='20' y='30' width='10' height='10' fill='#f43f5e'/><rect x='50' y='40' width='10' height='10' fill='#22c55e'/><rect x='80' y='30' width='10' height='10' fill='#3b82f6'/><polygon points='30,90 40,70 50,90' fill='#f59e0b'/></svg>`)
+        
+        const templateMeta = {
+            restaurant: { pattern: patterns.pizza, tags: ['comida', 'delivery', 'menu'] },
+            realestate: { pattern: patterns.house, tags: ['propiedades', 'ubicacion', 'asesoria'] },
+            lawyer: { pattern: patterns.scales, tags: ['legal', 'contratos', 'defensa'] },
+            health: { pattern: patterns.heart, tags: ['salud', 'citas', 'especialistas'] },
+            gym: { pattern: patterns.dumbbell, tags: ['fitness', 'membresia', 'entrenamiento'] },
+            ecommerce: { pattern: patterns.bag, tags: ['catalogo', 'pagos', 'envios'] },
+            barber: { pattern: patterns.scissors, tags: ['barberia', 'citas', 'estilo'] },
+            beauty: { pattern: patterns.lipstick, tags: ['belleza', 'spa', 'tratamientos'] },
+            travel: { pattern: patterns.plane, tags: ['viajes', 'paquetes', 'destinos'] },
+            hotel: { pattern: patterns.key, tags: ['hotel', 'reservas', 'habitaciones'] },
+            academy: { pattern: patterns.book, tags: ['cursos', 'academia', 'certificados'] },
+            crypto: { pattern: patterns.coin, tags: ['fintech', 'crypto', 'seguridad'] },
+            dental: { pattern: patterns.tooth, tags: ['dental', 'citas', 'sonrisas'] },
+            vet: { pattern: patterns.paw, tags: ['mascotas', 'veterinaria', 'cuidado'] },
+            auto: { pattern: patterns.car, tags: ['taller', 'mantenimiento', 'garantia'] },
+            construction: { pattern: patterns.helmet, tags: ['obra', 'proyectos', 'ingenieria'] },
+            photo: { pattern: patterns.camera, tags: ['fotografia', 'portafolio', 'sesiones'] },
+            events: { pattern: patterns.confetti, tags: ['eventos', 'bodas', 'produccion'] }
         };
 
-        const data = {
+        const paymentMethods = [
+            { name: 'Yape', color: '#6f2dbd' },
+            { name: 'Plin', color: '#00a86b' },
+            { name: 'BCP', color: '#0033a0' },
+            { name: 'BBVA', color: '#072146' },
+            { name: 'Interbank', color: '#00a94f' },
+            { name: 'Scotiabank', color: '#d81e05' }
+        ];\n        const data = {
             restaurant: {
                 name: "Restaurante / Delivery",
                 color: "#ea580c",
@@ -931,11 +1038,136 @@
         const params = new URLSearchParams(window.location.search);
         const type = params.get('type') || 'restaurant';
         const content = data[type] || defaultData; // Fallback
+        const meta = templateMeta[type] || {};
+        content.tags = meta.tags || ['negocio', 'clientes', 'ventas'];
+        content.pattern = meta.pattern || '';
+
+        function hexToRgb(hex) {
+            const clean = hex.replace('#', '');
+            const bigint = parseInt(clean, 16);
+            const r = (bigint >> 16) & 255;
+            const g = (bigint >> 8) & 255;
+            const b = bigint & 255;
+            return { r, g, b };
+        }
+
+        function buildExtraBackgrounds() {
+            const { r, g, b } = hexToRgb(content.color);
+            const soft = `linear-gradient(135deg, rgba(${r}, ${g}, ${b}, 0.16) 0%, rgba(${r}, ${g}, ${b}, 0.04) 100%)`;
+            const mist = `linear-gradient(135deg, rgba(${r}, ${g}, ${b}, 0.08) 0%, rgba(255, 255, 255, 0.95) 100%)`;
+            const dark = `linear-gradient(135deg, #0f172a 0%, #111827 100%)`;
+            const slate = `linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)`;
+            const glow = `linear-gradient(135deg, rgba(${r}, ${g}, ${b}, 0.22) 0%, rgba(${r}, ${g}, ${b}, 0.12) 100%)`;
+            return [
+                { label: 'Suave', page: soft, hero: `${soft}, ${content.pattern}`, surface: '#ffffff', text: '#0f172a', secondary: '#64748b', heroSize: '180px 180px', heroRepeat: 'repeat' },
+                { label: 'Bruma', page: mist, hero: mist, surface: '#ffffff', text: '#0f172a', secondary: '#64748b' },
+                { label: 'Oscuro', page: dark, hero: `${dark}, ${content.pattern}`, surface: '#111827', text: '#f8fafc', secondary: '#cbd5f5', heroSize: '180px 180px', heroRepeat: 'repeat' },
+                { label: 'Slate', page: slate, hero: slate, surface: '#ffffff', text: '#0f172a', secondary: '#64748b' },
+                { label: 'Glow', page: glow, hero: `${glow}, ${content.pattern}`, surface: '#ffffff', text: '#0f172a', secondary: '#64748b', heroSize: '180px 180px', heroRepeat: 'repeat' }
+            ];
+        }
+
+        function getCustomBackground() {
+            switch (type) {
+                case 'restaurant':
+                    return { label: 'Pizza Roja', page: 'linear-gradient(135deg, #fee2e2 0%, #fecaca 100%)', hero: `linear-gradient(135deg, #fee2e2 0%, #fecaca 100%), ${patterns.pizza}`, surface: '#ffffff', text: '#0f172a', secondary: '#64748b', heroSize: '180px 180px', heroRepeat: 'repeat' };
+                case 'gym':
+                    return { label: 'Pesas', page: 'linear-gradient(135deg, #0b0b0b 0%, #111827 100%)', hero: `linear-gradient(135deg, #0b0b0b 0%, #111827 100%), ${patterns.dumbbell}`, surface: '#111827', text: '#f8fafc', secondary: '#cbd5f5', heroSize: '180px 180px', heroRepeat: 'repeat' };
+                case 'health':
+                    return { label: 'Clinico', page: 'linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)', hero: `linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%), ${patterns.heart}`, surface: '#ffffff', text: '#0f172a', secondary: '#64748b', heroSize: '180px 180px', heroRepeat: 'repeat' };
+                case 'dental':
+                    return { label: 'Blanco', page: 'linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)', hero: `linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%), ${patterns.tooth}`, surface: '#ffffff', text: '#0f172a', secondary: '#64748b', heroSize: '180px 180px', heroRepeat: 'repeat' };
+                case 'travel':
+                    return { label: 'Cielo', page: 'linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%)', hero: `linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%), ${patterns.plane}`, surface: '#ffffff', text: '#0f172a', secondary: '#64748b', heroSize: '180px 180px', heroRepeat: 'repeat' };
+                case 'events':
+                    return { label: 'Fiesta', page: 'linear-gradient(135deg, #ffe4e6 0%, #fecdd3 100%)', hero: `linear-gradient(135deg, #ffe4e6 0%, #fecdd3 100%), ${patterns.confetti}`, surface: '#ffffff', text: '#0f172a', secondary: '#64748b', heroSize: '180px 180px', heroRepeat: 'repeat' };
+                default:
+                    return null;
+            }
+        }
+
+        function expandBackgrounds() {
+            const base = content.backgrounds || [];
+            const extras = buildExtraBackgrounds();
+            const custom = getCustomBackground();
+            const merged = custom ? [custom].concat(base, extras) : base.concat(extras);
+            return merged.slice(0, 8);
+        }
+
+        function buildTestimonials() {
+            const [t1, t2, t3] = content.tags;
+            return [
+                { name: 'Cliente 1', text: `Excelente ${t1} y atencion rapida.` },
+                { name: 'Cliente 2', text: `El proceso de ${t2} es muy simple.` },
+                { name: 'Cliente 3', text: `La experiencia en ${t3} supero expectativas.` },
+                { name: 'Cliente 4', text: `La calidad del servicio es top.` },
+                { name: 'Cliente 5', text: `Resultados visibles desde la primera semana.` },
+                { name: 'Cliente 6', text: `La plataforma es clara y facil de usar.` },
+                { name: 'Cliente 7', text: `Recomendado para negocios que quieren crecer.` },
+                { name: 'Cliente 8', text: `Soporte rapido y profesional.` },
+                { name: 'Cliente 9', text: `Todo el flujo de trabajo esta bien pensado.` },
+                { name: 'Cliente 10', text: `Volveria a contratar sin dudar.` }
+            ];
+        }
+
+        function buildFaqs() {
+            const [t1, t2] = content.tags;
+            return [
+                { q: `Como empiezo con ${t1}?`, a: `Agenda una llamada y te guiamos paso a paso.` },
+                { q: `Puedo personalizar ${t2}?`, a: `Si, cada seccion es editable.` },
+                { q: 'Cuanto demora la implementacion?', a: 'Entre 24 y 72 horas segun el alcance.' },
+                { q: 'Incluye soporte?', a: 'Si, soporte por chat y correo.' },
+                { q: 'Puedo cambiar el diseno?', a: 'Claro, puedes ajustar colores, textos y bloques.' }
+            ];
+        }
+
+        function renderPayments() {
+            const grid = document.getElementById('payment-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            paymentMethods.forEach((m) => {
+                const chip = document.createElement('div');
+                chip.className = 'payment-chip';
+                chip.style.background = m.color;
+                chip.textContent = m.name;
+                grid.appendChild(chip);
+            });
+        }
+
+        function setupMediaUpload() {
+            const input = document.getElementById('media-input');
+            const preview = document.getElementById('media-preview');
+            if (!input || !preview) return;
+            if (content.pattern) {
+                preview.style.backgroundImage = content.pattern;
+                preview.style.backgroundSize = '160px 160px';
+                preview.style.backgroundRepeat = 'repeat';
+            }
+            input.addEventListener('change', () => {
+                const file = input.files && input.files[0];
+                if (!file) return;
+                const url = URL.createObjectURL(file);
+                preview.innerHTML = '';
+                if (file.type.startsWith('video/')) {
+                    const video = document.createElement('video');
+                    video.src = url;
+                    video.controls = true;
+                    preview.appendChild(video);
+                } else {
+                    const img = document.createElement('img');
+                    img.src = url;
+                    preview.appendChild(img);
+                }
+            });
+        }
 
         // Update Theme
         document.documentElement.style.setProperty('--primary', content.color);
         document.getElementById('template-name').textContent = content.name;
-        renderBackgroundOptions(content.backgrounds || [], content);
+        const backgrounds = expandBackgrounds();
+        renderBackgroundOptions(backgrounds);
+        renderPayments();
+        setupMediaUpload();
 
         function applyBackground(bg) {
             const root = document.documentElement;
@@ -992,7 +1224,8 @@
 
         // Render Testimonials
         const testContainer = document.getElementById('testimonials-container');
-        content.testimonials.forEach(t => {
+        const testimonials = buildTestimonials();
+        testimonials.forEach(t => {
             testContainer.innerHTML += `
                 <div class="testimonial-card">
                     <div class="stars">★★★★★</div>
@@ -1004,7 +1237,8 @@
 
         // Render FAQs
         const faqContainer = document.getElementById('faq-container');
-        content.faqs.forEach((item, index) => {
+        const faqs = buildFaqs();
+        faqs.forEach((item, index) => {
             faqContainer.innerHTML += `
                 <div class="faq-item" onclick="toggleFaq(this)">
                     <div class="faq-question">
@@ -1037,4 +1271,9 @@
 </body>
 
 </html>
+
+
+
+
+
 
