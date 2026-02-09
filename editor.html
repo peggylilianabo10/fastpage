@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Editor - FastPage</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>"/>
+  <script src='https://cdn.jsdelivr.net/npm/fabric@6.0.0/dist/fabric.min.js'></script>
   <style>
     :root{--primary:#7c3aed;--muted:#64748b;--surface:#fff}
     *{box-sizing:border-box;font-family:Inter,system-ui,sans-serif}
@@ -46,7 +47,12 @@
     .block .payment-card{border:1px dashed rgba(0,0,0,0.15);border-radius:12px;padding:10px;text-align:center;background:#fff;font-weight:700}
     .block .faq-item{border:1px solid rgba(0,0,0,0.06);border-radius:10px;padding:10px 12px;background:#fff}
     .block details.faq-item summary{cursor:pointer;font-weight:700}
-    .block .testi-card{border:1px solid rgba(0,0,0,0.06);border-radius:12px;padding:12px;background:#fff}
+        .block .creative-toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+    .block .creative-toolbar .btn{padding:6px 10px;font-size:12px}
+    .block .creative-canvas-wrap{border:1px solid rgba(0,0,0,0.08);border-radius:12px;overflow:hidden;background:#f8fafc}
+    .block canvas.creative-canvas{width:100%;height:360px;display:block}
+    .block .creative-footer{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .block .creative-hidden{display:none}
     .placeholder{min-height:80px;border:2px dashed rgba(124,58,237,0.08);border-radius:8px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;color:var(--muted)}
     .templates{display:grid;grid-template-columns:1fr;gap:0.5rem}
     .small{font-size:0.85rem;color:var(--muted)}
@@ -83,7 +89,8 @@
       <div draggable="true" class="block" data-type="comparison">📊 Comparativa de precios</div>
       <div draggable="true" class="block" data-type="payments">💳 Métodos de pago (Perú)</div>
       <div draggable="true" class="block" data-type="faq">❓ FAQ Acordeón</div>
-      <hr/>
+            <div draggable='true' class='block' data-type='creative'>Creativos (imagenes)</div>
+<hr/>
       <h4>Plantillas</h4>
       <div class="templates">
         <button class="btn" onclick="useTemplate('startup')">Startup (moderno)</button>
@@ -372,7 +379,26 @@
           </div>
         `;
       }
-      if(type==='widget'){
+            if(type==='creative'){
+        return `
+          <div class="stack">
+            <div style="font-weight:800" data-edit="title">Creativo rapido</div>
+            <div class="creative-toolbar">
+              <button class="btn" data-action="add-text">Texto</button>
+              <button class="btn" data-action="add-rect">Rectangulo</button>
+              <button class="btn" data-action="add-circle">Circulo</button>
+              <button class="btn" data-action="upload">Subir imagen</button>
+              <label class="btn">Fondo <input type="color" data-action="bg-color" value="#ffffff" style="margin-left:6px;border:none;"/></label>
+              <button class="btn" data-action="export">Exportar PNG</button>
+            </div>
+            <div class="creative-canvas-wrap">
+              <canvas class="creative-canvas" data-creative-canvas></canvas>
+            </div>
+            <input class="creative-hidden" type="file" data-action="file" accept="image/*" />
+            <div class="small">Arrastra, escala y rota elementos.</div>
+          </div>
+        `;
+      }if(type==='widget'){
         return `
           <div class="stack">
             <div style="font-weight:800" data-edit="title">🔧 Widget embebido</div>
@@ -416,6 +442,7 @@
       el.dataset.props = JSON.stringify({bg:'#ffffff', color:'#0f172a', fontSize:16, padding:20, radius:8});
 
       setBlockContent(el, getTemplateHtml(type, label));
+      if(type==='creative'){ initCreative(el); }
 
       el.addEventListener('click', ()=> selectBlock(el));
       el.addEventListener('dragstart', (e)=>{ el.classList.add('dragging'); e.dataTransfer.setData('text/plain', JSON.stringify({type: el.dataset.type, label: el.textContent})); });
@@ -490,8 +517,7 @@
     }
 
     function makeLabel(txt){ const l = document.createElement('div'); l.textContent = txt; l.style.marginTop='8px'; l.style.fontWeight='600'; l.className='small'; return l; }
-    function makeInput(type, val){ const i = document.createElement('input'); i.type = type; i.value = val; i.style.padding='8px'; i.style.marginBottom='6px'; i.style.border='1px solid rgba(0,0,0,0.08)'; i.style.borderRadius='6px'; return i; }
-
+    
     function renderBlock(el){
       const props = JSON.parse(el.dataset.props || '{}');
       el.style.background = props.bg || '#fff';
@@ -501,6 +527,88 @@
       el.style.borderRadius = (props.radius || 8) + 'px';
       const html = el.dataset.html || getTemplateHtml(el.dataset.type, el.textContent);
       setBlockContent(el, html);
+      if(el.dataset.type==='creative'){ initCreative(el); }
+    }const creativeInstances = new Map();
+    let creativeCounter = 0;
+
+    function initCreative(el){
+      if(!el || el.dataset.creativeInit === 'true') return;
+      if(typeof fabric === 'undefined'){ console.warn('Fabric no disponible'); return; }
+      const canvasEl = el.querySelector('[data-creative-canvas]');
+      if(!canvasEl) return;
+      el.dataset.creativeInit = 'true';
+      const canvasId = `creative-canvas-${++creativeCounter}`;
+      canvasEl.id = canvasId;
+      const fabricCanvas = new fabric.Canvas(canvasId, { preserveObjectStacking: true });
+      creativeInstances.set(el, fabricCanvas);
+
+      const resize = () => {
+        const wrap = canvasEl.parentElement;
+        const width = wrap ? wrap.clientWidth : 600;
+        fabricCanvas.setWidth(width);
+        fabricCanvas.setHeight(360);
+        fabricCanvas.renderAll();
+      };
+      resize();
+      if('ResizeObserver' in window){
+        const ro = new ResizeObserver(() => resize());
+        ro.observe(canvasEl.parentElement);
+      }
+
+      const toolbar = el.querySelector('.creative-toolbar');
+      const fileInput = el.querySelector('input[data-action="file"]');
+      const bgInput = el.querySelector('input[data-action="bg-color"]');
+
+      const addTextBtn = toolbar.querySelector('[data-action="add-text"]');
+      const addRectBtn = toolbar.querySelector('[data-action="add-rect"]');
+      const addCircleBtn = toolbar.querySelector('[data-action="add-circle"]');
+      const uploadBtn = toolbar.querySelector('[data-action="upload"]');
+      const exportBtn = toolbar.querySelector('[data-action="export"]');
+
+      addTextBtn.onclick = () => {
+        const text = new fabric.Textbox('Nuevo texto', { left: 40, top: 40, fontSize: 28, fill: '#0f172a' });
+        fabricCanvas.add(text).setActiveObject(text);
+      };
+      addRectBtn.onclick = () => {
+        const rect = new fabric.Rect({ left: 60, top: 60, width: 180, height: 120, rx: 16, ry: 16, fill: '#8b5cf6' });
+        fabricCanvas.add(rect).setActiveObject(rect);
+      };
+      addCircleBtn.onclick = () => {
+        const circle = new fabric.Circle({ left: 80, top: 80, radius: 60, fill: '#22c55e' });
+        fabricCanvas.add(circle).setActiveObject(circle);
+      };
+      uploadBtn.onclick = () => fileInput.click();
+      fileInput.onchange = (e) => {
+        const file = e.target.files && e.target.files[0];
+        if(!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          fabric.Image.fromURL(reader.result, (img) => {
+            img.set({ left: 40, top: 40, scaleX: 0.6, scaleY: 0.6 });
+            fabricCanvas.add(img).setActiveObject(img);
+          }, { crossOrigin: 'anonymous' });
+        };
+        reader.readAsDataURL(file);
+      };
+      bgInput.oninput = (e) => {
+        fabricCanvas.setBackgroundColor(e.target.value, fabricCanvas.renderAll.bind(fabricCanvas));
+      };
+      exportBtn.onclick = () => {
+        const data = fabricCanvas.toDataURL({ format: 'png', multiplier: 2 });
+        const a = document.createElement('a');
+        a.href = data;
+        a.download = 'creative.png';
+        a.click();
+      };
+    }');
+      el.style.background = props.bg || '#fff';
+      el.style.color = props.color || '#0f172a';
+      el.style.fontSize = (props.fontSize || 16) + 'px';
+      el.style.padding = (props.padding || 20) + 'px';
+      el.style.borderRadius = (props.radius || 8) + 'px';
+      const html = el.dataset.html || getTemplateHtml(el.dataset.type, el.textContent);
+      setBlockContent(el, html);
+      if(el.dataset.type==='creative'){ initCreative(el); }
     }
 
     window.useTemplate = function(name){
@@ -584,6 +692,17 @@
   </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
 
 
 
